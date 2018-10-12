@@ -1,0 +1,9 @@
+gsanlogfile.log.*
+gsanServer.png
+Dockerfile
+mvnw
+mvnw.*
+PostgreSQL_*
+requeriments.txt
+target
+src/main/resources/application2.properties
