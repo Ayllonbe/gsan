@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<style>
+table td {
+	vertical-align: top;
+	border: solid 1px #888;
+	padding: 10px;
+}
+</style>
+</head>
+<body>
+
+	<div class="content">
+		<div th:insert="index"></div>
+
+		<!-- Scrollable div with main content -->
+		<div class="row" id="rowStart" style="width: 100%">
+			<div class="col-xs-12 col-md-12">
+				<div class="pageClass">
+					<h1>Error Page</h1>
+					<br>
+					<table>
+						<tr>
+							<td>Date</td>
+							<td th:text="${timestamp}" />
+						</tr>
+						<tr>
+							<td>Path</td>
+							<td id="path" th:text="${path}" />
+						</tr>
+						<tr>
+							<td>Error</td>
+							<td th:text="${error}" />
+						</tr>
+						<tr>
+							<td>Status</td>
+							<td th:text="${status}" />
+						</tr>
+						<tr>
+							<td>Message</td>
+							<td th:text="${message}" />
+						</tr>
+						<tr>
+							<td>Exception</td>
+							<td th:text="${exception}" />
+						</tr>
+						<tr>
+							<!--  <td>Trace</td>
+        <td>
+            <pre th:text="${trace}"/>
+        </td>-->
+						</tr>
+					</table>
+					<!--<script th:inline="javascript">
+
+      /*<![CDATA[*/
+
+         var user = /*[[${path}]]*/ 'path';
+         console.log(user);
+         if(user==="/visualization"){
+             window.location.href = "/charts";
+         }
+
+       /*]]>*/
+</script>-->
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
