@@ -30,6 +30,8 @@ import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.distribution.gsan_api.read_write.writeSimilarityMatrix;
 import gsan.distribution.gsan_api.run.representative.AlgorithmRepresentative;
 import gsan.distribution.gsan_api.run.representative.Cluster;
+import gsan.server.gsan.api.service.jpa.taskRepository;
+import gsan.server.gsan.api.service.model.task;
 import gsan.server.singleton.graphSingleton;
 
 @Service

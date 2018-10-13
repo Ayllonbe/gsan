@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+	<div class="content">
+		<div th:insert="index"></div>
+
+		<!-- Scrollable div with main content -->
+		<div class="row" id="rowStart" style="width: 100%">
+			<div class="col-xs-12 col-md-12">
+				<div class="pageClass" id="loadingPage">
+
+					<div class="col-md-12">
+						<div id="textLoading">
+							<h1>Loading ...</h1>
+							<br>
+							<p>The process can take several minutes. thank you for your
+								patience. If you provided your email, we will notify you when
+								the process will have finished.</p>
+						</div>
+						<br> <br> <br> <img id="load"
+							th:src="@{images/loading.gif}" src="images/loading.gif" /> <img
+							id="finish" th:src="@{images/finished.png}"
+							src="images/finished.png" width="128px" height="128px"
+							style="display: none;" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<script>
+		window.setInterval('refresh()', 10000); // CALL A FUNCTION EVERY 10000 MILLISECONDS OR 10 SECONDS.
+
+		// REFRESH OR RELOAD PAGE.
+		function refresh() {
+			window.location.reload();
+		}
+	</script>
+</body>
+</html>

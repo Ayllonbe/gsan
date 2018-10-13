@@ -1,0 +1,6 @@
+﻿SELECT "GO"."GOID","Quantifier"."Name", "objectDB"."uniprotID", "Gene"."Symbol","Evidence"."Name", "TaxonID","Version"  FROM "Association"
+INNER JOIN "GO" ON "Association"."GOnumberID" = "GO"."GOnumberID"
+INNER JOIN "objectDB" ON "objectDB"."objectDBID" = "Association"."objectDBID"
+INNER JOIN "Gene" ON "Gene"."GeneID" = "Association"."GeneID"
+INNER JOIN "Evidence" ON "Evidence"."EvidenceID" = "Association"."EvidenceID"
+LEFT OUTER JOIN  "Quantifier" ON "Quantifier"."QuantifierID" = "Association"."QuantifierID"

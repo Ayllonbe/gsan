@@ -1,4 +1,5 @@
-package gsan.server.gsan.api.service;
+package gsan.server.gsan.api.service.model;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -14,7 +15,8 @@ import org.hibernate.annotations.Type;
  
 @Entity
 @Table(name="task")
-public class task {
+public class task  implements Serializable{
+	private static final long serialVersionUID = 1L;
 	@Id
 	@NotNull
 	@Type(type = "pg-uuid") // only works for postgres

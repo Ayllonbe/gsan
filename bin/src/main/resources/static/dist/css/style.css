@@ -1,0 +1,245 @@
+html, body {
+    height:100%;
+    margin:0;
+    padding:0;
+    background-color: #F5F5F5;
+}
+header{
+    width: 100%;
+    background-color: #4169E1;
+    position: fixed;
+    top: 0;
+    height: 60px !important;
+    z-index: 1;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    box-sizing:border-box;
+}
+header h2{
+  margin-left: 1.5%;
+  margin-top: 0.5%;
+  color:white;
+  font-size:35px;
+}
+.popover{
+    width:250px;    
+}
+.content {
+    position:relative;
+    height: auto;
+    width:auto; /* Sizing - any length */
+    padding:60px 0 30px 0; /* Header height and footer height */
+    margin:0 auto 0 auto; /* Center content */
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    box-sizing:border-box;
+}
+.liheader1{
+  color:#909999;
+  font-size:14px;
+    font-family: 'Roboto', sans-serif;
+   margin: 00px 0px 10px -15px;
+}
+.sidebar-menu{
+  list-style-type: none;
+}
+
+.otherList{
+	  margin-left: 0;
+  	  padding-left: 50px;
+}
+.sidebar1{
+    z-index: 1;
+    top:60px;
+    bottom:30px;
+    width: 200px;
+    position:fixed;
+    background-color: #202020;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    box-sizing:border-box;
+}
+.sidebar1 i, .sidebar1 span{
+
+  color: white;
+  font-size:18px;
+}
+.sidebar1 {
+    left:0;
+}
+.sidebar-menu{
+  margin: 30px 10px 10px 20px;
+}
+
+.sidebar1 li{
+  line-height: 3;
+}
+#barplot H2{
+    text-align: center;
+}
+#gauge H2{
+    text-align: center;
+}
+
+
+#rowStart{
+	padding-left: 220px;
+}
+.pageClass {
+    height: 100%;
+
+    /*overflow:auto;*/
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    box-sizing:border-box;
+}
+
+#VisualizePage{
+	padding-right: 2%;
+}
+
+#examples{
+	height: 100%;
+	
+    
+     
+}
+#loadingPage {
+padding-top: 100px;
+
+}
+#Error{
+text-align:center;
+
+
+}
+
+#msgError{
+  width: 800px;
+  height: 300px;
+  margin: 0 auto;
+  background-color: #E0E0E0;
+  border: 2px solid black;
+  border-radius: 12px;
+
+}
+#textLoading{
+  margin: auto;
+   width: 35%;
+}
+#loadingPage p{
+  font-size:18px;
+}
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+footer {
+    width: 100%;
+    position: fixed;
+    height: 30px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+     z-index: 100;
+
+}
+#pro{
+  position: fixed;
+    width: 200px;
+    height: 100%;
+background-color: #202020;
+}
+footer #test{
+    background-color: white;
+    height: 100%;
+    text-align: center;
+    border-top: 2px solid #4169E1;
+
+}
+/*BUTTON*/
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+#run{
+
+  background-color: #4169E1;
+  color:white;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+table {
+        font-family: Arial, sans-serif;
+        font-size:18px;
+    }
+    .table-container{
+        padding-top: 2px;
+        width: 100%;
+        float:left;
+        padding-right:2px;
+
+    }
+    .table-toogle{
+        margin-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+        padding-top: 40px;
+        width: 90%;
+        float:left;
+
+    }
+    .table-toogle tr{
+      background-color: #F2F2F2;
+        border: 1px solid;
+    }
+    th {
+    background-color: #5f81e8;
+    color: white;
+} 
+/*
+    td {
+        border: 1px solid;
+        padding: 5px;
+    }
+  */
+    .tablink {
+        background-color: #555;
+        color: white;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        font-size: 25px;
+        width: 100%;
+    }
+    .tablink:hover {
+        background-color: #777;
+    }
+ 

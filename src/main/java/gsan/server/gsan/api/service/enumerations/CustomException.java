@@ -1,4 +1,4 @@
-package gsan.server.gsan.api;
+package gsan.server.gsan.api.service.enumerations;
 
 
 public enum CustomException {
@@ -11,7 +11,6 @@ public enum CustomException {
 	code2("500", "Internal Server Error","GSAn","The path to save the JSON file don't exist. Please create a ticket trouble.")
 	 ,
 	  code3("404", "Bad Request","/start","The gene ids of query don't match with the gene ids of GOA. Please, check if:\n"
-	  		+ ""
 	  		+ "1) You use the official symbol id.\n"
 	  		+ "2) You use the good organism.")
 	  ,
@@ -20,6 +19,7 @@ public enum CustomException {
 		  ,
 			code5("500", "Internal Server Error","GSAn","It is possible that the representative terms is empty because "
 					+ "any terms pass the filter. If that is not the case, please create a ticket trouble.")
+			
 				;
 	//	  code2("Lanage C", "Code Block"),
 //

@@ -12,7 +12,7 @@ public class graphSingleton {
 public static void initializeOrGet(String GOOWL) {
 		
 		
-		File owlf = new File("src/main/resources/static/ontology/"+GOOWL);
+		File owlf = new File(GOOWL);
 		
 		if(owlf.exists()) {
 			System.out.println(owlf.getAbsolutePath());

@@ -3,6 +3,7 @@ package gsan.server.gsan.api;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,7 +142,7 @@ public class FTPDownloader {
 							new FTPDownloader("ftp.geneontology.org", "anonymous", "");
 					long ftpLong = ftpDownloader.viewFile(pathGO+file,file);
 					if(thereIsModif(annotationFile, ftpLong)) {
-					serialize(fromFTP(file,pathGO,go,ftpDownloader),annotationFile,go,ftpLong);
+					serialize(fromFTP(file,pathGO,go,ftpDownloader,true,"\t","!"),annotationFile,go,ftpLong);
 					}
 					else {
 						System.out.println("Are there some modification in the file?\n- " + false);
@@ -161,11 +162,11 @@ public class FTPDownloader {
 					if(thereIsModif(annotationFile, ftpLong)) {
 						String path = pathEBI+file+"/";
 						List<List<String>> gt = new ArrayList<>();
-						gt.addAll(fromFTP(gaf,path,go,ftpDownloader));
+						gt.addAll(fromFTP(gaf,path,go,ftpDownloader,true,"\t","!"));
 						ftpDownloader =
 								new FTPDownloader("ftp.ebi.ac.uk", "anonymous", "");
 //						
-						gt.addAll(fromFTP(isogaf,path,go,ftpDownloader));
+						gt.addAll(fromFTP(isogaf,path,go,ftpDownloader,true,"\t","!"));
 						serialize(gt,annotationFile,go,ftpLong);
 						
 					}else {
@@ -189,7 +190,8 @@ public class FTPDownloader {
 		return ts_ftp.after(ts_local);
 		
 	}
-	public static List<List<String>> fromFTP(String file, String pathGO, GlobalOntology go,FTPDownloader ftpDownloader) throws Exception {
+	public static List<List<String>> fromFTP(String file, String pathGO, GlobalOntology go,
+			FTPDownloader ftpDownloader, boolean compress,String delim,String comment) throws Exception {
 
 		
 		
@@ -205,20 +207,21 @@ public class FTPDownloader {
 			System.out.println("Reading GOA files");
 			List<List<String>> goaTable = new ArrayList<>();
 			try {
-
-				GZIPInputStream in = new GZIPInputStream(is);
-
-				Reader decoder = new InputStreamReader(in);
+				Reader decoder = Iscompressed(is, compress);
+				
 				BufferedReader br = new BufferedReader(decoder);
 				String line;
 				
 				while ((line = br.readLine()) != null) {
-					if(!line.contains("!")) {
-					String[] array = line.split("\t");
+					if(!line.contains(comment)) {
+					String[] array = line.split(delim);
 					List<String> col = new ArrayList<>();
 					for(String a : array) col.add(a);
 					
 					goaTable.add(col);
+					}else {
+
+						System.out.println(line);
 					}
 					
 				}
@@ -235,6 +238,17 @@ public class FTPDownloader {
 			}
 			ftpDownloader.disconnect();
 			return goaTable;
+		
+	}
+	
+	public static Reader Iscompressed(InputStream is, boolean c) throws IOException{
+		if(c) {
+			GZIPInputStream in = new GZIPInputStream(is);
+
+			return new InputStreamReader(in);
+			}else {
+				return new InputStreamReader(is);
+			}
 		
 	}
 

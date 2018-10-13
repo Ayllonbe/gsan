@@ -1,5 +1,6 @@
 package gsan.server.gsan.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -14,7 +15,7 @@ import gsan.server.singleton.graphSingleton;
 
 @Component
 public class ComplementStartUp  implements ApplicationListener<ApplicationReadyEvent>{
-	private static String GOOWL = "go.owl";
+	private static String GOOWL = "src/main/resources/static/ontology/go.owl";
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
 		// debug
@@ -30,12 +31,15 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 			e.printStackTrace();
 		}
 		 // Commenter pour l'instance, mais important
-		//FTPDownloader.DownloadGOOWL(GOOWL); // Commenter pour l'instance mais important
+		File goFile = new File(GOOWL);
+		if(!goFile.exists()) {
+			FTPDownloader.DownloadGOOWL(GOOWL); // Commenter pour l'instance mais important
+		}
 		graphSingleton.initializeOrGet(GOOWL);
 		graphSingleton.getGraph(false);
 		
 //		System.out.println("Downloading GOA!");
-//		FTPDownloader.DownloadGOA();
+		FTPDownloader.DownloadGOA();
 		
 		System.out.println("Ready to use!");
 		
