@@ -58,7 +58,7 @@ public class GSAnController {
 	private JavaMailSender sender;
 	
 
-	public static String local = "http://localhost:8282/";
+	//public static String local = "http://localhost:8282/";
 	
 	
 	
@@ -212,7 +212,7 @@ public class GSAnController {
 
 		try {
 			helper.setTo(emailTo);
-			helper.setText(local+id);
+			helper.setText("/"+id);
 			helper.setSubject("[GSAn] Analysis finished");
 		} catch (MessagingException e) {
 			e.printStackTrace();

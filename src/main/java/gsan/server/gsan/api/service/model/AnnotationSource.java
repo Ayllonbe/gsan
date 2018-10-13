@@ -39,8 +39,6 @@ public class AnnotationSource implements Serializable{
 	@Column(name = "serialized_name") 
 	public String serialized_name;
 	@Column(name = "type_download")
-	public String type_download;
-	 @Column(name = "compresed")
 		public boolean compresed;
 	 @Column(name = "delimiter")
 		public String delimiter;
@@ -92,7 +90,7 @@ public class AnnotationSource implements Serializable{
 		return this.file_name;
 	}
 	public void setSerializedname(String f1) {
-		this.file_name = f1;
+		this.serialized_name = f1;
 	}
 	public String getSerializedname() {
 		return this.serialized_name;

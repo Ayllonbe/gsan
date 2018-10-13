@@ -33,6 +33,8 @@ public class DownloadInformation implements Serializable{
 	 public String auth;
 	 @Column(name = "passw")
 	 public String passw;
+	 @Column(name = "type_download")
+		public String type_download;
 	 
 	 @OneToMany(mappedBy = "downloadInformation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 		private Set<AnnotationSource> annotations;
@@ -40,7 +42,24 @@ public class DownloadInformation implements Serializable{
 	 @OneToMany(mappedBy = "downloadInformation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 		private Set<IntegrationSource> integrations;
 		
+	 public DownloadInformation() {
+		// TODO Auto-generated constructor stub
+	}
 	 
+	 public DownloadInformation(String uri, String path, String auth, String ps, String type) {
+		 this.uri = uri;
+		 this.pathway = path;
+		 this.auth = auth;
+		 this.passw = ps;
+		 this.type_download = type;
+	 }
+	 
+	 public void setId(Long id) {
+			this.id = id;
+		}
+		public Long getId() {
+			return this.id;
+		} 
 	 public void setUri(String uri) {
 			this.uri = uri;
 		}
@@ -77,4 +96,10 @@ public class DownloadInformation implements Serializable{
 		public Set<IntegrationSource> getIntegration(){
 			return this.integrations;
 		}
+		public void setTypeDownload(String type) {
+			this.type_download = type;
+		}
+		public String getTypeDownload() {
+			return this.type_download;
+		}	
 }

@@ -42,11 +42,11 @@ public class IntegrationSource implements Serializable{
 	public String file_name1;
 	 @Column(name = "file_name2")
 	public String file_name2;
-	 @Column(name = "type_download")
-	public String type_download;
+	
 	 @Column(name = "compresed")
 		public boolean compresed;
-		 
+	 @Column(name = "serialized_name") 
+		public String serialized_name;
 	
 	 @ManyToOne(fetch = FetchType.LAZY, optional = false)
 		@JoinColumn(name = "downloadinformation_id", nullable = false)
@@ -64,6 +64,7 @@ public class IntegrationSource implements Serializable{
 	 public IntegrationSource(String name, String f1, boolean c ) {
 		 this.name = name;
 		 this.file_name1 = f1;
+		 this.file_name2 = "";
 		 this.type_source = KnowledgeType.ontology.toString();
 		 this.compresed=c;
 	 }
@@ -113,13 +114,13 @@ public class IntegrationSource implements Serializable{
 	public String getAnexefilename() {
 		return this.file_name2;
 	}
-	public void setTypeDownload(String type) {
-		this.type_download = type;
-	}
-	public String getTypeDownload() {
-		return this.type_source;
-	}	
 	
+	public void setSerializedname(String f1) {
+		this.serialized_name = f1;
+	}
+	public String getSerializedname() {
+		return this.serialized_name;
+	}
 	
 
 	public void setAnnotations(Set<AnnotationSource> annotations) {

@@ -1,17 +1,32 @@
 package gsan.server.singleton;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
+import gsan.server.gsan.api.FTPDownloader;
+import gsan.server.gsan.api.service.jpa.DownloadInformationRepository;
+import gsan.server.gsan.api.service.jpa.IntegrationSourcesRepository;
+import gsan.server.gsan.api.service.model.DownloadInformation;
+import gsan.server.gsan.api.service.model.IntegrationSource;
 
 public class graphSingleton {
 	
 	private static GlobalOntology goBase;
-	
-	
+
+
+		
 public static void initializeOrGet(String GOOWL) {
-		
-		
+	
 		File owlf = new File(GOOWL);
 		
 		if(owlf.exists()) {
@@ -40,5 +55,6 @@ public static void initializeOrGet(String GOOWL) {
 		return new GlobalOntology(goBase);
 		}
 	}
-
+	
+	
 }
