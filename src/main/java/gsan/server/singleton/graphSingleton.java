@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
+import gsan.distribution.gsan_api.ontology.integration.GlobalGraph;
 import gsan.server.gsan.api.FTPDownloader;
 import gsan.server.gsan.api.service.jpa.DownloadInformationRepository;
 import gsan.server.gsan.api.service.jpa.IntegrationSourcesRepository;
@@ -37,7 +38,38 @@ public static void initializeOrGet(String GOOWL) {
 		
 		// Charge ontology, resoner ontology and recover information
 		GlobalOntology go= GlobalOntology.informationOnt(owlf.getAbsolutePath());
+		/*
+		 * INIT TEST HUMAN integration
+		 */
+		File pathways = new File("src/main/resources/static/integration/ReactomePathways.txt");
+		File rel = new File("src/main/resources/static/integration/ReactomePathwaysRelation.txt");
+		GlobalOntology reactome = GlobalGraph.getGraph(pathways, rel);
+		go.allStringtoInfoTerm.putAll(reactome.allStringtoInfoTerm);
 		
+		for(String author : go.IC2DS.keySet()) {
+			go.IC2DS.get(author).putAll(reactome.IC2DS.get(author));
+			
+		}
+		
+		
+		go.subontology.putAll(reactome.subontology);
+		
+		
+		
+		String doid = "src/main/resources/static/integration/doid.owl";
+		
+		GlobalOntology DO =GlobalOntology.informationOnt(doid);
+		go.allStringtoInfoTerm.putAll(DO.allStringtoInfoTerm);
+		
+		for(String author : go.IC2DS.keySet()) {
+			go.IC2DS.get(author).putAll(DO.IC2DS.get(author));
+			
+		}
+		go.subontology.putAll(DO.subontology);
+		
+		/*
+		 * END Test
+		 */
 		goBase = go;
 		
 		

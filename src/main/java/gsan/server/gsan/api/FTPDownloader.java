@@ -101,6 +101,10 @@ public class FTPDownloader {
 	}
 
 	public static void DownloadGOA() {
+		File srcPath = new File("src/main/resources/static/AssociationTAB/");
+		if(!srcPath.exists()) {
+			srcPath.mkdirs();
+		}
 		//DateFormat dateFormater = new SimpleDateFormat("dd/MM/yyyy");
 		String[] listFiles = new String[] {
 				//				"gene_association.ecocyc.gz",
@@ -132,7 +136,7 @@ public class FTPDownloader {
 
 		String pathGO = "go/gene-associations/";
 		String pathEBI = "pub/databases/GO/goa/";
-
+	
 		try {
 			GlobalOntology go = graphSingleton.getGraph(false);
 			for(String file : listFiles) {
@@ -292,7 +296,10 @@ public class FTPDownloader {
 	
 	
 	public static boolean DownloadGOOWL(String file) {
-		
+		File srcPath = new File("src/main/resources/static/ontology/");
+		if(!srcPath.exists()) {
+			srcPath.mkdirs();
+		}
 
 		String path = "go/ontology/";
 
@@ -360,7 +367,10 @@ public class FTPDownloader {
 	}
 	
 public static boolean DownloadOntology(IntegrationSource is) {
-		
+		File srcPath = new File("src/main/resources/static/ontology/");
+		if(!srcPath.exists()) {
+			srcPath.mkdirs();
+		}
 		try {
 			FTPDownloader ftpDownloader;
 			//System.out.println(file);
