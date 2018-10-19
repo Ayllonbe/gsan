@@ -68,7 +68,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		//graphSingleton.getGraph(false);
 		
 //		System.out.println("Downloading GOA!");
-//		FTPDownloader.DownloadGOA();
+		FTPDownloader.DownloadGOA();
 		
 		System.out.println("Ready to use!");
 		

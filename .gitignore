@@ -1,5 +1,5 @@
 gsanlogfile*
-.gitignore.
+.gitignore.*
 gsanServer.png
 Dockerfile
 mvnw
@@ -7,8 +7,11 @@ mvnw.*
 PostgreSQL_*
 requeriments.txt
 target
-src/main/resources/application2.properties
+src/main/resources/application.properties
 src/main/resources/static/ontology/*
 src/main/resources/static/AssociationTAB/*
 src/main/resources/static/integration/*
-src/main/tmp/*
+src/main/tmp/results
+.settings
+bin
+
