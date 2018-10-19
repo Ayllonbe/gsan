@@ -148,7 +148,7 @@ public class GSAnServiceImpl implements GSAnService {
 //					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
 //					goaTable.addAll(doiTable);
 				GOA = new Annotation(goaTable, go, true);
-				System.out.println(GOA.annotation.keySet().size());
+//				System.out.println(GOA.annotation.keySet().size());
 //				for(String other : OTHER.annotation.keySet()) {
 //					
 //					if(GOA.annotation.containsKey(other)) {
@@ -248,9 +248,9 @@ public class GSAnServiceImpl implements GSAnService {
 			go.AggregateIC();
 			log.debug("Computing Percentiles...");	
 			for(String subont : go.sourceSet) {
-				System.out.println(subont);
+//				System.out.println(subont);
 				Mappercentile.put(subont, go.getPercentile(percentile, author, subont));
-				System.out.println("Percentile : "+go.getPercentile(percentile, author, subont));
+//				System.out.println("Percentile : "+go.getPercentile(percentile, author, subont));
 			} 
 			
 			log.debug("Reducing annotation...");
@@ -566,7 +566,7 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			
 			Map<String,Map<String, Object>> mapInfo = new HashMap<>();
-			System.out.println("All terms " + allterms.size());
+//			System.out.println("All terms " + allterms.size());
 			for(String t : allterms) {
 				InfoTerm it = go.allStringtoInfoTerm.get(t);
 				Map<String, Object> mapTerm = new HashMap<>();
@@ -632,10 +632,10 @@ public class GSAnServiceImpl implements GSAnService {
 			List<String> scp =  SetCoverAaron.scp(term2genebs,go,ontology);
 			Set<String> genesTest = new HashSet<>();
 			for(String t: scp) {
-				System.out.println("Rep? " + go.allStringtoInfoTerm.get(t).toName());
+//				System.out.println("Rep? " + go.allStringtoInfoTerm.get(t).toName());
 				genesTest.addAll(go.allStringtoInfoTerm.get(t).geneSet);
 			}
-			System.out.println(genesTest.size());
+//			System.out.println(genesTest.size());
 			finalResult.put("scp", scp);
 			finalResult.put("Reduce", Math.floor(scp.size()/termsInc.size()*100)/100);
 			
