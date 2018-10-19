@@ -1184,3 +1184,4 @@ java.lang.NullPointerException: null
 2018-Oct-19 14:47:00.010 DEBUG [workExecutor-1] g.s.g.a.s.GSAnServiceImpl - Computing Synthetic algorithm...
 2018-Oct-19 14:47:00.017 DEBUG [workExecutor-1] g.s.g.a.s.GSAnServiceImpl - Ending process n° 0d681114-d1e4-4a1c-9bc6-30d8dc478e27
 2018-Oct-19 14:47:05.486 DEBUG [http-nio-8282-exec-3] g.s.g.a.GSAnController - The email is not valide.
+2018-Oct-19 15:00:09.730 DEBUG [pool-1-thread-1] g.s.g.a.ScheduledTasks - Checking and Donwloading GO and GOA.
