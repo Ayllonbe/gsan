@@ -38,7 +38,6 @@ public class GSAnServiceImpl implements GSAnService {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Async("workExecutor")
 	public void runService(taskRepository tR, task t,List<String> query, String organism, boolean IEA,int inc,List<String> ontology,
@@ -50,53 +49,96 @@ public class GSAnServiceImpl implements GSAnService {
 			String goa_file = ChooseAnnotation.annotation(organism,IEA);
 			GlobalOntology go = graphSingleton.getGraph(prok);
 			log.debug("Charging Annotation file");
-//			Annotation GOA = this.getAnnotation();
-			/*
-			 * TEST
-			 */
-			File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
-//			File dogaf = new File("src/main/resources/static/integration/gene_hsa2doid.gaf");
 			Annotation GOA ;
-		List<List<String>> goaTable = new 	ArrayList<>();
-				List<List<String>> reacTable;
+		
 				try {
-					goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+goa_file);
-					reacTable = ReadFile.ReadAnnotation(reacf.getAbsolutePath());
-					goaTable.addAll(reacTable);
-//					List<List<String>> doiTable;
-//					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
-//					goaTable.addAll(doiTable);
+					List<List<String>> 	goaTable = getFile(goa_file);
 				GOA = new Annotation(goaTable, go, true);
-				
-//				for(String other : OTHER.annotation.keySet()) {
-//					
-//					if(GOA.annotation.containsKey(other)) {
-//					GOA.annotation.get(other).associations.putAll(OTHER.annotation.get(other).associations);
-//					}else{
-//						GOA.annotation.put(other, OTHER.annotation.get(other));
-//					}
-//						GOA.genes.addAll(OTHER.genes);
-//					
-//				}
-				
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-					GOA = null;
+					GOA=null;
 				}
-				
 					
-			/*
-			 * END
-			 */
-			
+	
 			
 			process.putAll(gsanService(query,GOA,go , inc, ontology, ssMethod,
 					simRepFilter, covering, geneSupport,  percentile, prok));
 		
 			
-			try {
+			finishing(tR,t, process);		
+		
+	}
+
+	@Override
+	public Map<String,Object> runService(List<String> query, String organism, boolean IEA,int inc,List<String> ontology,
+			String ssMethod, double simRepFilter, double covering,
+			int geneSupport, int percentile, boolean prok) {
+		try {
+			String goa_file = ChooseAnnotation.annotation(organism,IEA);
+			GlobalOntology go = graphSingleton.getGraph(prok);
+			Annotation GOA ;
+		
+				try {
+					List<List<String>> 	goaTable = getFile(goa_file);
+				GOA = new Annotation(goaTable, go, true);
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					GOA=null;
+				}
+						
+			Map<String,Object> process = gsanService(query,GOA,go, inc, ontology, ssMethod,
+					simRepFilter, covering, geneSupport,  percentile, prok);
+			
+			return process;
+		}
+		catch(Exception ie) {
+			log.error(""+ie);
+			ie.printStackTrace();
+			return null;
+		}
+	}
+	
+	@Override
+	@Async("workExecutor")
+	public void runService(taskRepository tR, task t,List<String> query, File goa_file, boolean IEA,int ic_inc,List<String> ontology,
+			String ssMethod, double simRepFilter, double covering,
+			int geneSupport,  int percentile, boolean prok) {
+			Map<String,Object> process = new HashMap<>();
+			
+			log.debug("Beging process n° " + t.getId());
+			GlobalOntology go = graphSingleton.getGraph(prok);
+			log.debug("Charging Annotation file");
+			Annotation GOA ;
+		
+				try {
+					List<List<String>> 	goaTable = getFile(goa_file);
+				GOA = new Annotation(goaTable, go, true);
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					GOA=null;
+				}
+					
+	
+			
+			process.putAll(gsanService(query,GOA,go , ic_inc, ontology, ssMethod,
+					simRepFilter, covering, geneSupport,  percentile, prok));
+		
+			
+			finishing(tR,t, process);	
+	}
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	private void finishing(taskRepository tR,task t, Map<String,Object> process) {
+		try {
 			JSONObject jo = new JSONObject();
 			jo.putAll(process);
 			PrintWriter pw = new PrintWriter("src/main/tmp/results/"+t.getId()+".json");
@@ -120,103 +162,20 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			
 			log.debug("Ending process n° " + t.getId());
-		
-		
+
 	}
 	
-	@Override
-	public Map<String,Object> runService(List<String> query, String organism, boolean IEA,int inc,List<String> ontology,
-			String ssMethod, double simRepFilter, double covering,
-			int geneSupport, int percentile, boolean prok) {
-		try {
-			String goa_file = ChooseAnnotation.annotation(organism,IEA);
-			GlobalOntology go = graphSingleton.getGraph(prok);
-//			Annotation GOA = this.getAnnotation();
-			/*
-			 * TEST
-			 */
-			File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
-//			File dogaf = new File("src/main/resources/static/integration/gene_hsa2doid.gaf");
-			Annotation GOA ;
-		List<List<String>> goaTable = new 	ArrayList<>();
-				List<List<String>> reacTable;
-				try {
-					goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+goa_file);
-					reacTable = ReadFile.ReadAnnotation(reacf.getAbsolutePath());
-					goaTable.addAll(reacTable);
-//					List<List<String>> doiTable;
-//					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
-//					goaTable.addAll(doiTable);
-				GOA = new Annotation(goaTable, go, true);
-//				System.out.println(GOA.annotation.keySet().size());
-//				for(String other : OTHER.annotation.keySet()) {
-//					
-//					if(GOA.annotation.containsKey(other)) {
-//					GOA.annotation.get(other).associations.putAll(OTHER.annotation.get(other).associations);
-//					}else{
-//						GOA.annotation.put(other, OTHER.annotation.get(other));
-//					}
-//						GOA.genes.addAll(OTHER.genes);
-//					
-//				}
-				
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					GOA=null;
-				}
-				
-					
-			/*
-			 * END
-			 */
-			
-			Map<String,Object> process = gsanService(query,GOA,go, inc, ontology, ssMethod,
-					simRepFilter, covering, geneSupport,  percentile, prok);
-			
-			return process;
-		}
-		catch(Exception ie) {
-			log.error(""+ie);
-			ie.printStackTrace();
-			return null;
-		}
+	private List<List<String>> getFile(String o) throws IOException{
+		File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
+		List<List<String>> goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+o);
+		 
+		goaTable.addAll(ReadFile.ReadAnnotation(reacf.getAbsolutePath()));
+		return goaTable;
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	@Async("workExecutor")
-	public void runService(taskRepository tR, task t,List<String> query, File goaf, boolean IEA,int ic_inc,List<String> ontology,
-			String ssMethod, double simRepFilter, double covering,
-			int geneSupport,  int percentile, boolean prok) {
-		try {
-			log.debug("Beging process n° " + t.getId());
-			GlobalOntology go = graphSingleton.getGraph(prok);
-			List<List<String>> goaTable;
-			log.debug("Charging Annotation file");
-			goaTable = ReadFile.ReadAnnotation(goaf.getAbsolutePath());
-			Annotation GOA = new Annotation(goaTable, go,IEA);
-			Map<String,Object> process = gsanService(query, GOA, go , ic_inc, ontology, ssMethod,
-					simRepFilter, covering, geneSupport,  percentile, prok);
-			JSONObject jo = new JSONObject();
-			jo.putAll(process);
-			PrintWriter pw = new PrintWriter("src/main/tmp/results/"+t.getId()+".json");
-			pw.print(jo.toJSONString());
-			pw.close();
-			boolean finish = (boolean)  process.get("boolean");
-			if(finish)
-				t.setfinish(true);
-			else
-				t.setError(true);
-			
-			tR.save(t);
-			log.debug("Ending process n° " + t.getId());
-		}
-		catch(Exception ie) {
-			log.error(""+ ie);
-			t.setError(true);
-		}
+	private List<List<String>> getFile(File o) throws IOException{
+		List<List<String>> goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+o.getAbsolutePath());
+		 
+		return goaTable;
 	}
 	
 	
