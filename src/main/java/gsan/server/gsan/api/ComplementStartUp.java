@@ -27,6 +27,7 @@ import gsan.server.singleton.graphSingleton;
 @Component
 public class ComplementStartUp  implements ApplicationListener<ApplicationReadyEvent>{
 	private static String GOOWL = "go.owl";
+	private static String path = "src/main/resources/static/ontology/";
 	
 	@Autowired
 	private IntegrationSourcesRepository integrationRepository;
@@ -47,7 +48,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 			e.printStackTrace();
 		}
 		 // Commenter pour l'instance, mais important
-		File goFile = new File(GOOWL);
+		File goFile = new File(path+GOOWL);
 		if(!goFile.exists()) {
 			FTPDownloader.DownloadGOOWL(GOOWL); // Commenter pour l'instance mais important
 		}
@@ -63,7 +64,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		
 		
 		
-		graphSingleton.initializeOrGet(GOOWL);
+		graphSingleton.initializeOrGet(path+GOOWL);
 		
 		//graphSingleton.getGraph(false);
 		
