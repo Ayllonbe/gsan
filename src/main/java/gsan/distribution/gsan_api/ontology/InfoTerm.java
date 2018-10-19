@@ -52,7 +52,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 //	List<String> hasPart;
 	public ArrayList<Double> ICs; // 0 nuno 1 zhou 
 
-	String[] alphaBetaMazandu = new String[2];
+	double[] alphaBetaMazandu = new double[2];
 	Set<String> proteinsgenome;
 	public String positiveR;
 	public String negativeR;

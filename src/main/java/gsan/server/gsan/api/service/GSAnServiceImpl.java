@@ -25,7 +25,6 @@ import gsan.distribution.gsan_api.annotation.Annotation;
 import gsan.distribution.gsan_api.annotation.ChooseAnnotation;
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
 import gsan.distribution.gsan_api.ontology.InfoTerm;
-import gsan.distribution.gsan_api.ontology.OntoInfo;
 import gsan.distribution.gsan_api.ontology.TransformDagToTree;
 import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.distribution.gsan_api.read_write.writeSimilarityMatrix;
@@ -53,41 +52,40 @@ public class GSAnServiceImpl implements GSAnService {
 			String goa_file = ChooseAnnotation.annotation(organism,IEA);
 			GlobalOntology go = graphSingleton.getGraph(prok);
 			log.debug("Charging Annotation file");
-			Annotation GOA = this.getAnnotation("src/main/resources/static/AssociationTAB/"+goa_file);
-			
+//			Annotation GOA = this.getAnnotation();
 			/*
 			 * TEST
 			 */
 			File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
 			File dogaf = new File("src/main/resources/static/integration/gene_hsa2doid.gaf");
-//	 		System.out.println(prok);
-			
-			
+			Annotation GOA ;
 		List<List<String>> goaTable = new 	ArrayList<>();
 				List<List<String>> reacTable;
 				try {
+					goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+goa_file);
 					reacTable = ReadFile.ReadAnnotation(reacf.getAbsolutePath());
 					goaTable.addAll(reacTable);
 					List<List<String>> doiTable;
-					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
-					goaTable.addAll(doiTable);
-				Annotation OTHER = new Annotation(goaTable, go, true);
+//					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
+//					goaTable.addAll(doiTable);
+				GOA = new Annotation(goaTable, go, true);
 				
-				for(String other : OTHER.annotation.keySet()) {
-					
-					if(GOA.annotation.containsKey(other)) {
-					GOA.annotation.get(other).associations.putAll(OTHER.annotation.get(other).associations);
-					}else{
-						GOA.annotation.put(other, OTHER.annotation.get(other));
-					}
-						GOA.genes.addAll(OTHER.genes);
-					
-				}
+//				for(String other : OTHER.annotation.keySet()) {
+//					
+//					if(GOA.annotation.containsKey(other)) {
+//					GOA.annotation.get(other).associations.putAll(OTHER.annotation.get(other).associations);
+//					}else{
+//						GOA.annotation.put(other, OTHER.annotation.get(other));
+//					}
+//						GOA.genes.addAll(OTHER.genes);
+//					
+//				}
 				
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					GOA = null;
 				}
 				
 					
@@ -135,38 +133,40 @@ public class GSAnServiceImpl implements GSAnService {
 		try {
 			String goa_file = ChooseAnnotation.annotation(organism,IEA);
 			GlobalOntology go = graphSingleton.getGraph(prok);
-			Annotation GOA = this.getAnnotation("src/main/resources/static/AssociationTAB/"+goa_file);
+//			Annotation GOA = this.getAnnotation();
 			/*
 			 * TEST
 			 */
 			File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
 			File dogaf = new File("src/main/resources/static/integration/gene_hsa2doid.gaf");
-	 		
+			Annotation GOA ;
 		List<List<String>> goaTable = new 	ArrayList<>();
 				List<List<String>> reacTable;
 				try {
+					goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+goa_file);
 					reacTable = ReadFile.ReadAnnotation(reacf.getAbsolutePath());
 					goaTable.addAll(reacTable);
 					List<List<String>> doiTable;
-					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
-					goaTable.addAll(doiTable);
-				Annotation OTHER = new Annotation(goaTable, go, true);
-				
-				for(String other : OTHER.annotation.keySet()) {
-					
-					if(GOA.annotation.containsKey(other)) {
-					GOA.annotation.get(other).associations.putAll(OTHER.annotation.get(other).associations);
-					}else{
-						GOA.annotation.put(other, OTHER.annotation.get(other));
-					}
-						GOA.genes.addAll(OTHER.genes);
-					
-				}
+//					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
+//					goaTable.addAll(doiTable);
+				GOA = new Annotation(goaTable, go, true);
+				System.out.println(GOA.annotation.keySet().size());
+//				for(String other : OTHER.annotation.keySet()) {
+//					
+//					if(GOA.annotation.containsKey(other)) {
+//					GOA.annotation.get(other).associations.putAll(OTHER.annotation.get(other).associations);
+//					}else{
+//						GOA.annotation.put(other, OTHER.annotation.get(other));
+//					}
+//						GOA.genes.addAll(OTHER.genes);
+//					
+//				}
 				
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					GOA=null;
 				}
 				
 					
@@ -252,12 +252,12 @@ public class GSAnServiceImpl implements GSAnService {
 			for(String subont : go.subontology.keySet()) {
 				//System.out.println(subont);
 				Mappercentile.put(subont, go.getPercentile(percentile, author, subont));
-			}
+				System.out.println("Percentile : "+go.getPercentile(percentile, author, subont));
+			} 
 			
 			log.debug("Reducing annotation...");
 			Annotation  GOAred = Annotation.redondancyReduction(GOA,go);
 			Annotation GOAincom = Annotation.icIncompleteReduction(GOAred,go,ic_inc, Mappercentile);
-
 
 		Set<String> termsInc = new HashSet<String>();
 		//System.out.println(ontology);
@@ -469,9 +469,12 @@ public class GSAnServiceImpl implements GSAnService {
 			Map<String, Set<String>> mapTerm2genes = new HashMap<>();
 			
 			Set<String> allterms = new HashSet<>(hierarchy.keySet());
+			
 			for(String t : allterms) {
 				mapTerm2genes.put(t, new HashSet<>(go.allStringtoInfoTerm.get(t).geneSet));
+				
 			}
+			
 			
 			for(int i = 0; i<allRepresentatives.size();i++) {
 				InfoTerm ti = go.allStringtoInfoTerm.get(allRepresentatives.get(i));
@@ -565,7 +568,7 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			
 			Map<String,Map<String, Object>> mapInfo = new HashMap<>();
-			
+			System.out.println("All terms " + allterms.size());
 			for(String t : allterms) {
 				InfoTerm it = go.allStringtoInfoTerm.get(t);
 				Map<String, Object> mapTerm = new HashMap<>();
@@ -629,7 +632,12 @@ public class GSAnServiceImpl implements GSAnService {
 			finalResult.put("terms", mapInfo);
 			log.debug("Computing Synthetic algorithm...");
 			List<String> scp =  SetCoverAaron.scp(term2genebs,go,ontology);
-			
+			Set<String> genesTest = new HashSet<>();
+			for(String t: scp) {
+				System.out.println("Rep? " + go.allStringtoInfoTerm.get(t).toName());
+				genesTest.addAll(go.allStringtoInfoTerm.get(t).geneSet);
+			}
+			System.out.println(genesTest.size());
 			finalResult.put("scp", scp);
 			finalResult.put("Reduce", Math.floor(scp.size()/termsInc.size()*100)/100);
 			

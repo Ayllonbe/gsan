@@ -18,6 +18,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.math3.analysis.function.Log10;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -1294,20 +1295,18 @@ public class GlobalOntology {
 
 	public void goUniverseIC() {
 		
-		 NumberFormat formatter = new DecimalFormat();
-		 formatter = new DecimalFormat("0.###########E0");
 
 		for(Entry<String,OntoInfo> sub : this.subontology.entrySet()) {
 			OntoInfo oi = sub.getValue();
 			this.allStringtoInfoTerm.get(sub.getKey()).ICs.add(0.);
-			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[0] = "1";
-			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[1] = "0";
+			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[0] = 1.;
+			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[1] = 0.;
 			Set<Double> setMax = new HashSet<>();
 		//	Set<Double> probMax = new HashSet<>();
 			for(String lt : oi.getLeavesISA()) {
 				
-				String[] dd = this.goUniverseIC(this.allStringtoInfoTerm.get(lt),formatter);
-				setMax.add(-Math.log(Double.parseDouble(dd[0]))-Double.parseDouble(dd[1])*Math.log(10));
+				double[] dd = this.goUniverseIC(this.allStringtoInfoTerm.get(lt));
+				setMax.add(-Math.log(dd[0])-dd[1]*Math.log(10));
 				//System.out.println(-Math.log(Double.parseDouble(dd[0]))-Double.parseDouble(dd[1])*Math.log(10));
 				
 				//			if(dd == 0) {
@@ -1327,39 +1326,75 @@ public class GlobalOntology {
 
 
 	}
-	public String[] goUniverseIC(InfoTerm it, NumberFormat nf) {
+	public double[] goUniverseIC(InfoTerm it) {
 
-		Double alpha = 1.;
-		Double beta = 0.;
+		double alpha = 1.;
+		double beta = 0.;
 		for(String par : it.is_a.parents) {
 
 			
 			if(!par.equals(it.top)) {
-				String[] pereAlphaBeta = goUniverseIC(this.allStringtoInfoTerm.get(par), nf);
-				double division = Double.parseDouble(pereAlphaBeta[0])/(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
-				String[] alphaBeta = nf.format(division).toString().split("E");
-				alpha = alpha* Double.parseDouble(alphaBeta[0]);
-				beta = beta + Double.parseDouble(pereAlphaBeta[1]) + Double.parseDouble(alphaBeta[1]);
-				alphaBeta[1] = beta.toString();
+				double[] pereAlphaBeta = goUniverseIC(this.allStringtoInfoTerm.get(par));
+				double division = pereAlphaBeta[0]/(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
+				double b = Math.floor(Math.log10(division));
+				double a = division/Math.pow(10,b); 
+				
+				alpha = alpha* a;
+				beta = beta + pereAlphaBeta[1] + b;
+				
 				
 				}
 			else {
 				double division = 1./(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
-				String[] alphaBeta = nf.format(division).toString().split("E");
-				alpha = alpha* Double.parseDouble(alphaBeta[0]);
-				beta = beta + Double.parseDouble(alphaBeta[1]);
+				double b = Math.floor(Math.log10(division));
+				double a = division/Math.pow(10,b); 
+				alpha = alpha* a;
+				beta = beta + b;
 			}
 		}
-		it.alphaBetaMazandu[0] = alpha.toString();
-		it.alphaBetaMazandu[1] = beta.toString();
+		it.alphaBetaMazandu[0] = alpha;
+		it.alphaBetaMazandu[1] = beta;
 	
 		if(it.ICs.size()==3) {
-			it.ICs.add(-Math.log(Double.parseDouble(alpha.toString()))-Double.parseDouble(beta.toString())*Math.log(10));
+			it.ICs.add(-Math.log(alpha)-beta*Math.log(10));
 		}
 		//System.out.println(it.ICs.size());
 		//System.out.println("\t"+it.id + " " +probX);
 		return it.alphaBetaMazandu;
 	}
+//	public String[] goUniverseIC(InfoTerm it, NumberFormat nf) {
+//
+//		Double alpha = 1.;
+//		Double beta = 0.;
+//		for(String par : it.is_a.parents) {
+//
+//			
+//			if(!par.equals(it.top)) {
+//				String[] pereAlphaBeta = goUniverseIC(this.allStringtoInfoTerm.get(par), nf);
+//				double division = Double.parseDouble(pereAlphaBeta[0])/(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
+//				String[] alphaBeta = nf.format(division).toString().split("E");
+//				alpha = alpha* Double.parseDouble(alphaBeta[0]);
+//				beta = beta + Double.parseDouble(pereAlphaBeta[1]) + Double.parseDouble(alphaBeta[1]);
+//				
+//				
+//				}
+//			else {
+//				double division = 1./(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
+//				String[] alphaBeta = nf.format(division).toString().split("E");
+//				alpha = alpha* Double.parseDouble(alphaBeta[0]);
+//				beta = beta + Double.parseDouble(alphaBeta[1]);
+//			}
+//		}
+//		it.alphaBetaMazandu[0] = alpha.toString();
+//		it.alphaBetaMazandu[1] = beta.toString();
+//	
+//		if(it.ICs.size()==3) {
+//			it.ICs.add(-Math.log(Double.parseDouble(alpha.toString()))-Double.parseDouble(beta.toString())*Math.log(10));
+//		}
+//		//System.out.println(it.ICs.size());
+//		//System.out.println("\t"+it.id + " " +probX);
+//		return it.alphaBetaMazandu;
+//	}
 
 //	public BigDecimal goUniverseICTest(InfoTerm it) {
 //

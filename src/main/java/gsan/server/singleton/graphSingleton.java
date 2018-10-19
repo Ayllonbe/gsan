@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
+import gsan.distribution.gsan_api.ontology.InfoTerm;
 import gsan.distribution.gsan_api.ontology.integration.GlobalGraph;
 import gsan.server.gsan.api.FTPDownloader;
 import gsan.server.gsan.api.service.jpa.DownloadInformationRepository;
@@ -30,7 +31,7 @@ public static void initializeOrGet(String GOOWL) {
 	
 		File owlf = new File(GOOWL);
 		
-		if(owlf.exists()) {
+	 	if(owlf.exists()) {
 			System.out.println(owlf.getAbsolutePath());
 		}else {
 			System.out.println("The file don't exist");

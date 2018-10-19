@@ -24,7 +24,7 @@ public class Annotation implements Serializable {
 
 	public Map<String,AnnotationProperty> annotation;
 	//String organism = "N/A";
-	Set<String> genes;
+	public Set<String> genes;
 	//public Map<String,Double> percentile;
 	//public Map<String,Map<Integer,Double>> percentileOnt;
 
