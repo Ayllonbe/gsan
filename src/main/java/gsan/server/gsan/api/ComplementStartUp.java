@@ -26,7 +26,7 @@ import gsan.server.singleton.graphSingleton;
 
 @Component
 public class ComplementStartUp  implements ApplicationListener<ApplicationReadyEvent>{
-	private static String GOOWL = "src/main/resources/static/ontology/go.owl";
+	private static String GOOWL = "go.owl";
 	
 	@Autowired
 	private IntegrationSourcesRepository integrationRepository;
