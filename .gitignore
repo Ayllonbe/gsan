@@ -9,5 +9,6 @@ target
 src/main/resources/application.properties
 src/main/resources/static/ontology/*
 src/main/resources/static/AnnotationTAB/*
+src/main/resources/static/integration/*
 .settings
 bin
