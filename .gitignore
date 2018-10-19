@@ -8,3 +8,6 @@ requeriments.txt
 target
 src/main/resources/application2.properties
 src/main/resources/static/ontology/*
+src/main/resources/static/AssociationTAB/*
+src/main/resources/static/integration/*
+src/main/tmp/*
