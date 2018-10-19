@@ -3,10 +3,7 @@ package gsan.server.singleton;
 import java.io.File;
 
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
-
-import gsan.distribution.gsan_api.ontology.OntoInfo;
 import gsan.distribution.gsan_api.ontology.integration.GlobalGraph;
-
 
 public class graphSingleton {
 	
