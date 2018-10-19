@@ -26,7 +26,7 @@ import gsan.server.singleton.graphSingleton;
 
 @Component
 public class ComplementStartUp  implements ApplicationListener<ApplicationReadyEvent>{
-	private static String GOOWL = "src/main/resources/static/ontology/go.owl";
+	private static String GOOWL = "go.owl";
 	
 	@Autowired
 	private IntegrationSourcesRepository integrationRepository;
@@ -36,19 +36,15 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
 		// debug
 		//System.out.println("Removing the json...");
-		File dir = new File("src/main/tmp/results/");
-		Path path = Paths.get("src/main/tmp/results/");
-		if(dir.exists()) {
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.json")) {
+		Path dir = Paths.get("src/main/tmp/results/");
+
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.json")) {
 		    for (Path file : stream) {
 		    	Files.delete(file);
 		    }
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		}else {
-			dir.mkdirs();
 		}
 		 // Commenter pour l'instance, mais important
 		File goFile = new File(GOOWL);
