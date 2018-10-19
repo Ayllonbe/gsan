@@ -1,4 +1,5 @@
-gsanlogfile.log.*
+gsanlogfile*
+.gitignore.
 gsanServer.png
 Dockerfile
 mvnw
