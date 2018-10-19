@@ -3,6 +3,7 @@ package gsan.server.singleton;
 import java.io.File;
 
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
+import gsan.distribution.gsan_api.ontology.OntoInfo;
 import gsan.distribution.gsan_api.ontology.integration.GlobalGraph;
 
 public class graphSingleton {
@@ -56,6 +57,13 @@ public static void initializeOrGet(String GOOWL) {
 		}
 		go.subontology.putAll(DO.subontology);
 		go.sourceSet.addAll(DO.sourceSet);
+		
+//		for(String sub : go.subontology.keySet()) {
+//			OntoInfo oi = go.subontology.get(sub);
+//			
+//			System.out.println(go.allStringtoInfoTerm.get(sub).toName() +" " +oi.numberOfNodes() +" "+oi.numberOfEdges()+" "+oi.maxDepth());
+//			
+//		}
 		/*
 		 * END Test
 		 */

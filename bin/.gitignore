@@ -8,3 +8,4 @@ requeriments.txt
 target
 src/main/resources/application2.properties
 src/main/resources/static/ontology/*
+/src/

@@ -136,34 +136,50 @@ public class FTPDownloader {
 
 		String pathGO = "go/gene-associations/";
 		String pathEBI = "pub/databases/GO/goa/";
-	
+
 		try {
 			GlobalOntology go = graphSingleton.getGraph(false);
 			for(String file : listFiles) {
 				//System.out.println(file);
 				if(file.contains("gene")) {
 					String annotationFile = "src/main/resources/static/AssociationTAB/"+file.replace(".gz", "");
-		
+
 					FTPDownloader ftpDownloader =
 							new FTPDownloader("ftp.geneontology.org", "anonymous", "");
 					long ftpLong = ftpDownloader.viewFile(pathGO+file,file);
 					if(thereIsModif(annotationFile, ftpLong)) {
-					serialize(fromFTP(file,pathGO,go,ftpDownloader,true,"\t","!"),annotationFile,go,ftpLong);
+						List<List<String>> gt = new ArrayList<>();
+						gt.addAll(fromFTP(file,pathGO,go,ftpDownloader,true,"\t","!"));
+
+						StringBuffer sb = new StringBuffer();
+						for(List<String> line : gt) {
+
+							for(String c : line) {
+								sb.append(c+"\t");
+							}
+							sb.deleteCharAt(sb.length()-1);
+							sb.append("\n");
+						}
+						PrintWriter pw = new PrintWriter(annotationFile);
+						pw.print(sb);
+						pw.close();
+						File f = new File(annotationFile);
+						f.setLastModified(ftpLong);
 					}
 					else {
 						System.out.println("Are there some modification in the file?\n- " + false);
 					}
 					ftpDownloader.disconnect();
-				
+
 				}else {
 					String gaf = "goa_"+file.toLowerCase()+".gaf.gz";
 					String isogaf = "goa_"+file.toLowerCase()+"_isoform.gaf.gz";
 					String annotationFile = "src/main/resources/static/AssociationTAB/"+gaf.replace(".gz", "");
-					
+
 					FTPDownloader ftpDownloader =
 							new FTPDownloader("ftp.ebi.ac.uk", "anonymous", "");
 					//System.out.println(pathEBI+file+"/"+gaf);
-					
+
 					long ftpLong = ftpDownloader.viewFile(pathEBI+file+"/"+gaf,gaf);
 					if(thereIsModif(annotationFile, ftpLong)) {
 						String path = pathEBI+file+"/";
@@ -171,130 +187,110 @@ public class FTPDownloader {
 						gt.addAll(fromFTP(gaf,path,go,ftpDownloader,true,"\t","!"));
 						ftpDownloader =
 								new FTPDownloader("ftp.ebi.ac.uk", "anonymous", "");
-//						
+						//						
 						gt.addAll(fromFTP(isogaf,path,go,ftpDownloader,true,"\t","!"));
-						serialize(gt,annotationFile,go,ftpLong);
-						
+
+						StringBuffer sb = new StringBuffer();
+						for(List<String> line : gt) {
+
+							for(String c : line) {
+								sb.append(c+"\t");
+							}
+							sb.deleteCharAt(sb.length()-1);
+							sb.append("\n");
+						}
+						PrintWriter pw = new PrintWriter(annotationFile);
+						pw.print(sb);
+						pw.close();
+						File f = new File(annotationFile);
+						f.setLastModified(ftpLong);
+
 					}else {
 						System.out.println("Are there some modification in the file?\n- " + false);
 					}
-					
+
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static boolean thereIsModif(String annotationFile, long ftpLong) {
-		File created_file = new File(annotationFile+"_IEA.ser");
+		File created_file = new File(annotationFile);
 		long localLong = created_file.lastModified() ;
-		
+
 		Timestamp ts_ftp = new Timestamp(ftpLong);
 		Timestamp ts_local = new Timestamp(localLong);
-		
+
 		return ts_ftp.after(ts_local);
-		
+
 	}
 	public static List<List<String>> fromFTP(String file, String pathGO, GlobalOntology go,
 			FTPDownloader ftpDownloader, boolean compress,String delim,String comment) throws Exception {
 
-		
-		
+
+
 		//	System.out.println(pathGO+file);
-			System.out.println("Are there some modification in the file?\n- " + true);
-			InputStream is = ftpDownloader.downloadFile(pathGO+file);
+		System.out.println("Are there some modification in the file?\n- " + true);
+		InputStream is = ftpDownloader.downloadFile(pathGO+file);
 
-			System.out.println("FTP File downloaded successfully");
-
-
+		System.out.println("FTP File downloaded successfully");
 
 
-			System.out.println("Reading GOA files");
-			List<List<String>> goaTable = new ArrayList<>();
-			try {
-				Reader decoder = Iscompressed(is, compress);
-				
-				BufferedReader br = new BufferedReader(decoder);
-				String line;
-				
-				while ((line = br.readLine()) != null) {
-					if(!line.contains(comment)) {
+
+
+		System.out.println("Reading GOA files");
+		List<List<String>> goaTable = new ArrayList<>();
+		try {
+			Reader decoder = Iscompressed(is, compress);
+
+			BufferedReader br = new BufferedReader(decoder);
+			String line;
+
+			while ((line = br.readLine()) != null) {
+				if(!line.contains(comment)) {
 					String[] array = line.split(delim);
 					List<String> col = new ArrayList<>();
 					for(String a : array) col.add(a);
-					
-					goaTable.add(col);
-					}else {
 
-						System.out.println(line);
-					}
-					
+					goaTable.add(col);
+				}else {
+
+					System.out.println(line);
 				}
-				
-				
-				
+
 			}
-			catch(IOException ex) {
-				// there was some connection problem, or the file did not exist on the server,
-				// or your URL was not in the right format.
-				// think about what to do now, and put it here.
-				ex.printStackTrace(); // for now, simply output it.
-				
-			}
-			ftpDownloader.disconnect();
-			return goaTable;
-		
+
+
+
+		}
+		catch(IOException ex) {
+			// there was some connection problem, or the file did not exist on the server,
+			// or your URL was not in the right format.
+			// think about what to do now, and put it here.
+			ex.printStackTrace(); // for now, simply output it.
+
+		}
+		ftpDownloader.disconnect();
+		return goaTable;
+
 	}
-	
+
 	public static Reader Iscompressed(InputStream is, boolean c) throws IOException{
 		if(c) {
 			GZIPInputStream in = new GZIPInputStream(is);
 
 			return new InputStreamReader(in);
-			}else {
-				return new InputStreamReader(is);
-			}
-		
+		}else {
+			return new InputStreamReader(is);
+		}
+
 	}
 
-	
-	public static void serialize(List<List<String>> goaTable, String annotationFile, GlobalOntology go, long ftpLong) throws IOException, ClassNotFoundException {
-		
-			Annotation GOAIEA = new Annotation(goaTable, go, true);
-			
-			FileOutputStream fileOut = new FileOutputStream(annotationFile+"_IEA.ser");
-//			         out.writeObject(GOA);
-//			         out.close();
-			         FSTObjectOutput outFTS = new FSTObjectOutput(fileOut);
-			         
-			         outFTS.writeObject( GOAIEA );
-			         outFTS.close(); // required !
-			         fileOut.close();
-		
-	         
-	     	Annotation GOANOIEA = new Annotation(goaTable, go, false);
-	         fileOut =
-			         new FileOutputStream(annotationFile+"_NOIEA.ser");
-//			         out.writeObject(GOA);
-//			         out.close();
-			         outFTS = new FSTObjectOutput(fileOut);
-			         outFTS.writeObject( GOANOIEA, Annotation.class );
-			         outFTS.close(); // required !
-			         fileOut.close();
-	      
-		
 
-		File created_file = new File(annotationFile+"_IEA.ser");
-		created_file.setLastModified(ftpLong);
-		created_file = new File(annotationFile+"_NOIEA.ser");
-		created_file.setLastModified(ftpLong);
 
-		// read from your scanner
-	}
-	
-	
-	
+
 	public static boolean DownloadGOOWL(String file) {
 		File srcPath = new File("src/main/resources/static/ontology/");
 		if(!srcPath.exists()) {
@@ -357,7 +353,7 @@ public class FTPDownloader {
 				return true;
 			}else {
 				System.out.println("Are there some modification in the file?\n- " + false);
-		return false;
+				return false;
 			}
 
 		} catch (Exception e) {
@@ -365,8 +361,8 @@ public class FTPDownloader {
 			return false;
 		}
 	}
-	
-public static boolean DownloadOntology(IntegrationSource is) {
+
+	public static boolean DownloadOntology(IntegrationSource is) {
 		File srcPath = new File("src/main/resources/static/ontology/");
 		if(!srcPath.exists()) {
 			srcPath.mkdirs();
@@ -379,7 +375,7 @@ public static boolean DownloadOntology(IntegrationSource is) {
 			case "ftp":
 				System.out.println(di.auth+" "+ di.passw);
 				ftpDownloader=
-				new FTPDownloader(di.uri, di.auth, di.passw);
+						new FTPDownloader(di.uri, di.auth, di.passw);
 				break;
 
 			case "DL":
@@ -391,25 +387,25 @@ public static boolean DownloadOntology(IntegrationSource is) {
 				new FTPDownloader(di.uri, di.auth, di.passw);
 				break;
 			}
-			
+
 			String annotationFile;
 			if(is.file_name2 =="") {
-			annotationFile = "src/main/resources/static/ontology/"+is.file_name1;
-			 return GetOntologyFTP(ftpDownloader, annotationFile, is, di);
-		}else {
-			annotationFile = "src/main/resources/static/ontology/"+is.file_name1;
-			return GetOntologyFTP(ftpDownloader, annotationFile, is, di);
-		}
-			} catch (Exception e) {
+				annotationFile = "src/main/resources/static/ontology/"+is.file_name1;
+				return GetOntologyFTP(ftpDownloader, annotationFile, is, di);
+			}else {
+				annotationFile = "src/main/resources/static/ontology/"+is.file_name1;
+				return GetOntologyFTP(ftpDownloader, annotationFile, is, di);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-			
+
 	}
 	public static boolean GetOntologyFTP(FTPDownloader ftpDownloader, String annotationFile,IntegrationSource is, DownloadInformation di) {
 		File created_file = new File(annotationFile);
 		long localLong = created_file.lastModified() ;
-		
+
 		long ftpLong = ftpDownloader.viewFile(di.pathway+is.file_name1,is.file_name1);
 		Timestamp ts_ftp = new Timestamp(ftpLong);
 		Timestamp ts_local = new Timestamp(localLong);
@@ -455,7 +451,7 @@ public static boolean DownloadOntology(IntegrationSource is) {
 				ftpDownloader.disconnect();
 				return false;
 			}
-			
+
 		}else {
 			System.out.println("Are there some modification in the file?\n- " + false);
 			ftpDownloader.disconnect();

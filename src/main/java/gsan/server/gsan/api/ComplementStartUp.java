@@ -50,9 +50,9 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		}
 		 // Commenter pour l'instance, mais important
 		File goFile = new File(GOOWL);
-//		if(!goFile.exists()) {
-//			FTPDownloader.DownloadGOOWL(GOOWL); // Commenter pour l'instance mais important
-//		}
+		if(!goFile.exists()) {
+			FTPDownloader.DownloadGOOWL(GOOWL); // Commenter pour l'instance mais important
+		}
 //		
 //		try {
 //			initSourcesDB();
@@ -70,7 +70,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		//graphSingleton.getGraph(false);
 		
 //		System.out.println("Downloading GOA!");
-//		FTPDownloader.DownloadGOA();
+		FTPDownloader.DownloadGOA();
 		
 		System.out.println("Ready to use!");
 		
