@@ -188,7 +188,7 @@ public class Annotation implements Serializable {
 					for(int i = 0; i<termOnt.size();i ++) {
 						InfoTerm t1 = go.allStringtoInfoTerm.get(termOnt.get(i));
 						//log.debug(t1.top +" " +t1.ICs.get(ic) + " " +ic);
-						if(t1.ICs.get(ic)<percentile.get(t1.top)) {
+						if(t1.ICs.get(ic)<percentile.get(t1.ontology)) {
 							//					if((t1.ICs.get(ic)/go.top2MaxIC.get(t1.top).get(ic))<goa.percentileOnt.get(t1.top)) {
 							termOnt.remove(i);
 							i--;

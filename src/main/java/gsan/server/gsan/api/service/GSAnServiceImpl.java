@@ -1,6 +1,5 @@
 package gsan.server.gsan.api.service;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.json.simple.JSONObject;
-import org.nustaq.serialization.FSTObjectInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -57,7 +55,7 @@ public class GSAnServiceImpl implements GSAnService {
 			 * TEST
 			 */
 			File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
-			File dogaf = new File("src/main/resources/static/integration/gene_hsa2doid.gaf");
+//			File dogaf = new File("src/main/resources/static/integration/gene_hsa2doid.gaf");
 			Annotation GOA ;
 		List<List<String>> goaTable = new 	ArrayList<>();
 				List<List<String>> reacTable;
@@ -65,7 +63,7 @@ public class GSAnServiceImpl implements GSAnService {
 					goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+goa_file);
 					reacTable = ReadFile.ReadAnnotation(reacf.getAbsolutePath());
 					goaTable.addAll(reacTable);
-					List<List<String>> doiTable;
+//					List<List<String>> doiTable;
 //					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
 //					goaTable.addAll(doiTable);
 				GOA = new Annotation(goaTable, go, true);
@@ -138,7 +136,7 @@ public class GSAnServiceImpl implements GSAnService {
 			 * TEST
 			 */
 			File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
-			File dogaf = new File("src/main/resources/static/integration/gene_hsa2doid.gaf");
+//			File dogaf = new File("src/main/resources/static/integration/gene_hsa2doid.gaf");
 			Annotation GOA ;
 		List<List<String>> goaTable = new 	ArrayList<>();
 				List<List<String>> reacTable;
@@ -146,7 +144,7 @@ public class GSAnServiceImpl implements GSAnService {
 					goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+goa_file);
 					reacTable = ReadFile.ReadAnnotation(reacf.getAbsolutePath());
 					goaTable.addAll(reacTable);
-					List<List<String>> doiTable;
+//					List<List<String>> doiTable;
 //					doiTable = ReadFile.ReadAnnotation(dogaf.getAbsolutePath());
 //					goaTable.addAll(doiTable);
 				GOA = new Annotation(goaTable, go, true);
@@ -249,8 +247,8 @@ public class GSAnServiceImpl implements GSAnService {
 			go.addAnnotationICs();
 			go.AggregateIC();
 			log.debug("Computing Percentiles...");	
-			for(String subont : go.subontology.keySet()) {
-				//System.out.println(subont);
+			for(String subont : go.sourceSet) {
+				System.out.println(subont);
 				Mappercentile.put(subont, go.getPercentile(percentile, author, subont));
 				System.out.println("Percentile : "+go.getPercentile(percentile, author, subont));
 			} 
@@ -293,27 +291,27 @@ public class GSAnServiceImpl implements GSAnService {
 	}
 	
 	
-	private Annotation getAnnotation(String goa) {
-		FileInputStream fileIn;
-		FSTObjectInput in;
-		try {
-			fileIn = new FileInputStream(goa);
-			in = new FSTObjectInput(fileIn);
-	         // required !
-	        Annotation GOA = (Annotation) in.readObject();
-	        in.close();
-	        fileIn.close();
-	        return GOA;
-		} catch (IOException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-
-        
-        
-       
-	}
+//	private Annotation getAnnotation(String goa) {
+//		FileInputStream fileIn;
+//		FSTObjectInput in;
+//		try {
+//			fileIn = new FileInputStream(goa);
+//			in = new FSTObjectInput(fileIn);
+//	         // required !
+//	        Annotation GOA = (Annotation) in.readObject();
+//	        in.close();
+//	        fileIn.close();
+//	        return GOA;
+//		} catch (IOException | ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return null;
+//		}
+//
+//        
+//        
+//       
+//	}
 	
 	private String ICauthor(int ic) {
 		String a = new String();

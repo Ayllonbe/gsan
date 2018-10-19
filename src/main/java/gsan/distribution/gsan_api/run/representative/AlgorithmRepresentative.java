@@ -149,14 +149,14 @@ public class AlgorithmRepresentative {
 							Set<String> retGen = new HashSet<>(cIT.geneSet);
 							retGen.retainAll(gen);
 
-							if(cIT.ICs.get(ic_inc)>percentile.get(cIT.top)&&retGen.size()>compare) {
+							if(cIT.ICs.get(ic_inc)>percentile.get(cIT.ontology)&&retGen.size()>compare) {
 								cl.representatives.add(cIT);
 								genesObserve.addAll(cIT.geneSet);
 								clusterList.add(cl);
 							}
 						}
 					}else {
-						if(it.ICs.get(ic_inc)>percentile.get(it.top)&&gen.size()>compare) {
+						if(it.ICs.get(ic_inc)>percentile.get(it.ontology)&&gen.size()>compare) {
 //							System.out.println("Cluster "+it.toName()+" "+it.ICs.get(ic_inc) +" "+it.geneSet);
 							cl.representatives.add(it);
 							genesObserve.addAll(it.geneSet);
