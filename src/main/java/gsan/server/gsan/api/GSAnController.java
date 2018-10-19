@@ -386,7 +386,7 @@ public class GSAnController {
 			try {
 				StringWriter writer = new StringWriter();
 				IOUtils.copy(file.getInputStream(), writer, StandardCharsets.UTF_8);
-				String theString = writer.toString();
+				String theString = writer.toString().toLowerCase();
 				String[] sa = theString.replaceAll("\"", "").replaceAll("\n", "").split(",");
 				for(String s :sa) {
 					query.add(s);
@@ -404,10 +404,11 @@ public class GSAnController {
 			List<String> rep = new ArrayList<>((Collection<String>)map.get("representatives"));
 			List<String> scp = new ArrayList<>((Collection<String>)map.get("scp"));
 			List<String> genes = new ArrayList<>((Collection<String>)map.get("GeneSet"));
+			List<String> anngenes = new ArrayList<>((Collection<String>)map.get("AnnotatedGeneSet"));
 			Map<String,Object> terms = (HashMap<String,Object>) map.get("terms");
 			
 			StringBuffer sb = new StringBuffer();
-			sb.append("Id,Name,Onto,IC,QueryNumber,CoverNumber,Synthetic,Genes\n");
+			sb.append("Id,Name,Onto,IC,QueryNumber,AnnotationQueryNumber,CoverNumber,Synthetic,Genes\n");
 					
 			for(String r : rep) {
 				//System.out.println(terms.get(r));
@@ -416,12 +417,14 @@ public class GSAnController {
 				sb.append((String)((Map<String,Object>) terms.get(r)).get("onto")+",");
 				sb.append((Double) ((Map<String,Object>) terms.get(r)).get("IC")+",");
 				sb.append(genes.size()+",");
+				sb.append(anngenes.size()+",");
 				sb.append(((List<String>)((Map<String,Object>) terms.get(r)).get("geneSet")).size()+",");
 				sb.append(scp.contains(r)+",");
 				StringBuffer sb_genes = new StringBuffer();
 				for(String g : (List<String>)((Map<String,Object>) terms.get(r)).get("geneSet") ) {
 				sb_genes.append(g+";");	
 				}
+				System.out.println(sb_genes);
 				sb_genes.deleteCharAt(sb_genes.length()-1);
 				sb.append(sb_genes+"\n");
 				

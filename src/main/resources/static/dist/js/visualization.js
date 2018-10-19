@@ -13,13 +13,21 @@ scp.sort(function(a,b){
 	return dic[a].IC - dic[b].IC
 });
 var recoverGenes = new Set();
-var scpDic = [];
-scp.forEach(function(x){
-scpDic.push(dic[x]);
+
+representative.forEach(function(x){
 dic[x].geneSet.forEach(function(g){
   recoverGenes.add(g);
 });
+})
+
+var scpDic = [];
+scp.forEach(function(x){
+scpDic.push(dic[x]);
+
 });
+
+
+console.log("GeneSet SCP " + recoverGenes.size);
 gauge(gs2,"#gs2");
 gauge(recoverGenes.size/genes.length,"#recoverGenes");
 //gauge(reduceterm,"#reduce");

@@ -42,6 +42,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
     public Edges[] adjacencies;
     public InfoTerm next;
     public String top;
+    public final String ontology;
 	public String name= new String();
 	public Link is_a;
 	public Link part_of;
@@ -52,7 +53,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 //	List<String> hasPart;
 	public ArrayList<Double> ICs; // 0 nuno 1 zhou 
 
-	String[] alphaBetaMazandu = new String[2];
+	double[] alphaBetaMazandu = new double[2];
 	Set<String> proteinsgenome;
 	public String positiveR;
 	public String negativeR;
@@ -77,6 +78,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.positiveR= new String();
 		this.negativeR = new String();
 		this.h_scores = 0.;
+		this.ontology = new String();
 		//this.hasPart = new ArrayList<String>();
 		this.proteinsgenome = new HashSet<String>();
 		this.ICs  = new ArrayList<Double>();
@@ -85,7 +87,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.genome = new HashSet<String>();
 		this.bits = new BitSet();
 	}
-	public InfoTerm(String id, double level,boolean prok){
+	public InfoTerm(String id, double level,boolean prok,String ontology){
 		this.id = id;
 		this.name=new String();
 		this.is_a = new Link();
@@ -94,6 +96,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.regulate = new String();
 		this.positiveR= new String();
 		this.negativeR = new String();
+		this.ontology = ontology;
 		this.h_scores = level;
 		this.inProk = prok;
 		//this.hasPart = new ArrayList<String>();
@@ -105,11 +108,12 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.bits = new BitSet();
 		this.sValue = new HashMap<>();
 	}
-	public InfoTerm(String id, double level){
+	public InfoTerm(String id, double level, String ontology){
 		this.id = id;
 		this.name=new String();
 		this.is_a = new Link();
 		this.part_of = new Link();
+		this.ontology = ontology;
 		this.both = new Link();
 		this.regulate = new String();
 		this.positiveR= new String();
@@ -135,6 +139,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.negativeR = new String(it.negativeR);
 		this.h_scores = it.h_scores;
 		this.inProk = it.inProk;
+		this.ontology = it.ontology;
 		//this.hasPart = new ArrayList<String>();
 		this.proteinsgenome = new HashSet<String>(it.proteinsgenome);
 		this.ICs  = new ArrayList<Double>(it.ICs);
@@ -164,7 +169,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.bits = new BitSet();
 		double[] d = new double[ti.size()];
 		this.ICs = new ArrayList<Double>();
-		
+		this.ontology = ti.get(0).ontology;
 		double nuno = 0.;
 		double zhou= 0.;
 		double sanchez= 0.;

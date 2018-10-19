@@ -18,6 +18,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import gsan.distribution.gsan_api.ontology.integration.GlobalGraph;
+import gsan.distribution.gsan_api.ontology.GlobalOntology;
 import gsan.server.gsan.api.service.jpa.DownloadInformationRepository;
 import gsan.server.gsan.api.service.jpa.IntegrationSourcesRepository;
 import gsan.server.gsan.api.service.model.DownloadInformation;
@@ -48,16 +50,21 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		}
 		 // Commenter pour l'instance, mais important
 		File goFile = new File(GOOWL);
-		if(!goFile.exists()) {
-			FTPDownloader.DownloadGOOWL(GOOWL); // Commenter pour l'instance mais important
-		}
+//		if(!goFile.exists()) {
+//			FTPDownloader.DownloadGOOWL(GOOWL); // Commenter pour l'instance mais important
+//		}
+//		
+//		try {
+//			initSourcesDB();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
-		try {
-			initSourcesDB();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		
+		
+		
 		graphSingleton.initializeOrGet(GOOWL);
 		
 		//graphSingleton.getGraph(false);

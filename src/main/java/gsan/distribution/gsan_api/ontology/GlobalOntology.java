@@ -3,18 +3,14 @@ package gsan.distribution.gsan_api.ontology;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -48,6 +44,7 @@ public class GlobalOntology {
 	public Hashtable<String,InfoTerm> allStringtoInfoTerm = new Hashtable<String,InfoTerm>();
 	public Hashtable<String, List<String>> obsolete2consORrepl = new Hashtable<String,List<String>>();
 	public Map<String,OntoInfo> subontology = new HashMap<>();
+	public Set<String> sourceSet = new HashSet<>();
 	public final String owlprefix = "http://purl.obolibrary.org/obo/";
 	private static  OWLReasonerFactory reasonerFactory;
 	public static OWLOntology ontology;
@@ -67,6 +64,7 @@ public class GlobalOntology {
 		this.ontology = go.ontology;
 		this.reasonerFactory = go.reasonerFactory;
 		this.manager = go.manager;
+		this.sourceSet = new HashSet<>(go.sourceSet);
 		//System.out.println(this.reasoner);
 		this.reasoner = go.reasoner;
 		this.termsProks = new HashSet<>(go.termsProks);
@@ -85,15 +83,17 @@ public class GlobalOntology {
 	}
 
 	@SuppressWarnings("static-access")
-	public GlobalOntology(OWLOntologyManager manager, OWLReasonerFactory reasonerFactory)
+	public GlobalOntology(OWLOntologyManager manager, OWLReasonerFactory reasonerFactory,String source)
 			throws OWLException, MalformedURLException {
 		this.manager = manager;
 		this.reasonerFactory = reasonerFactory;
 		this.IC2DS = new HashMap<>();
+		this.sourceSet.add(source);
 	}
-	public GlobalOntology(Map<String,String> info, Map<String,Set<String>> p2c,Map<String,Set<String>> c2p){
+	public GlobalOntology(Map<String,String> info, Map<String,Set<String>> p2c,Map<String,Set<String>> c2p, String source){
 		this.allStringtoInfoTerm = new Hashtable<>();
 		this.subontology = new HashMap<>();
+		this.sourceSet.add(source);
 		this.IC2DS = new HashMap<>();
 		int flag=1; // Parameters to break the follow while 
 		int level = 0;  // integer showing the depth of a term
@@ -108,7 +108,7 @@ public class GlobalOntology {
 		{
 			for (String pere : list1) { // For each owl class in list1
 
-				InfoTerm iT = new InfoTerm(pere,level); // Create InfoTerm class to this owl class
+				InfoTerm iT = new InfoTerm(pere,level,source); // Create InfoTerm class to this owl class
 				iT.name = info.get(pere); // get GO name and add in InfoTerm class
 				iT.top = top; // get the top of subOntology and add in InfoTerm class
 
@@ -169,19 +169,18 @@ public class GlobalOntology {
 		Map<String, DescriptiveStatistics> mapZhou = new HashMap<>();
 		Map<String, DescriptiveStatistics> mapSanchez = new HashMap<>();
 		Map<String, DescriptiveStatistics> mapMaz = new HashMap<>();
-		for(String ont : this.subontology.keySet()) {
-			mapSeco.put(ont, new DescriptiveStatistics());
-			mapZhou.put(ont, new DescriptiveStatistics());
-			mapSanchez.put(ont, new DescriptiveStatistics());
-			mapMaz.put(ont, new DescriptiveStatistics());
-		}
+		mapSeco.put(source, new DescriptiveStatistics());
+			mapZhou.put(source, new DescriptiveStatistics());
+			mapSanchez.put(source, new DescriptiveStatistics());
+			mapMaz.put(source, new DescriptiveStatistics());
+	
 		
 		for(String t : this.allStringtoInfoTerm.keySet()){
 			
-			mapSeco.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(0));
-			mapZhou.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(1));
-			mapSanchez.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(2));
-			mapMaz.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(3));
+			mapSeco.get(source).addValue(this.allStringtoInfoTerm.get(t).ICs.get(0));
+			mapZhou.get(source).addValue(this.allStringtoInfoTerm.get(t).ICs.get(1));
+			mapSanchez.get(source).addValue(this.allStringtoInfoTerm.get(t).ICs.get(2));
+			mapMaz.get(source).addValue(this.allStringtoInfoTerm.get(t).ICs.get(3));
 		}
 		this.IC2DS.put("seco", mapSeco);
 		this.IC2DS.put("zhou", mapZhou);
@@ -260,10 +259,10 @@ public class GlobalOntology {
 
 
 
-	public void printHierarchy(OWLOntology ontology, OWLClass clazz) throws Exception {
+	public void printHierarchy(OWLOntology ontology, OWLClass clazz, String source) throws Exception {
 
 		reasoner = reasonerFactory.createReasoner(ontology); // Creation of reasoner
-		printHierarchy(reasoner, clazz); // Once reasoner charged, go to printHierarchy method
+		printHierarchy(reasoner, clazz,source); // Once reasoner charged, go to printHierarchy method
 		/* Now print out any unsatisfiable classes */
 		for (OWLClass cl: ontology.getClassesInSignature()) {
 			if (!reasoner.isSatisfiable(cl)) {
@@ -403,7 +402,7 @@ public class GlobalOntology {
 	 * inheritance.
 	 * @throws Exception 
 	 */
-	public void printHierarchy(OWLReasoner reasoner, OWLClass clazz)
+	public void printHierarchy(OWLReasoner reasoner, OWLClass clazz, String source)
 			throws Exception {
 		IRI oboinowl = IRI.create(URLDecoder.decode("http://www.geneontology.org/formats/oboInOwl#inSubset", "UTF-8"));
 		OWLDataFactory df = OWLManager.getOWLDataFactory();
@@ -491,7 +490,7 @@ public class GlobalOntology {
 							
 						}
 						
-						InfoTerm iT = new InfoTerm(id,level,prok); // Create InfoTerm class to this owl class
+						InfoTerm iT = new InfoTerm(id,level,prok,source); // Create InfoTerm class to this owl class
 						iT.name = new String(); // get GO name and add in InfoTerm class
 		
 						List<String> labelaxioms = new ArrayList<String>();
@@ -736,7 +735,7 @@ public class GlobalOntology {
 	 * @param args
 	 * @return GlobalOntology
 	 */
-	public static GlobalOntology informationOnt(String args) {
+	public static GlobalOntology informationOnt(String[] args) {
 
 		try {
 
@@ -750,22 +749,22 @@ public class GlobalOntology {
 			manager = OWLManager.createOWLOntologyManager();
 
 
-			File file = new File(args);
-
+			File file = new File(args[0]);
+			String source = args[1];
 			ontology = manager.loadOntologyFromOntologyDocument(file); //Charging Ontology
 
 
 			System.out.println("[GlobalOntology] Charging reasoner...");
 			OWLReasonerFactory reasonerFactoryin = new ElkReasonerFactory(); // Charging ELK reasoner and hierarchy
 
-			GlobalOntology simpleHierarchy = new GlobalOntology(manager, reasonerFactoryin); // Create a new GlobalOntology object with the given reasoner.
+			GlobalOntology simpleHierarchy = new GlobalOntology(manager, reasonerFactoryin,source); // Create a new GlobalOntology object with the given reasoner.
 
 
 			OWLClass clazz = manager.getOWLDataFactory().getOWLClass(classIRI);// Get owl class of owl:Thing
 			/*
 			 * Completing information to GlobalOntology object
 			 */
-			simpleHierarchy.printHierarchy(ontology, clazz ); // Create the Object of Term information
+			simpleHierarchy.printHierarchy(ontology, clazz, source ); // Create the Object of Term information
 			simpleHierarchy.completingThePath(); // Get PartOf terms (method created for me)
 			simpleHierarchy.Leaves(); // Get the leaves terms in is a taxonomy
 			//			simpleHierarchy.Both(); // create
@@ -778,19 +777,19 @@ public class GlobalOntology {
 			Map<String, DescriptiveStatistics> mapZhou = new HashMap<>();
 			Map<String, DescriptiveStatistics> mapSanchez = new HashMap<>();
 			Map<String, DescriptiveStatistics> mapMaz = new HashMap<>();
-			for(String ont : simpleHierarchy.subontology.keySet()) {
-				mapSeco.put(ont, new DescriptiveStatistics());
-				mapZhou.put(ont, new DescriptiveStatistics());
-				mapSanchez.put(ont, new DescriptiveStatistics());
-				mapMaz.put(ont, new DescriptiveStatistics());
-			}
+			
+				mapSeco.put(source, new DescriptiveStatistics());
+				mapZhou.put(source, new DescriptiveStatistics());
+				mapSanchez.put(source, new DescriptiveStatistics());
+				mapMaz.put(source, new DescriptiveStatistics());
+			
 			
 			for(String t : simpleHierarchy.allStringtoInfoTerm.keySet()){
 				
-				mapSeco.get(simpleHierarchy.allStringtoInfoTerm.get(t).top).addValue(simpleHierarchy.allStringtoInfoTerm.get(t).ICs.get(0));
-				mapZhou.get(simpleHierarchy.allStringtoInfoTerm.get(t).top).addValue(simpleHierarchy.allStringtoInfoTerm.get(t).ICs.get(1));
-				mapSanchez.get(simpleHierarchy.allStringtoInfoTerm.get(t).top).addValue(simpleHierarchy.allStringtoInfoTerm.get(t).ICs.get(2));
-				mapMaz.get(simpleHierarchy.allStringtoInfoTerm.get(t).top).addValue(simpleHierarchy.allStringtoInfoTerm.get(t).ICs.get(3));
+				mapSeco.get(source).addValue(simpleHierarchy.allStringtoInfoTerm.get(t).ICs.get(0));
+				mapZhou.get(source).addValue(simpleHierarchy.allStringtoInfoTerm.get(t).ICs.get(1));
+				mapSanchez.get(source).addValue(simpleHierarchy.allStringtoInfoTerm.get(t).ICs.get(2));
+				mapMaz.get(source).addValue(simpleHierarchy.allStringtoInfoTerm.get(t).ICs.get(3));
 			}
 			simpleHierarchy.IC2DS.put("seco", mapSeco);
 			simpleHierarchy.IC2DS.put("zhou", mapZhou);
@@ -811,208 +810,208 @@ public class GlobalOntology {
 
 	}
 	
-	public void prokaryoteOnto() {
-		
-		try {
-		Map<String,InfoTerm> info = new HashMap<>();
-		
-		for(String sub : this.subontology.keySet()) {
-		List<String> termsLevel = new LinkedList<>();
-		List<String> listPivot = new LinkedList<>();
-		Set<String> leavesIsA = new HashSet<>();
-	
-		boolean bol = false;
-		termsLevel.add(sub);
-		int level = 0;
-		while(!bol) {
-			for(String k : termsLevel) {
-			
-			InfoTerm it = this.allStringtoInfoTerm.get(k);
-			if(k.equals("GO:0008150"))
-				//System.out.println(this.termsProks.size());
-			if(it.inProk) {
-				InfoTerm it_prok = new InfoTerm(k,level,true);
-				it_prok.name=it.toName();
-				Queue<String> papa = new LinkedList<>(it.is_a.parents);
-				Set<String> solPapa = new HashSet<>();
-				while(!papa.isEmpty()) {
-					String p = papa.poll();
-						if(this.allStringtoInfoTerm.get(p).inProk) {
-							solPapa.add(p);
-						}else {
-							papa.addAll(this.allStringtoInfoTerm.get(p).is_a.parents);
-						}
-					
-					
-				}
-				Queue<String> childs = new LinkedList<>(it.is_a.childrens);
-				Set<String> solChilds = new HashSet<>();
-				while(!childs.isEmpty()) {
-					String p = childs.poll();
-						if(this.allStringtoInfoTerm.get(p).inProk) {
-							solChilds.add(p);
-						}else {
-							childs.addAll(this.allStringtoInfoTerm.get(p).is_a.childrens);
-						}
-					
-					
-				}
-				
-				Set<String> ancestors = new HashSet<>(it.is_a.ancestors);
-				ancestors.retainAll(this.termsProks);
-				Set<String> descendants = new HashSet<>(it.is_a.descendants);
-				descendants.retainAll(this.termsProks);
-//				Set<String> leaves = new HashSet<>(it.is_a.descLeaves);
-//				leaves.retainAll(this.termsProks);
-				
-				//System.out.println(this.allStringtoInfoTerm.get(k).toName());
-				
-				it_prok.is_a.parents.addAll(solPapa);
-				it_prok.is_a.childrens.addAll(solChilds);
-				it_prok.is_a.ancestors.addAll(ancestors);
-				it_prok.is_a.descendants.addAll(descendants);
-				
-				if(solChilds.isEmpty()) {
-					leavesIsA.add(it_prok.id);
-				}
-//				it_prok.is_a.descLeaves.addAll(leaves);
-				
-				
-				/*
-				 * Take firs the part of and after the is a is not a error.
-				 * I choose do that because the part of of part of are considered
-				 * for me as ancestors. 
-				 */
-				
-				Queue<String> papapf = new LinkedList<>(it.part_of.parents);
-				Set<String> solPapapf = new HashSet<>();
-				while(!papapf.isEmpty()) {
-					String p = papapf.poll();
-						if(this.allStringtoInfoTerm.get(p).inProk) {
-							solPapapf.add(p);
-						}else {
-							papapf.addAll(this.allStringtoInfoTerm.get(p).is_a.parents);
-						}
-					
-					
-				}
-				Queue<String> childspf = new LinkedList<>(it.part_of.childrens);
-				Set<String> solChildspf = new HashSet<>();
-				while(!childspf.isEmpty()) {
-					String p = childspf.poll();
-						if(this.allStringtoInfoTerm.get(p).inProk) {
-							solChildspf.add(p);
-						}else {
-							childspf.addAll(this.allStringtoInfoTerm.get(p).is_a.childrens);
-						}
-					
-					
-				}
-				
-//				Set<String> ancestorspf = new HashSet<>(it.part_of.ancestors);
-//				ancestorspf.retainAll(this.termsProks);
-//				Set<String> descendantspf = new HashSet<>(it.part_of.descendants);
-//				descendantspf.retainAll(this.termsProks);
-//				Set<String> leavespf = new HashSet<>(it.part_of.descLeaves);
-//				leavespf.retainAll(this.termsProks);
-				
-				it_prok.part_of.parents.addAll(solPapapf);
-				it_prok.part_of.childrens.addAll(solChildspf);
-				it_prok.part_of.ancestors.addAll(solPapapf);
-				it_prok.part_of.descendants.addAll(solChildspf);
-//				it_prok.part_of.descLeaves.addAll(leavespf);
-				
-				
-				if(this.termsProks.contains(it.positiveR)) {
-					it_prok.positiveR = it.positiveR;
-				}
-				if(this.termsProks.contains(it.negativeR)) {
-					it_prok.negativeR = it.negativeR;
-				}
-				if(!this.termsProks.contains(it.regulate)) {
-					it_prok.regulate = it.regulate;
-				}
-				
-				it_prok.top = it.top;
-				
-				info.put(it.id, it_prok);
-				listPivot.addAll(it_prok.is_a.childrens);
-			}
-			
-			}
-			
-			termsLevel.clear();
-			if(!listPivot.isEmpty()) {
-				termsLevel.addAll(listPivot);
-				listPivot.clear();
-				level++;
-			}else {
-				bol=true;
-			}
-			
-		}
-		
-		
-		
-		this.subontology.get(sub).setMaxDepth((double)level-1); // get the maximal Depth to subOntology
-		//System.out.println(info.get("GO:0008150").is_a.descendants);
-		this.subontology.get(sub).setnumbernodes(info.get(sub).is_a.descendants.size());
-
-		int nisA = 0;
-		int npartOf = 0;
-
-		for(String t : info.get(sub).is_a.descendants) {
-			nisA = nisA + info.get(t).is_a.parents.size();
-			npartOf = npartOf + info.get(t).part_of.parents.size();
-
-		}
-		
-		
-		
-		
-		this.subontology.get(sub).setnumberedge(nisA, npartOf);
-		this.subontology.get(sub).ClearLeavesISA();
-		this.subontology.get(sub).ClearMaxIC();
-		this.subontology.get(sub).addAllLeavesISA(leavesIsA);
-		}
-		
-		this.allStringtoInfoTerm.clear();
-		this.allStringtoInfoTerm.putAll(info);
-		this.Leaves(); // Get the leaves terms in is a taxonomy
-		this.completingThePath();
-		this.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
-		this.GetICs(); // Add the Intrinsic IC for every GO term
-		this.goUniverseIC(); // Add the GO Universal IC Mazandu et al 2013.
-		
-		
-		Map<String, DescriptiveStatistics> mapSeco = new HashMap<>();
-		Map<String, DescriptiveStatistics> mapZhou = new HashMap<>();
-		Map<String, DescriptiveStatistics> mapSanchez = new HashMap<>();
-		Map<String, DescriptiveStatistics> mapMaz = new HashMap<>();
-		for(String ont : this.subontology.keySet()) {
-			mapSeco.put(ont, new DescriptiveStatistics());
-			mapZhou.put(ont, new DescriptiveStatistics());
-			mapSanchez.put(ont, new DescriptiveStatistics());
-			mapMaz.put(ont, new DescriptiveStatistics());
-		}
-		
-		for(String t : this.allStringtoInfoTerm.keySet()){
-			
-			mapSeco.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(0));
-			mapZhou.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(1));
-			mapSanchez.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(2));
-			mapMaz.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(3));
-		}
-		this.IC2DS.put("seco", mapSeco);
-		this.IC2DS.put("zhou", mapZhou);
-		this.IC2DS.put("sanchez", mapSanchez);
-		this.IC2DS.put("mazandu", mapMaz);
-		}catch (Exception e) {
-			e.printStackTrace();
-			// TODO: handle exception
-		}
-		
-	}
+//	public void prokaryoteOnto() {
+//		
+//		try {
+//		Map<String,InfoTerm> info = new HashMap<>();
+//		
+//		for(String sub : this.subontology.keySet()) {
+//		List<String> termsLevel = new LinkedList<>();
+//		List<String> listPivot = new LinkedList<>();
+//		Set<String> leavesIsA = new HashSet<>();
+//	
+//		boolean bol = false;
+//		termsLevel.add(sub);
+//		int level = 0;
+//		while(!bol) {
+//			for(String k : termsLevel) {
+//			
+//			InfoTerm it = this.allStringtoInfoTerm.get(k);
+//			if(k.equals("GO:0008150"))
+//				//System.out.println(this.termsProks.size());
+//			if(it.inProk) {
+//				InfoTerm it_prok = new InfoTerm(k,level,true);
+//				it_prok.name=it.toName();
+//				Queue<String> papa = new LinkedList<>(it.is_a.parents);
+//				Set<String> solPapa = new HashSet<>();
+//				while(!papa.isEmpty()) {
+//					String p = papa.poll();
+//						if(this.allStringtoInfoTerm.get(p).inProk) {
+//							solPapa.add(p);
+//						}else {
+//							papa.addAll(this.allStringtoInfoTerm.get(p).is_a.parents);
+//						}
+//					
+//					
+//				}
+//				Queue<String> childs = new LinkedList<>(it.is_a.childrens);
+//				Set<String> solChilds = new HashSet<>();
+//				while(!childs.isEmpty()) {
+//					String p = childs.poll();
+//						if(this.allStringtoInfoTerm.get(p).inProk) {
+//							solChilds.add(p);
+//						}else {
+//							childs.addAll(this.allStringtoInfoTerm.get(p).is_a.childrens);
+//						}
+//					
+//					
+//				}
+//				
+//				Set<String> ancestors = new HashSet<>(it.is_a.ancestors);
+//				ancestors.retainAll(this.termsProks);
+//				Set<String> descendants = new HashSet<>(it.is_a.descendants);
+//				descendants.retainAll(this.termsProks);
+////				Set<String> leaves = new HashSet<>(it.is_a.descLeaves);
+////				leaves.retainAll(this.termsProks);
+//				
+//				//System.out.println(this.allStringtoInfoTerm.get(k).toName());
+//				
+//				it_prok.is_a.parents.addAll(solPapa);
+//				it_prok.is_a.childrens.addAll(solChilds);
+//				it_prok.is_a.ancestors.addAll(ancestors);
+//				it_prok.is_a.descendants.addAll(descendants);
+//				
+//				if(solChilds.isEmpty()) {
+//					leavesIsA.add(it_prok.id);
+//				}
+////				it_prok.is_a.descLeaves.addAll(leaves);
+//				
+//				
+//				/*
+//				 * Take firs the part of and after the is a is not a error.
+//				 * I choose do that because the part of of part of are considered
+//				 * for me as ancestors. 
+//				 */
+//				
+//				Queue<String> papapf = new LinkedList<>(it.part_of.parents);
+//				Set<String> solPapapf = new HashSet<>();
+//				while(!papapf.isEmpty()) {
+//					String p = papapf.poll();
+//						if(this.allStringtoInfoTerm.get(p).inProk) {
+//							solPapapf.add(p);
+//						}else {
+//							papapf.addAll(this.allStringtoInfoTerm.get(p).is_a.parents);
+//						}
+//					
+//					
+//				}
+//				Queue<String> childspf = new LinkedList<>(it.part_of.childrens);
+//				Set<String> solChildspf = new HashSet<>();
+//				while(!childspf.isEmpty()) {
+//					String p = childspf.poll();
+//						if(this.allStringtoInfoTerm.get(p).inProk) {
+//							solChildspf.add(p);
+//						}else {
+//							childspf.addAll(this.allStringtoInfoTerm.get(p).is_a.childrens);
+//						}
+//					
+//					
+//				}
+//				
+////				Set<String> ancestorspf = new HashSet<>(it.part_of.ancestors);
+////				ancestorspf.retainAll(this.termsProks);
+////				Set<String> descendantspf = new HashSet<>(it.part_of.descendants);
+////				descendantspf.retainAll(this.termsProks);
+////				Set<String> leavespf = new HashSet<>(it.part_of.descLeaves);
+////				leavespf.retainAll(this.termsProks);
+//				
+//				it_prok.part_of.parents.addAll(solPapapf);
+//				it_prok.part_of.childrens.addAll(solChildspf);
+//				it_prok.part_of.ancestors.addAll(solPapapf);
+//				it_prok.part_of.descendants.addAll(solChildspf);
+////				it_prok.part_of.descLeaves.addAll(leavespf);
+//				
+//				
+//				if(this.termsProks.contains(it.positiveR)) {
+//					it_prok.positiveR = it.positiveR;
+//				}
+//				if(this.termsProks.contains(it.negativeR)) {
+//					it_prok.negativeR = it.negativeR;
+//				}
+//				if(!this.termsProks.contains(it.regulate)) {
+//					it_prok.regulate = it.regulate;
+//				}
+//				
+//				it_prok.top = it.top;
+//				
+//				info.put(it.id, it_prok);
+//				listPivot.addAll(it_prok.is_a.childrens);
+//			}
+//			
+//			}
+//			
+//			termsLevel.clear();
+//			if(!listPivot.isEmpty()) {
+//				termsLevel.addAll(listPivot);
+//				listPivot.clear();
+//				level++;
+//			}else {
+//				bol=true;
+//			}
+//			
+//		}
+//		
+//		
+//		
+//		this.subontology.get(sub).setMaxDepth((double)level-1); // get the maximal Depth to subOntology
+//		//System.out.println(info.get("GO:0008150").is_a.descendants);
+//		this.subontology.get(sub).setnumbernodes(info.get(sub).is_a.descendants.size());
+//
+//		int nisA = 0;
+//		int npartOf = 0;
+//
+//		for(String t : info.get(sub).is_a.descendants) {
+//			nisA = nisA + info.get(t).is_a.parents.size();
+//			npartOf = npartOf + info.get(t).part_of.parents.size();
+//
+//		}
+//		
+//		
+//		
+//		
+//		this.subontology.get(sub).setnumberedge(nisA, npartOf);
+//		this.subontology.get(sub).ClearLeavesISA();
+//		this.subontology.get(sub).ClearMaxIC();
+//		this.subontology.get(sub).addAllLeavesISA(leavesIsA);
+//		}
+//		
+//		this.allStringtoInfoTerm.clear();
+//		this.allStringtoInfoTerm.putAll(info);
+//		this.Leaves(); // Get the leaves terms in is a taxonomy
+//		this.completingThePath();
+//		this.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
+//		this.GetICs(); // Add the Intrinsic IC for every GO term
+//		this.goUniverseIC(); // Add the GO Universal IC Mazandu et al 2013.
+//		
+//		
+//		Map<String, DescriptiveStatistics> mapSeco = new HashMap<>();
+//		Map<String, DescriptiveStatistics> mapZhou = new HashMap<>();
+//		Map<String, DescriptiveStatistics> mapSanchez = new HashMap<>();
+//		Map<String, DescriptiveStatistics> mapMaz = new HashMap<>();
+//		for(String ont : this.subontology.keySet()) {
+//			mapSeco.put(ont, new DescriptiveStatistics());
+//			mapZhou.put(ont, new DescriptiveStatistics());
+//			mapSanchez.put(ont, new DescriptiveStatistics());
+//			mapMaz.put(ont, new DescriptiveStatistics());
+//		}
+//		
+//		for(String t : this.allStringtoInfoTerm.keySet()){
+//			
+//			mapSeco.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(0));
+//			mapZhou.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(1));
+//			mapSanchez.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(2));
+//			mapMaz.get(this.allStringtoInfoTerm.get(t).top).addValue(this.allStringtoInfoTerm.get(t).ICs.get(3));
+//		}
+//		this.IC2DS.put("seco", mapSeco);
+//		this.IC2DS.put("zhou", mapZhou);
+//		this.IC2DS.put("sanchez", mapSanchez);
+//		this.IC2DS.put("mazandu", mapMaz);
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//			// TODO: handle exception
+//		}
+//		
+//	}
 	
 	public double getPercentile(int per, String author,String ont) {
 		//System.out.println(this.IC2DS.get(author));
@@ -1294,20 +1293,18 @@ public class GlobalOntology {
 
 	public void goUniverseIC() {
 		
-		 NumberFormat formatter = new DecimalFormat();
-		 formatter = new DecimalFormat("0.###########E0");
 
 		for(Entry<String,OntoInfo> sub : this.subontology.entrySet()) {
 			OntoInfo oi = sub.getValue();
 			this.allStringtoInfoTerm.get(sub.getKey()).ICs.add(0.);
-			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[0] = "1";
-			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[1] = "0";
+			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[0] = 1.;
+			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[1] = 0.;
 			Set<Double> setMax = new HashSet<>();
 		//	Set<Double> probMax = new HashSet<>();
 			for(String lt : oi.getLeavesISA()) {
 				
-				String[] dd = this.goUniverseIC(this.allStringtoInfoTerm.get(lt),formatter);
-				setMax.add(-Math.log(Double.parseDouble(dd[0]))-Double.parseDouble(dd[1])*Math.log(10));
+				double[] dd = this.goUniverseIC(this.allStringtoInfoTerm.get(lt));
+				setMax.add(-Math.log(dd[0])-dd[1]*Math.log(10));
 				//System.out.println(-Math.log(Double.parseDouble(dd[0]))-Double.parseDouble(dd[1])*Math.log(10));
 				
 				//			if(dd == 0) {
@@ -1327,39 +1324,75 @@ public class GlobalOntology {
 
 
 	}
-	public String[] goUniverseIC(InfoTerm it, NumberFormat nf) {
+	public double[] goUniverseIC(InfoTerm it) {
 
-		Double alpha = 1.;
-		Double beta = 0.;
+		double alpha = 1.;
+		double beta = 0.;
 		for(String par : it.is_a.parents) {
 
 			
 			if(!par.equals(it.top)) {
-				String[] pereAlphaBeta = goUniverseIC(this.allStringtoInfoTerm.get(par), nf);
-				double division = Double.parseDouble(pereAlphaBeta[0])/(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
-				String[] alphaBeta = nf.format(division).toString().split("E");
-				alpha = alpha* Double.parseDouble(alphaBeta[0]);
-				beta = beta + Double.parseDouble(pereAlphaBeta[1]) + Double.parseDouble(alphaBeta[1]);
-				alphaBeta[1] = beta.toString();
+				double[] pereAlphaBeta = goUniverseIC(this.allStringtoInfoTerm.get(par));
+				double division = pereAlphaBeta[0]/(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
+				double b = Math.floor(Math.log10(division));
+				double a = division/Math.pow(10,b); 
+				
+				alpha = alpha* a;
+				beta = beta + pereAlphaBeta[1] + b;
+				
 				
 				}
 			else {
 				double division = 1./(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
-				String[] alphaBeta = nf.format(division).toString().split("E");
-				alpha = alpha* Double.parseDouble(alphaBeta[0]);
-				beta = beta + Double.parseDouble(alphaBeta[1]);
+				double b = Math.floor(Math.log10(division));
+				double a = division/Math.pow(10,b); 
+				alpha = alpha* a;
+				beta = beta + b;
 			}
 		}
-		it.alphaBetaMazandu[0] = alpha.toString();
-		it.alphaBetaMazandu[1] = beta.toString();
+		it.alphaBetaMazandu[0] = alpha;
+		it.alphaBetaMazandu[1] = beta;
 	
 		if(it.ICs.size()==3) {
-			it.ICs.add(-Math.log(Double.parseDouble(alpha.toString()))-Double.parseDouble(beta.toString())*Math.log(10));
+			it.ICs.add(-Math.log(alpha)-beta*Math.log(10));
 		}
 		//System.out.println(it.ICs.size());
 		//System.out.println("\t"+it.id + " " +probX);
 		return it.alphaBetaMazandu;
 	}
+//	public String[] goUniverseIC(InfoTerm it, NumberFormat nf) {
+//
+//		Double alpha = 1.;
+//		Double beta = 0.;
+//		for(String par : it.is_a.parents) {
+//
+//			
+//			if(!par.equals(it.top)) {
+//				String[] pereAlphaBeta = goUniverseIC(this.allStringtoInfoTerm.get(par), nf);
+//				double division = Double.parseDouble(pereAlphaBeta[0])/(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
+//				String[] alphaBeta = nf.format(division).toString().split("E");
+//				alpha = alpha* Double.parseDouble(alphaBeta[0]);
+//				beta = beta + Double.parseDouble(pereAlphaBeta[1]) + Double.parseDouble(alphaBeta[1]);
+//				
+//				
+//				}
+//			else {
+//				double division = 1./(double) this.allStringtoInfoTerm.get(par).is_a.childrens.size();
+//				String[] alphaBeta = nf.format(division).toString().split("E");
+//				alpha = alpha* Double.parseDouble(alphaBeta[0]);
+//				beta = beta + Double.parseDouble(alphaBeta[1]);
+//			}
+//		}
+//		it.alphaBetaMazandu[0] = alpha.toString();
+//		it.alphaBetaMazandu[1] = beta.toString();
+//	
+//		if(it.ICs.size()==3) {
+//			it.ICs.add(-Math.log(Double.parseDouble(alpha.toString()))-Double.parseDouble(beta.toString())*Math.log(10));
+//		}
+//		//System.out.println(it.ICs.size());
+//		//System.out.println("\t"+it.id + " " +probX);
+//		return it.alphaBetaMazandu;
+//	}
 
 //	public BigDecimal goUniverseICTest(InfoTerm it) {
 //

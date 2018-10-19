@@ -149,14 +149,14 @@ public class AlgorithmRepresentative {
 							Set<String> retGen = new HashSet<>(cIT.geneSet);
 							retGen.retainAll(gen);
 
-							if(cIT.ICs.get(ic_inc)>percentile.get(cIT.top)&&retGen.size()>compare) {
+							if(cIT.ICs.get(ic_inc)>percentile.get(cIT.ontology)&&retGen.size()>compare) {
 								cl.representatives.add(cIT);
 								genesObserve.addAll(cIT.geneSet);
 								clusterList.add(cl);
 							}
 						}
 					}else {
-						if(it.ICs.get(ic_inc)>percentile.get(it.top)&&gen.size()>compare) {
+						if(it.ICs.get(ic_inc)>percentile.get(it.ontology)&&gen.size()>compare) {
 //							System.out.println("Cluster "+it.toName()+" "+it.ICs.get(ic_inc) +" "+it.geneSet);
 							cl.representatives.add(it);
 							genesObserve.addAll(it.geneSet);
@@ -210,8 +210,8 @@ public class AlgorithmRepresentative {
 		Hashtable<Integer, List<Representative>> clu2rep = new Hashtable<Integer, List<Representative> >();
 //		int MaxCombination = 0;
 //		int termClusterMax = 0;
-		for(Integer j : clusters.keySet()){ // Para cada cluster
-			List<String> termCluster = clusters.get(j);
+		for(Integer cl : clusters.keySet()){ // Para cada cluster
+			List<String> termCluster = clusters.get(cl);
 
 			Set<String> genes = new HashSet<>();
 			for(String term : termCluster) {
@@ -227,80 +227,53 @@ public class AlgorithmRepresentative {
 
 			for(String term : termCluster) {
 
-				if(((double)go.allStringtoInfoTerm.get(term).geneSet.size()/(double)genes.size())>tolerance&&go.allStringtoInfoTerm.get(term).geneSet.size()>=compare) { 
+				if(((double)go.allStringtoInfoTerm.get(term).geneSet.size()/(double)genes.size())>=tolerance&&go.allStringtoInfoTerm.get(term).geneSet.size()>=compare) { 
 
 					st.add(term);
 				}
 
 			}
-			if(st.size()>1){
-				/*
-				 * There are more than a candidate term
-				 * annotation >70% genes. These terms are
-				 * related betweem them? if yes, only the most
-				 * informative is keept.
-				 */
-				Set<String> related = new HashSet<>();
 
-				List<Double> ics_rel_list = new ArrayList<>();
-
-				for(int x =0;x<st.size();x++) {
-					String termX = st.get(x);
-					InfoTerm infoX = go.allStringtoInfoTerm.get(termX);
-					//System.out.println("test " + infoX.toName());
-					ics_rel_list.add(infoX.ICs.get(ic));
-					for(int y=x+1;y<st.size();y++) {
-						String termY = st.get(y);
-						InfoTerm infoP = go.allStringtoInfoTerm.get(termY);
-							if(infoX.is_a.ancestors.contains(termY)) {
-								related.add(termY);
-								related.add(termX);
-							}else if(infoP.is_a.ancestors.contains(termX)) {
-								related.add(termY);
-								related.add(termX);
-							}
-						
-
+		  
+			if(st.size()>0) {
+				for(int i = 0; i < st.size();i++) {
+					InfoTerm r1 = go.allStringtoInfoTerm.get(st.get(i));
+					for(int z=i+1; z<st.size();z++) {
+						InfoTerm r2 = go.allStringtoInfoTerm.get(st.get(z));
+						if(r1.is_a.descendants.contains(r2.id)) {
+							st.remove(i);
+							i--;
+							break;
+						}else if(r1.is_a.ancestors.contains(r2.id)) {
+							st.remove(z);
+							z--;
+						}
 					}
-
+					
+					
 				}
-				/*
-				 * If all terms are related, the most informative is kept.
-				 */
-				if(related.size()==st.size()) {
-					InfoTerm info = go.allStringtoInfoTerm.get(st.get(ics_rel_list.indexOf(Collections.max(ics_rel_list))));
-					candidate.add(info);
-					ics_list.add(info.ICs.get(ic));
-				}else {
-					int ncombi = termCluster.size()>1?((int) Math.floor(Math.sqrt(Math.abs(termCluster.size()/10)-1))+2):1 ; // numero que indica el numero de combinaciones deseadas
-//					MaxCombination = Math.max(MaxCombination, ncombi);
-//					termClusterMax = Math.max(termClusterMax, termCluster.size());
-					ncombi = ncombi >6? 6:ncombi;
-					Set<InfoTerm> representatives = new HashSet<>(getManyRep(termCluster,sub,go,ncombi,tailmin,RepCombinedSimilarity,precision,ic));
-					for(InfoTerm res:representatives)
-						ics_list.add(res.ICs.get(ic));
-				}
+				
 			}
-			/*
-			 * Only one term could represent a cluster annotating
-			 * > 70% of genes.
-			 */
-			else if(st.size()==1) {
-				InfoTerm info = go.allStringtoInfoTerm.get(st.get(0));
-				//	System.out.println("1 "+j+ " " + termCl.size()+" "+info.geneSet.size()+"/"+genes.size() +" " +info.toName() + " " + info.depth() + " " +info.ICs.get(ic) + " " +info.semanticValue);
 
-				candidate.add(info);
-				ics_list.add(info.ICs.get(ic));	
-			}
-			else {
-				int ncombi = termCluster.size()>1?((int) Math.floor(Math.sqrt(Math.abs(termCluster.size()/10)-1))+2):1 ; // numero que indica el numero de combinaciones deseadas
-//				MaxCombination = Math.max(MaxCombination, ncombi);
-//				termClusterMax = Math.max(termClusterMax, termCluster.size());
-				ncombi = ncombi >6? 6:ncombi;
-				Set<InfoTerm> representatives = new HashSet<>(getManyRep(termCluster,sub,go,ncombi,tailmin,RepCombinedSimilarity,precision,ic));
-				for(InfoTerm res:representatives)
+			
+			if(st.size()==1) {
+				
+					InfoTerm res = go.allStringtoInfoTerm.get(st.get(0));
 					ics_list.add(res.ICs.get(ic));
+					candidate.add(res);
+				
+				
+			}else {
+			int ncombi = termCluster.size()>1?((int) Math.floor(Math.sqrt(Math.abs(termCluster.size()/10)-1))+2):1 ; // numero que indica el numero de combinaciones deseadas
+				ncombi = ncombi >6? 6:ncombi;
+			Set<InfoTerm> representatives = new HashSet<>(getManyRep(termCluster,sub,go,ncombi,tailmin,RepCombinedSimilarity,precision,ic));
+			for(InfoTerm res:representatives) {
+				ics_list.add(res.ICs.get(ic));
+				candidate.add(res);
 			}
+			}	
+			
+			
 			
 			
 			if(candidate.size()>0) {
@@ -316,8 +289,8 @@ public class AlgorithmRepresentative {
 
 				}
 				Representative rep = new Representative(it.toString(),it,infoterm);
-				clu2rep.put(j, new ArrayList<>());
-				clu2rep.get(j).add(rep);
+				clu2rep.put(cl, new ArrayList<>());
+				clu2rep.get(cl).add(rep);
 			}
 
 

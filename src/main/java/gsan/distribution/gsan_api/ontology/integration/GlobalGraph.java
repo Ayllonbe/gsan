@@ -66,7 +66,7 @@ public class GlobalGraph{
 
 		return a;
 	}
-	public static GlobalOntology getGraph(File pathways, File rel) {
+	public static GlobalOntology getGraph(File pathways, File rel, String source) {
 		
 		//		File pathways = new File("src/main/resources/static/ontology/reactome/ReactomePathways.txt");
 		//		File rel = new File("src/main/resources/static/ontology/reactome/ReactomePathwaysRelation.txt");
@@ -124,8 +124,8 @@ public class GlobalGraph{
 		}
 		map.put("reac", "reactome");
 		child2parent.put("reac", new HashSet<String>());
-
-		return new GlobalOntology(map, parent2child, child2parent);
+		
+		return new GlobalOntology(map, parent2child, child2parent,source);
 
 	}
 }
