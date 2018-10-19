@@ -299,7 +299,7 @@ public class FTPDownloader {
 
 			String annotationFile = "src/main/resources/static/ontology/"+file;
 			File created_file = new File(annotationFile);
-			long localLong = created_file.lastModified() ;
+			long localLong = created_file.exists()? created_file.lastModified():0 ;
 			FTPDownloader ftpDownloader =
 					new FTPDownloader("ftp.geneontology.org", "anonymous", "");
 			long ftpLong = ftpDownloader.viewFile(path+file,file);
