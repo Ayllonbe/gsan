@@ -12,6 +12,8 @@ src/main/resources/static/ontology/*
 src/main/resources/static/AssociationTAB/*
 src/main/resources/static/integration/*
 src/main/tmp/results
+src/main/java/com
+top10DO.tsv
 .settings
 bin
 
