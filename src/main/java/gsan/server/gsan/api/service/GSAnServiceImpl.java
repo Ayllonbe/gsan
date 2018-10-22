@@ -53,7 +53,7 @@ public class GSAnServiceImpl implements GSAnService {
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, true);
+				GOA = new Annotation(goaTable, go, IEA);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -82,7 +82,7 @@ public class GSAnServiceImpl implements GSAnService {
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, true);
+				GOA = new Annotation(goaTable, go, IEA);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -116,7 +116,7 @@ public class GSAnServiceImpl implements GSAnService {
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, true);
+				GOA = new Annotation(goaTable, go, IEA);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -167,9 +167,10 @@ public class GSAnServiceImpl implements GSAnService {
 	
 	private List<List<String>> getFile(String o) throws IOException{
 		File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
+		File doid = new File ("src/main/resources/static/integration/gene_hsa2doidNOIEA.gaf");
 		List<List<String>> goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+o);
-		 
 		goaTable.addAll(ReadFile.ReadAnnotation(reacf.getAbsolutePath()));
+		goaTable.addAll(ReadFile.ReadAnnotation(doid.getAbsolutePath()));
 		return goaTable;
 	}
 	private List<List<String>> getFile(File o) throws IOException{

@@ -1,4 +1,8 @@
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+tm <- read.table("../static/integration/human_disease_textmining_full.tsv",sep="\t")
+
+tm <- tm[tm$V6>=3,]
+tm <- cbind(tm,"V8"=rep("IEA",length(tm$V1)))
 
 exp <- read.table("../static/integration/human_disease_experiments_full.tsv",sep="\t")
 #exp <- exp[grepl("DOID:",exp$V3)==TRUE,]
@@ -9,7 +13,7 @@ kno <- cbind(kno,"V8"=rep("CUR", length(kno$V1)))
 
 gaf <- rbind(exp,kno)
 
-genes <- c(as.character(exp$V2),as.character(kno$V2))
+genes <- c(as.character(gaf$V2))
 
 length(unique(genes))
 
@@ -32,8 +36,12 @@ gaf2 <- gaf[gaf$V2%in%nres$SYMBOL,]
 gaf2 <- cbind(rep("Disease",length(gaf2$V2)),rep("-",length(gaf2$V2)),
               as.character(gaf2$V2),
               rep("-",length(gaf2$V2)),
-              as.character(gaf2$V3),as.character(gaf2$V4),as.character(gaf2$V8), rep("-",length(gaf2$V2)), rep("DO",length(gaf2$V2)))
+              as.character(gaf2$V3),rep("-",length(gaf2$V2)),as.character(gaf2$V8), rep("-",length(gaf2$V2)), rep("DO",length(gaf2$V2)))
 gaf2 <- gaf2[grepl("DOID:",gaf2[,5])==TRUE,]
+
+
+length(unique(gaf2[,3]))
+
 write.table(gaf2,"../static/integration/gene_hsa2doidNOIEA.gaf", quote = F,row.names = F,col.names = F,sep= "\t")
 
 

@@ -1,0 +1,51 @@
+INFO [2018-10-22 10:28:16] $x
+INFO [2018-10-22 10:28:16] list(A = A, D = D, B = B, C = C)
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $filename
+INFO [2018-10-22 10:28:16] NULL
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $col
+INFO [2018-10-22 10:28:16] [1] "transparent"
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $fill
+INFO [2018-10-22 10:28:16] c("cornflowerblue", "green", "yellow", "darkorchid1")
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $alpha
+INFO [2018-10-22 10:28:16] [1] 0.5
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $label.col
+INFO [2018-10-22 10:28:16] c("orange", "white", "darkorchid4", "white", "white", "white", 
+INFO [2018-10-22 10:28:16]     "white", "white", "darkblue", "white", "white", "white", 
+INFO [2018-10-22 10:28:16]     "white", "darkgreen", "white")
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $cex
+INFO [2018-10-22 10:28:16] [1] 1.5
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $fontfamily
+INFO [2018-10-22 10:28:16] [1] "serif"
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $fontface
+INFO [2018-10-22 10:28:16] [1] "bold"
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $cat.col
+INFO [2018-10-22 10:28:16] c("darkblue", "darkgreen", "orange", "darkorchid4")
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $cat.cex
+INFO [2018-10-22 10:28:16] [1] 1.5
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $cat.pos
+INFO [2018-10-22 10:28:16] [1] 0
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $cat.dist
+INFO [2018-10-22 10:28:16] [1] 0.07
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $cat.fontfamily
+INFO [2018-10-22 10:28:16] [1] "serif"
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $rotation.degree
+INFO [2018-10-22 10:28:16] [1] 270
+INFO [2018-10-22 10:28:16] 
+INFO [2018-10-22 10:28:16] $margin
+INFO [2018-10-22 10:28:16] [1] 0.2
+INFO [2018-10-22 10:28:16] 
+ERROR [2018-10-22 11:58:21] Unexpected parameter length for 'cat.fontfamily'
