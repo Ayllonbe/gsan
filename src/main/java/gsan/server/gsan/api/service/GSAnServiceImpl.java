@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,7 @@ import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.distribution.gsan_api.read_write.writeSimilarityMatrix;
 import gsan.distribution.gsan_api.run.representative.AlgorithmRepresentative;
 import gsan.distribution.gsan_api.run.representative.Cluster;
+import gsan.distribution.gsan_api.semantic_similarity.SemanticSimilarity;
 import gsan.server.gsan.api.service.jpa.taskRepository;
 import gsan.server.gsan.api.service.model.task;
 import gsan.server.singleton.graphSingleton;
@@ -335,7 +339,8 @@ public class GSAnServiceImpl implements GSAnService {
 
 			
 			log.debug("Computing GS2...");
-			double gs2 = GS2(genesList, gene2term, go);
+			double gs2 = GS2(genesList, gene2term, go); // C'est le vrai GS2
+			
 			finalResult.put("GeneSet", genesList);
 			Set<String> annotatedGS = new HashSet<>();
 			
@@ -350,6 +355,33 @@ public class GSAnServiceImpl implements GSAnService {
 			go.getLocalInformation();
 
 			Set<String> termsDic = new HashSet<>();
+			
+			
+			/*
+			 * TEST
+			 */
+			
+			Set<String> geneS = new HashSet<>();
+			Set<String> geneQ = new HashSet<>();
+			
+			for(String g : genesList) {
+				if(GOAincom.annotation.containsKey(g)) {
+				Set<String> ts = new HashSet<>(GOAincom.annotation.get(g).getTerms("GO:0008150"));
+				if(ts.size()>=5) {
+					geneS.add(g);
+				}
+				if(ts.size()>=15) {
+					geneQ.add(g);
+				}
+				
+				}
+			}
+			
+			System.out.println("% Genes with more than 5 terms: " + ((double)geneS.size()/genesList.size()*100) );
+			System.out.println("% Genes with more than 15 terms: " + ((double)geneQ.size()/genesList.size()*100) );
+			/*
+			 * ENDTEST
+			 */
 			for(String t :termsInc) {
 				termsDic.add(t);
 				termsDic.addAll(go.allStringtoInfoTerm.get(t).is_a.ancestors);
@@ -368,7 +400,7 @@ public class GSAnServiceImpl implements GSAnService {
 			listTerm.retainAll(go.allStringtoInfoTerm.get(ont).is_a.descendants);
 			log.debug("Writing Similarity Matrix...");
 			writeSimilarityMatrix wSS = new writeSimilarityMatrix(ssMethod);
-			wSS.similarityMethod(go, listTerm, icSimilarity.intValue());
+			wSS.similarityMethod(go, listTerm);
 			
             AlgorithmRepresentative ar = new AlgorithmRepresentative(ic_inc, ont, wSS.getFile(), "average",
 					tailmin, simRepFilter, covering, geneSupport);
@@ -695,7 +727,7 @@ public class GSAnServiceImpl implements GSAnService {
 
 		Map<String, Set<String>> map = new HashMap<>();
 		List<String> genePresent = new ArrayList<>();
-		for(String s : symbols) {
+		for(String s : symbols) { // modificado, normalmente es symbol
 			if(gene2rep.containsKey(s)) {
 				genePresent.add(s);
 				for(String t : gene2rep.get(s)) {
@@ -744,6 +776,8 @@ public class GSAnServiceImpl implements GSAnService {
 
 		return (1/(double)genePresent.size()) * dd;
 	}
+	
+
 	
 	public String onto2simpleName(String onto) {
 		String t = new String();

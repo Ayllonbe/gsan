@@ -86,7 +86,7 @@ public class SetCoverAaron {
 				}else {
 					//li.add((double)pivot.cardinality()/t2IC.get(t));	
 					//System.out.println(t + " " +(double)pivot.cardinality()/t2Iv.get(t));
-					li.add((double)intersection.cardinality()*(go.allStringtoInfoTerm.get(t).ICs.get(4)/go.allStringtoInfoTerm.get(t).sIC));
+					li.add((double)intersection.cardinality()*(go.allStringtoInfoTerm.get(t).ICs.get(3)/go.allStringtoInfoTerm.get(t).sIC));
 					//li.add((go.allStringtoInfoTerm.get(t).ICs.get(4))/go.allStringtoInfoTerm.get(t).sIC);
 					
 
