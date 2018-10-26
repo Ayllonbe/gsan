@@ -189,7 +189,6 @@ function motvis(dictionary, representatives, genes,tree){
         DRAW THE BAR CHART INTO LEAVES CIRCLE
         */
         if(!circle.children){
-          //console.log(circle.data.id);
 
           var rectH = ((circleR * Math.pow(2, 1 / 2)) / 2) / dictionary[circle.data.id].terms.length;
           circle.posX = circleX - circleR / 2;//(Math.pow(2, 1 / 2));
@@ -200,13 +199,13 @@ function motvis(dictionary, representatives, genes,tree){
             return dictionary[obj1].IC - dictionary[obj2].IC;
           });
           circle.axisY = posY + rectH * (dictionary[circle.data.id].terms.length);
-          circle.axisWitdh = (circleR* Maxv) /  Maxv;
+          circle.axisWitdh = (circleR* (-Math.log( Maxv))) / (-Math.log( Maxv));
           circle.rectnodes = [];
-        //  console.log(genes2circles[circle.data.id]);
+       
           genes2circles[circle.data.id].forEach(function(obj,i){
             var RectY = posY + rectH * i ;// Y position
 
-            var posW =(circleR * (dictionary[obj.parent.data.id].IC /  Maxv)); // WIDTH
+            var posW =circleR * (-Math.log(dictionary[obj.parent.data.id].IC) / (-Math.log( Maxv))); // WIDTH
             var rectNode = {};
             rectNode.name =  dictionary[obj.parent.data.id].name;
             rectNode.IC =  dictionary[obj.parent.data.id].IC
@@ -218,29 +217,10 @@ function motvis(dictionary, representatives, genes,tree){
             circle.rectnodes.push(rectNode);
             context.fillStyle=d3.hcl(dictionary[obj.parent.data.id].color.h, dictionary[obj.parent.data.id].color.c, dictionary[obj.parent.data.id].color.l);
             context.fillRect(circle.posX,RectY,posW,rectH-gap);
-            /*
-            circle.equalCircle IS A VARIABLE TO OBJ circle USED AFTER IN LEAVE ZOOM
-            SHOWING THE TOOLTIP ONLY IN THE RECTANGLE.
-            */
-          /*  var eqobj = {};
-            eqobj.data = {};
-            eqobj.color = dictionary[obj].color;
-            eqobj.data.name = dictionary[obj].name;
-            eqobj.data.pvalue = dictionary[obj].IC;
-            eqobj.x = circle.posX;
-            eqobj.y = posY;
-            eqobj.w = posW;
-            eqobj.h = circle.rectH-circle.gap;
-            circle.eqobjs.push(eqobj);*/
+
             });
           };
         }
-
-    /*  if (circle.active) {
-      context.lineWidth = 0;
-      context.strokeStyle = "null";
-      context.stroke();
-    }*/
     };
 
     };
@@ -271,14 +251,13 @@ function motvis(dictionary, representatives, genes,tree){
 
     transition.transition().duration(d3.event.altKey ? 7500 : 2750).tween("fill", function() {
       var imgData = context.getImageData(0,0, width, height);
-      //console.log(imgData)
+
         var alpha = 0;
          interval = setInterval(function(){
-          //render([focus.x, focus.y, focus.r * 2]);
+          
           alpha = Math.min(alpha +0.2, 1);
           context.clearRect(0, 0, width, height); // CLEAR canvas.
           context.putImageData(imgData,0, 0 );
-          //render([focus.x, focus.y, focus.r * 2]);
           textNode(focus,alpha);
           if(alpha===1){
             clearInterval(interval);
@@ -346,7 +325,7 @@ function motvis(dictionary, representatives, genes,tree){
      var number = Math.trunc(Maxv)+1;
      number = number.toString()
      context.fillText(number, focus.posX+focus.axisWitdh-context.measureText(number).width,focus.axisY + font/1.5);
-     var pvaluestr = "Information content (IC)"
+     var pvaluestr = "log(Information content) (log(IC))"
      context.fillText(pvaluestr, focus.posX-context.measureText(pvaluestr).width/2+focus.axisWitdh/2,focus.axisY+font);
       };
   }
@@ -542,32 +521,6 @@ function motvis(dictionary, representatives, genes,tree){
           close(c);
         };
           });
-    /*  if(!focus0.children){
-        root.descendants().forEach(function(c){
-          if(focus0.ancestors().includes(c) || rectnode === c){
-            open(c);
-            if(c.children){
-              barH = barH + c.__children.length;
-            };
-          }
-          else{
-            close(c);
-          };
-        })
-      }else{
-        root.descendants().forEach(function(c){
-          if(rectnode.ancestors().includes(c) || rectnode === c){
-            open(c);
-            if(c.children){
-              barH = barH + c.__children.length;
-            };
-          }
-          else{
-            close(c);
-          };
-        });
-      };*/
-
     };
   /*
   PREPARING TO RENDERING
@@ -623,17 +576,12 @@ function drawTextAlongArc(context,str, centerX, centerY, radius,alpha){
                 var font = radius*0.08;
                 context.save();
                 context.font = 'bold '+font + 'pt Ubuntu Mono';
-              /*  while(contextTree.measureText(str).width>radius*(2+Math.PI)){
-                  font = font -1;
-                  contextTree.font =  font + 'pt Arial';
-                }*/
+          
                 var angle =  (Math.PI*(context.measureText(str).width)/radius)/2;
 
-            //      //console.log(str + '  ' +font + '  ' + angle);
-
+          
                 while(angle>Math.PI){
-                //  console.log(angle + " " + Math.PI + " " + (angle>Math.PI));
-                  font = (font*Math.PI)/angle;
+                 font = (font*Math.PI)/angle;
                   context.font =  'bold '+font + 'pt Ubuntu Mono';
                     angle =  (Math.floor(Math.PI*(context.measureText(str).width)/radius*100)/100)/2;
 

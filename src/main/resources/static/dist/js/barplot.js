@@ -91,7 +91,7 @@ var g=    svg.append("g")
     .enter().append("rect")
       .attr("class", "bar1")
       .attr("x", function(d) { return posText + posPlot/2+10; })
-      .attr("width", function(d) {return d.IC/maxIC * posPlot/2; } )
+      .attr("width", function(d) {return Math.log(d.IC)/Math.log(maxIC) * posPlot/2; } )
       .attr("y", function(d) { return y(d.name); })
       .attr("fill", "#68a9ff" )
       .attr("height", y.bandwidth())
@@ -184,15 +184,15 @@ g.append("text")
 .text("Covered genes percentage")
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
-.attr("font-size","14px");
+.attr("font-size","12px");
 
 g.append("text")
 .attr("x", posText + posPlot/2+10+(posPlot/4))
 .attr("y", height +30)
-.text("Information Content (IC)")
+.text("log(Information Content)")
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
-.attr("font-size","14px");
+.attr("font-size","12px");
 
 g.append("text")
 .attr("x", posText +10)
@@ -200,7 +200,7 @@ g.append("text")
 .text("100%")
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
-.attr("font-size","14px");
+.attr("font-size","12px");
 
 g.append("text")
 .attr("x", posText + posPlot/2+10)
@@ -208,14 +208,14 @@ g.append("text")
 .text("0")
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
-.attr("font-size","14px");
+.attr("font-size","12px");
 g.append("text")
 .attr("x", posText + posPlot+10)
 .attr("y", height +20)
 .text(maxIC)
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
-.attr("font-size","14px");
+.attr("font-size","12px");
 
 
 

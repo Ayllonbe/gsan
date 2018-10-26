@@ -458,10 +458,7 @@ public class GSAnServiceImpl implements GSAnService {
 
 			}
 			remove.clear();
-		//
-		// To remove the part of parents if the union of genes of child is the same number
-		//	of genes of his child part.
-		//
+
 			for(int i = 0; i<allRepresentatives.size();i++) {
 				InfoTerm ti = go.allStringtoInfoTerm.get(allRepresentatives.get(i));
 				for(int j= i+1; j<allRepresentatives.size();j++) {
@@ -553,12 +550,6 @@ public class GSAnServiceImpl implements GSAnService {
 				Map<String, Object> mapTerm = new HashMap<>();
 				mapTerm.put("name", "Gene Ontology");
 				mapTerm.put("IC", 0);
-				//Set<String> gs = new HashSet<>();
-//				for(String top : ontology) {
-//					InfoTerm it = go.allStringtoInfoTerm.get(top);
-//					//gs.addAll(it.geneSet);
-//							
-//				}
 				mapTerm.put("geneSet", new ArrayList<String>());
 				mapTerm.put("children", ontology);
 				mapInfo.put("GO", mapTerm);
@@ -597,16 +588,7 @@ public class GSAnServiceImpl implements GSAnService {
 //			System.out.println(genesTest.size());
 			finalResult.put("scp", scp);
 			finalResult.put("Reduce", Math.floor(scp.size()/termsInc.size()*100)/100);
-			
-			
-			
-//			Set<InfoTerm> test = new HashSet<>();
-//			for( Cluster c : rep) {
-//				//for(InfoTerm ir : c.representatives) System.out.println("Rep " + ir.toName());
-//				test.addAll(c.representatives);
-//			}
-			//			FIS fis = new FIS(test,geneSupport);
-			
+
 			Map<String,Object> map = new HashMap<>(finalResult);
 			map.put("msg", msg_code);
 			map.put("boolean", true);
@@ -637,59 +619,6 @@ public class GSAnServiceImpl implements GSAnService {
 		return set;
 	}
 
-//	public static double GS2(List<String> symbols, Annotation goa, GlobalOntology go) {
-//
-//		Map<String, Set<String>> map = new HashMap<>();
-//		List<String> genePresent = new ArrayList<>();
-//		for(String s : symbols) {
-//			if(goa.annotation.containsKey(s)) {
-//				genePresent.add(s);
-//				for(String t : goa.annotation.get(s).terms) {
-//					if(!map.containsKey(t)) {
-//						map.put(t, new HashSet<>());
-//						map.get(t).add(s);
-//					}else {
-//						map.get(t).add(s);
-//					}
-//					for(String anc : go.allStringtoInfoTerm.get(t).is_a.ancestors) {
-//						if(!map.containsKey(anc)) {
-//							map.put(anc, new HashSet<>());
-//							map.get(anc).add(s);
-//						}else {
-//							map.get(anc).add(s);
-//						}
-//					}
-//				}
-//			}
-//		}
-//		int H = genePresent.size()-1;
-//		double dd = 0.;
-//		for(String s : genePresent) {
-//			int ng = goa.annotation.get(s).terms.size();
-//			double sum = 0.;
-//			for(String t : goa.annotation.get(s).terms) {
-//				List<String> lt = new ArrayList<String>();
-//				lt.add(t);
-//				lt.addAll(go.allStringtoInfoTerm.get(t).is_a.ancestors);
-//				int san = lt.size();
-//				double rank = 0.;
-//				for(String anc : lt) {
-//					Set<String> set = new HashSet<>(map.get(anc));
-//					set.remove(s);
-//					rank = rank + ((double)set.size()/(double)H);
-//
-//				}
-//				sum = sum + (1/(double)san) * rank;
-//
-//			}
-//			if(Double.isNaN(dd)) {
-//				System.exit(0);
-//			}
-//			dd = dd + (1./(double)ng) * sum;
-//		}
-//
-//		return (1/(double)genePresent.size()) * dd;
-//	}
 	public static double GS2(List<String> symbols,Map<String,Set<String>> gene2rep, GlobalOntology go) {
 
 		Map<String, Set<String>> map = new HashMap<>();

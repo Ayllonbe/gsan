@@ -68,6 +68,7 @@ public class Communication {
 //		System.out.println("[Communication] Exit of R program");
 		
 		com = readFileClustering(path);
+		
 			if(Files.exists(path.toPath()))
 				Files.delete(path.toPath());
 			if(Files.exists(fR.toPath()))

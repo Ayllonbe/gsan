@@ -162,9 +162,10 @@ public class GlobalOntology {
 		this.subontology.get(top).setnumberedge(nisA, npartOf);
 		this.subontology.get(top).addAllLeavesISA(leavesISA);
 		this.Leaves(); // Get the leaves terms in is a taxonomy
-		this.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
 		this.GetICs(); // Add the Intrinsic IC for every GO term
 		this.goUniverseIC(); // Add the GO Universal IC Mazandu et al 2013.
+		
+		this.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
 		Map<String, DescriptiveStatistics> mapSeco = new HashMap<>();
 		Map<String, DescriptiveStatistics> mapZhou = new HashMap<>();
 		Map<String, DescriptiveStatistics> mapSanchez = new HashMap<>();
@@ -768,9 +769,20 @@ public class GlobalOntology {
 			simpleHierarchy.completingThePath(); // Get PartOf terms (method created for me)
 			simpleHierarchy.Leaves(); // Get the leaves terms in is a taxonomy
 			//			simpleHierarchy.Both(); // create
-			simpleHierarchy.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
+			
 			simpleHierarchy.GetICs(); // Add the Intrinsic IC for every GO term
 			simpleHierarchy.goUniverseIC(); // Add the GO Universal IC Mazandu et al 2013.
+			
+			simpleHierarchy.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
+			
+			for(String o : simpleHierarchy.subontology.keySet()) {
+				List<Double> dist = new ArrayList<Double>();
+				for(String t : simpleHierarchy.subontology.get(o).getLeavesISA()) {
+					InfoTerm it = simpleHierarchy.allStringtoInfoTerm.get(t);
+					dist.add(it.distancias.get(o));
+				}
+				simpleHierarchy.subontology.get(o).setMaxDistance(Collections.max(dist));
+			}
 			
 			
 			Map<String, DescriptiveStatistics> mapSeco = new HashMap<>();
@@ -1210,16 +1222,22 @@ public class GlobalOntology {
 			Edges[] lien;
 			ArrayList<Edges> e = new ArrayList<Edges>();
 			InfoTerm it = this.allStringtoInfoTerm.get(m);
+			double icC = it.ICs.get(3);
 			for(String pere : it.is_a.parents){
-				Edges ed = new Edges(this.allStringtoInfoTerm.get(m),this.allStringtoInfoTerm.get(pere),1.0);
+				InfoTerm itP = this.allStringtoInfoTerm.get(pere);
+				double icP = itP.ICs.get(3);
+				
+//				Edges ed = new Edges(it,this.allStringtoInfoTerm.get(pere),Math.abs(icP-icC));
+				Edges ed = new Edges(it,this.allStringtoInfoTerm.get(pere),1);
+				
 				e.add(ed);
 				edges.add(ed);
 			}
-			for(String pere : it.part_of.ancestors){
-				Edges ed = new Edges(this.allStringtoInfoTerm.get(m),this.allStringtoInfoTerm.get(pere),1.0);
-				e.add(ed);
-				edges.add(ed);
-			}
+//			for(String pere : it.part_of.ancestors){
+//				Edges ed = new Edges(this.allStringtoInfoTerm.get(m),this.allStringtoInfoTerm.get(pere),1.0);
+//				e.add(ed);
+//				edges.add(ed);
+//			}
 			// To save distances for each node
 			lien =  new Edges[e.size()];
 			for(int n = 0; n<e.size();n++){
@@ -1231,6 +1249,7 @@ public class GlobalOntology {
 		// Saving distance for each terms
 		this.SaveDistance();
 	}
+	
 	/**
 	 * Method depends of GetDistanceTerms. That method compute A* algorithm to get the distance between two terms
 	 */
