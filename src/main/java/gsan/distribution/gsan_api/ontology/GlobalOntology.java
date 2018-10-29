@@ -1222,13 +1222,13 @@ public class GlobalOntology {
 			Edges[] lien;
 			ArrayList<Edges> e = new ArrayList<Edges>();
 			InfoTerm it = this.allStringtoInfoTerm.get(m);
-			double icC = it.ICs.get(3);
+			double icC = it.ICs.get(1);
 			for(String pere : it.is_a.parents){
 				InfoTerm itP = this.allStringtoInfoTerm.get(pere);
-				double icP = itP.ICs.get(3);
+				double icP = itP.ICs.get(1);
 				
-//				Edges ed = new Edges(it,this.allStringtoInfoTerm.get(pere),Math.abs(icP-icC));
-				Edges ed = new Edges(it,this.allStringtoInfoTerm.get(pere),1);
+				Edges ed = new Edges(it,this.allStringtoInfoTerm.get(pere),Math.abs(icP-icC));
+//				Edges ed = new Edges(it,this.allStringtoInfoTerm.get(pere),1);
 				
 				e.add(ed);
 				edges.add(ed);
