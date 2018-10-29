@@ -13,6 +13,7 @@ src/main/resources/static/AssociationTAB/*
 src/main/resources/static/integration/*
 src/main/tmp/results
 src/main/java/com
+src/main/java/gsan/server/singleton/AnalysisNAR.java
 top10DO.tsv
 .settings
 bin
