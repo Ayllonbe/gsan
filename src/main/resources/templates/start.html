@@ -23,8 +23,7 @@
 												function() {
 													if ($.trim($(this).val()) === "Put here the official gene symbol...") {
 														$(this).val("");
-													}
-													;
+													};
 													return false;
 												})
 								function printText() {
@@ -346,13 +345,10 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 													var csvval = e.target.result
 															.split("\n");
 
-													csvval
-															.forEach(function(x) {
+													csvval.forEach(function(x) {
 																if (x !== "") {
 
-																	genesFile = genesFile
-																			.concat(x
-																					.split(/[\n|\t|;|,]/g));
+																	genesFile = genesFile.concat(x.split(/[\n|\t|;|,]/g));
 
 																}
 															});
@@ -391,30 +387,34 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 
 											if (genesFile.length === 0) { // Observamos si los genes han sido cargados en un fichero.
 
-												genes = genes
-														.concat(document
-																.getElementById("queryText").value
-																.split(/[\n|\t|;|,]/g));
-												if (genes === "Put here the official gene symbol...") {
-													genes = [];
-												}
+												genes = genes.concat(document.getElementById("queryText").value.split(/[\n|\t|;|,]/g));
+												console.log(genes);
+						
 											}
 											var organism = document
 													.getElementById("organism").value;
-											if (genes.length === 0
-													|| (organism === "input" && fileGAF === "")
-													|| $('.ontologies:checked').length === 0) {//Aqui es para validar si los dos (fichero, areatext) tienen algo.
-
-												if (genes.length === 0)
-													alert("Please, the gene input is required!");
-												else if (organism === "input"
-														&& fileGAF === "")
-													alert("Please, the annotation input is required!");
-												else if ($('.ontologies:checked').length === 0)
-													alert("Please, choose at least one ontology");
-
+					
+											if (genes.includes("Put here the official gene symbol...")){
+												alert("Please, the gene input is required!");
+											return false;
+											}
+											else if(genes.length ===1 && genes.includes("")){
+												alert("Please, the gene input is required!");
 												return false;
-											} else {
+											}
+											else if(genes.length<5){
+												alert("Please, the gene input must have a minimun of 5 genes");
+												return false;
+											}
+											else if (organism === "input" && fileGAF === ""){
+												alert("Please, the annotation input is required!");
+												return false;
+											}
+											else if ($('.ontologies:checked').length === 0){
+												alert("Please, choose at least one ontology");
+												return false;
+											}
+											else {
 
 												var iea = document
 														.getElementById("iea").value === "on" ? true
@@ -459,7 +459,7 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 												 "CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4"*/
 												//console.log(organism);
 												if (organism !== "input") {
-
+													console.log(genes.length);
 													var gf = [ genes.toString() ];
 													var f = new File(gf,
 															"filename.txt");

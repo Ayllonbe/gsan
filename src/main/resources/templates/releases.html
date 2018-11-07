@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+	<div class="content">
+		<div th:insert="index"></div>
+
+		<!-- Scrollable div with main content -->
+		<div class="row" id="rowStart" style="width: 100%">
+			<div class="col-xs-12 col-md-12" style="overflow: hidden">
+				<div class="pageClass" id="VisualizePage">
+					<h1>
+						Releases <small>version 1.0</small>
+				<div class="table-container" id="ontology">
+
+						<script>
+							$(document).ready(
+									function() {
+										var table = $('#ont').DataTable();
+										table.order([ 5, 'desc' ],
+												[ 3, 'desc' ]).draw();
+									});
+						</script>
+</div>
+	
+	<div class="table-container" id="annotation">
+
+						<script>
+							$(document).ready(
+									function() {
+										var table = $('#ann').DataTable();
+										table.order([ 5, 'desc' ],
+												[ 3, 'desc' ]).draw();
+									});
+						</script>
+</div>
+	
+		
+</div>
+
+		<script th:inline="javascript">
+			var jobj;
+			/*<![CDATA[*/
+
+			var message = /*[[${json}]]*/'default';
+			jobj = JSON.parse(message);
+			console.log(jobj);
+			/*]]>*/
+
+			
+			
+	
+		var h = ["Ontology","File_name","Release"];
+			var r = [];
+			jobj.ontology.forEach(function(x){
+			  //console.log(dic[x]);
+			  var cells = [];
+			  cells.push(x.name);
+			  cells.push(x.file);
+			  cells.push(x.date);
+			  
+			r.push(cells);
+			})
+
+			var table = new Table()
+			$("#ontology").append('<H2>Ontologies</H2>');
+
+			//sets table data and builds it
+			table
+			    .setHeader(h)
+			    .setData(r)
+			    .setTableClass('table table-striped table-bordered')
+			    .setTableID('ont')
+			    .build('#ontology')
+			    
+			var annh = ["Organism","File_name","Release"];
+			var annr = [];
+			jobj.annotation.forEach(function(x){
+			  //console.log(dic[x]);
+			  var cells = [];
+			  cells.push(x.name);
+			  cells.push(x.file);
+			  cells.push(x.date);
+			  
+			annr.push(cells);
+			})
+			
+			$('#ont').dataTable({searching: false, paging: false, info: false});
+			
+			var annoTable = new Table()
+			$("#annotation").append('<H2>Annotations</H2>');
+
+			//sets table data and builds it
+			annoTable
+			    .setHeader(annh)
+			    .setData(annr)
+			    .setTableClass('table table-striped table-bordered')
+			    .setTableID('ann')
+			    .build('#annotation')
+			    
+			  $('#ann').dataTable({searching: false, paging: false, info: false});
+			 
+		</script>
+
+	</div>
+</body>
+</html>

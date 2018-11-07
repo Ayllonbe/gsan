@@ -1,9 +1,13 @@
 package gsan.server.gsan.api;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -20,6 +24,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ntp.TimeStamp;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import gsan.distribution.gsan_api.annotation.ChooseAnnotation;
 import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.server.gsan.api.service.GSAnService;
 import gsan.server.gsan.api.service.enumerations.CustomException;
@@ -52,7 +58,7 @@ public class GSAnController {
 
 	@Autowired
 	private GSAnService gsanService;
-	@Autowired
+	@Autowired 
 	private taskRepository tRepository;
 	@Autowired
 	private JavaMailSender sender;
@@ -109,6 +115,67 @@ public class GSAnController {
 	public String visu() {
 		return "Chart";
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/releases")
+	public String releases(Model model) {
+		
+		String goFile = "src/main/resources/static/ontology/go.owl";
+		Map<String, Object> process = new HashMap<>();
+		Map<String, String> instance = new HashMap<>();
+		
+		instance.put("name", "Gene Ontology");
+		instance.put("file", "go.owl");
+		File gof = new File(goFile);
+		DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+		instance.put("date",df.format(gof.lastModified()));
+		List<Map<String,String>> liM = new ArrayList<Map<String,String>>();
+		liM.add(instance);
+		
+		process.put("ontology",liM);
+	
+		String[] goas = new String[] {
+			"homo_sapiens",
+			"danio_rerio",
+			"saccharomyces_cerevisiae",
+			"escherichia_coli",
+			"mus_musculus",
+			"arabidopsis_thaliana",
+			"canis_lupus",
+			"sus_scrofa",
+			"rattus_norvegicus",
+			"gallus_gallus",
+			"candida_albicans",
+			"bos_taurus",
+			"drosophila_melanogaster",
+			"caenorhabditis_elegans"
+		};
+		liM = new ArrayList<Map<String,String>>();
+		
+		for(String goaOrg:goas) {
+			String org = ChooseAnnotation.annotation(goaOrg, true);
+			String goaFile = "src/main/resources/static/AssociationTAB/"+org;
+			File goaf = new File(goaFile);
+			System.out.println(goaOrg+"\t"+org+"\t" + df.format(goaf.lastModified()));
+			instance = new HashMap<>();
+	
+			instance.put("name", goaOrg);
+			instance.put("file",org);
+			instance.put("date",df.format(goaf.lastModified()));
+			liM.add(instance);	
+
+			
+		}
+		
+		process.put("annotation", liM);
+		
+		JSONObject jo = new JSONObject();
+		jo.putAll(process);
+		
+		model.addAttribute("json", jo.toJSONString());
+		return "releases";
+	}
+	
 	@RequestMapping("/visualization")
 	public String uploadJSON(Model model,
 			@RequestParam(name = "file",defaultValue="@null") MultipartFile json
