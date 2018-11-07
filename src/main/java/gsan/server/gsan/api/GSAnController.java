@@ -1,10 +1,8 @@
 package gsan.server.gsan.api;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
@@ -28,6 +25,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +35,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -48,9 +45,7 @@ import gsan.distribution.gsan_api.annotation.ChooseAnnotation;
 import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.server.gsan.api.service.GSAnService;
 import gsan.server.gsan.api.service.enumerations.CustomException;
-import gsan.server.gsan.api.service.jpa.IntegrationSourcesRepository;
 import gsan.server.gsan.api.service.jpa.taskRepository;
-import gsan.server.gsan.api.service.model.IntegrationSource;
 import gsan.server.gsan.api.service.model.task;
 
 @Controller
@@ -67,7 +62,8 @@ public class GSAnController {
 	//public static String local = "http://localhost:8282/";
 	
 	
-	
+	@Value("${version.number}")
+	private String versionNumber;
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -91,35 +87,40 @@ public class GSAnController {
 		return new ResponseEntity<Object>("GOOD",HttpStatus.OK);}
 
 	@RequestMapping("/start")
-	public String start() {
+	public String start(Model m) {
+		m.addAttribute("version", versionNumber);
 		return "start";
 	}
 	
 	@RequestMapping("/")
-	public String wellcome() {
+	public String wellcome(Model m) {
+		m.addAttribute("version", versionNumber);
 		return "home";
 	}
 	
 
 	@RequestMapping("/doc")
-	public String documentation() {
+	public String documentation(Model m) {
+		m.addAttribute("version", versionNumber);
 		return "doc";
 	}
 	
 	@RequestMapping("/contact")
-	public String contact() {
+	public String contact(Model m) {
+		m.addAttribute("version", versionNumber);
 		return "contact";
 	}
 	
 	@RequestMapping("/charts")
-	public String visu() {
+	public String visu(Model m) {
+		m.addAttribute("version", versionNumber);
 		return "Chart";
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/releases")
 	public String releases(Model model) {
-		
+		model.addAttribute("version", versionNumber);
 		String goFile = "src/main/resources/static/ontology/go.owl";
 		Map<String, Object> process = new HashMap<>();
 		Map<String, String> instance = new HashMap<>();
@@ -142,7 +143,7 @@ public class GSAnController {
 			"mus_musculus",
 			"arabidopsis_thaliana",
 			"canis_lupus",
-			"sus_scrofa",
+			"sus_scrofa", 
 			"rattus_norvegicus",
 			"gallus_gallus",
 			"candida_albicans",
@@ -180,7 +181,7 @@ public class GSAnController {
 	public String uploadJSON(Model model,
 			@RequestParam(name = "file",defaultValue="@null") MultipartFile json
 			) {
-	
+		model.addAttribute("version", versionNumber);
 		try {
 			byte[] bytes = json.getBytes();
 			String str = new String(bytes, "UTF-8"); 
@@ -219,7 +220,7 @@ public class GSAnController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public String overviewTask(Model model, @PathVariable("id") @NotNull UUID id) {
-
+		model.addAttribute("version", versionNumber);
 		
 		try {
 		if(tRepository.existsById(id)) {	
