@@ -28,7 +28,7 @@ function motvis(dictionary, representatives, genes,tree){
       transform = d3.zoomIdentity,
       x,
       y,
-      pack = d3.pack().size([width*0.9 , height*0.9]),
+      pack = d3.pack().size([width*0.9 , height*0.9]).padding(0.4) ,
       additive = TreeColors("add"),
       subtractive = TreeColors("sub"),
       mode = additive;
@@ -69,7 +69,6 @@ function motvis(dictionary, representatives, genes,tree){
   circleHIDDEN,
   barH;
 
-
  ////console.log(test);
   ////console.log(Math.max(test) + " " + Math.min(test));
   /*
@@ -78,7 +77,9 @@ function motvis(dictionary, representatives, genes,tree){
   */
   //console.log("See");
 
-  genes2circles = {};
+  var genes2circles = {};
+  var node2circles = {};
+  var test = {};
   circles.forEach(function(d) {
 
     d.wTree = treediv.clientWidth/1.1;
@@ -90,19 +91,43 @@ function motvis(dictionary, representatives, genes,tree){
             dictionary[d.data.id].r = d.r;
             dictionary[d.data.id].x = d.x;
             dictionary[d.data.id].y = d.y;
+            if(d.data.id in node2circles ){
+              node2circles[d.data.id].push(d);
+            }else{
+            node2circles [d.data.id] = [];
+                node2circles [d.data.id].push(d);
+            }
+
           //  //console.log(dictionary[d.data.id]);
     }else{
         if(d.data.id in genes2circles){
-          genes2circles[d.data.id].push(d);
+          if(!test[d.data.id].includes(d.parent.data.id)){
+            genes2circles[d.data.id].push(d);
+            test[d.data.id].push(d.parent.data.id);
+          }
+
         }else{
           genes2circles[d.data.id] = [];
             genes2circles[d.data.id].push(d);
+            test[d.data.id] = [];
+            test[d.data.id].push(d.parent.data.id);
         }
     }
   });
 
-
-
+  var saw = []
+  circles.forEach(function(d) {
+      if(d.children &&  !saw.includes(d.data.id)){
+        saw.push(d.data.id);
+      // Pour associer un color a tous les êlements appelé pareil.  
+      //  var color = node2circles[d.data.id][0].color;
+      //  node2circles[d.data.id].forEach(function(x){
+      //    x.color = color;
+      //  });
+  //  console.log(dictionary[d.data.id].name +" " +node2circles[d.data.id].length);
+  }
+  });
+  console.log(circles.length);
   /*
   PREPARING THE FIRST RENDERING. x and y show the original position.
   */
@@ -155,6 +180,7 @@ function motvis(dictionary, representatives, genes,tree){
     context.clearRect(0, 0, width, height); // CLEAR canvas.
     scale = (width-marginW) / v[2];
     ////console.log("scale "+scale);
+
     view = v;
     for (var i = 0, n = circles.length, circle; i < n; ++i) {
       circle = circles[i];
@@ -174,7 +200,7 @@ function motvis(dictionary, representatives, genes,tree){
 
         context.moveTo(circleX + circleR, circleY);
         context.arc(circleX,circleY,circleR, 0, 2 * Math.PI);
-        context.fillStyle =  d3.hcl(circle.color.h, circle.color.c, circle.color.l);
+        context.fillStyle =  d3.hcl(circle.color.h, circle.color.c, circle.color.l,dictionary[circle.data.id].opacity);
         context.fill();
       }
       else{
@@ -183,44 +209,76 @@ function motvis(dictionary, representatives, genes,tree){
         */
         context.moveTo(circleX + circleR, circleY );
         context.arc(circleX,circleY,circleR, 0, 2 * Math.PI);
-        context.fillStyle =  d3.rgb(255,255,255);
+        context.fillStyle =  d3.rgb(255,255,255, dictionary[circle.parent.data.id].opacity);
         context.fill();
         /*
         DRAW THE BAR CHART INTO LEAVES CIRCLE
         */
-        if(!circle.children){
+        if(!circle.children&&(focus===circle||focus===circle.parent|| focus===circle.parent.parent||focus===circle.parent.parent.parent)){
+            var rectH = ((circleR * Math.pow(2, 1 / 2)) / 2) / dictionary[circle.data.id].terms.length;
+              circle.posX = circleX - circleR / 2;//(Math.pow(2, 1 / 2));
+              var posY = circleY- dictionary[circle.data.id].terms.length * rectH / 2
 
-          var rectH = ((circleR * Math.pow(2, 1 / 2)) / 2) / dictionary[circle.data.id].terms.length;
-          circle.posX = circleX - circleR / 2;//(Math.pow(2, 1 / 2));
-          var posY = circleY- dictionary[circle.data.id].terms.length * rectH / 2
+              var gap = rectH * 0.1;
+              dictionary[circle.data.id].terms.sort(function(obj1,obj2){
+                return dictionary[obj1].IC - dictionary[obj2].IC;
+              });
+              circle.axisY = posY + rectH * (dictionary[circle.data.id].terms.length);
+              circle.axisWitdh = (circleR* (-Math.log( Maxv))) / (-Math.log( Maxv));
+              circle.rectnodes = [];
+              genes2circles[circle.data.id].forEach(function(obj,i){
 
-          var gap = rectH * 0.1;
-          dictionary[circle.data.id].terms.sort(function(obj1,obj2){
-            return dictionary[obj1].IC - dictionary[obj2].IC;
-          });
-          circle.axisY = posY + rectH * (dictionary[circle.data.id].terms.length);
-          circle.axisWitdh = (circleR* (-Math.log( Maxv))) / (-Math.log( Maxv));
-          circle.rectnodes = [];
-       
-          genes2circles[circle.data.id].forEach(function(obj,i){
-            var RectY = posY + rectH * i ;// Y position
 
-            var posW =circleR * (-Math.log(dictionary[obj.parent.data.id].IC) / (-Math.log( Maxv))); // WIDTH
-            var rectNode = {};
-            rectNode.name =  dictionary[obj.parent.data.id].name;
-            rectNode.IC =  dictionary[obj.parent.data.id].IC
-            rectNode.posX = circle.posX;
-            rectNode.posY = RectY;
-            rectNode.w = posW;
-            rectNode.h = rectH - gap;
+                var RectY = posY + rectH * i ;// Y position
 
-            circle.rectnodes.push(rectNode);
-            context.fillStyle=d3.hcl(dictionary[obj.parent.data.id].color.h, dictionary[obj.parent.data.id].color.c, dictionary[obj.parent.data.id].color.l);
-            context.fillRect(circle.posX,RectY,posW,rectH-gap);
+                var posW =circleR * (-Math.log(dictionary[obj.parent.data.id].IC) / (-Math.log( Maxv))); // WIDTH
+                var rectNode = {};
+                rectNode.name =  dictionary[obj.parent.data.id].name;
+                rectNode.IC =  dictionary[obj.parent.data.id].IC
+                rectNode.posX = circle.posX;
+                rectNode.posY = RectY;
+                rectNode.w = posW;
+                rectNode.h = rectH - gap;
 
-            });
-          };
-        }
+                circle.rectnodes.push(rectNode);
+                context.fillStyle=d3.hcl(dictionary[obj.parent.data.id].color.h, dictionary[obj.parent.data.id].color.c, dictionary[obj.parent.data.id].color.l,dictionary[obj.parent.data.id].opacity );
+                context.fillRect(circle.posX,RectY,posW,rectH-gap);
+
+                });
+          }
+//        if(!circle.children){
+//
+//          var rectH = ((circleR * Math.pow(2, 1 / 2)) / 2) / dictionary[circle.data.id].terms.length;
+//          circle.posX = circleX - circleR / 2;//(Math.pow(2, 1 / 2));
+//          var posY = circleY- dictionary[circle.data.id].terms.length * rectH / 2
+//
+//          var gap = rectH * 0.1;
+//          dictionary[circle.data.id].terms.sort(function(obj1,obj2){
+//            return dictionary[obj1].IC - dictionary[obj2].IC;
+//          });
+//          circle.axisY = posY + rectH * (dictionary[circle.data.id].terms.length);
+//          circle.axisWitdh = (circleR* (-Math.log( Maxv))) / (-Math.log( Maxv));
+//          circle.rectnodes = [];
+//
+//          genes2circles[circle.data.id].forEach(function(obj,i){
+//            var RectY = posY + rectH * i ;// Y position
+//
+//            var posW =circleR * (-Math.log(dictionary[obj.parent.data.id].IC) / (-Math.log( Maxv))); // WIDTH
+//            var rectNode = {};
+//            rectNode.name =  dictionary[obj.parent.data.id].name;
+//            rectNode.IC =  dictionary[obj.parent.data.id].IC
+//            rectNode.posX = circle.posX;
+//            rectNode.posY = RectY;
+//            rectNode.w = posW;
+//            rectNode.h = rectH - gap;
+//
+//            circle.rectnodes.push(rectNode);
+//            context.fillStyle=d3.hcl(dictionary[obj.parent.data.id].color.h, dictionary[obj.parent.data.id].color.c, dictionary[obj.parent.data.id].color.l);
+//            context.fillRect(circle.posX,RectY,posW,rectH-gap);
+//
+//            });
+//          };
+};
     };
 
     };
@@ -254,7 +312,7 @@ function motvis(dictionary, representatives, genes,tree){
 
         var alpha = 0;
          interval = setInterval(function(){
-          
+
           alpha = Math.min(alpha +0.2, 1);
           context.clearRect(0, 0, width, height); // CLEAR canvas.
           context.putImageData(imgData,0, 0 );
@@ -576,10 +634,10 @@ function drawTextAlongArc(context,str, centerX, centerY, radius,alpha){
                 var font = radius*0.08;
                 context.save();
                 context.font = 'bold '+font + 'pt Ubuntu Mono';
-          
+
                 var angle =  (Math.PI*(context.measureText(str).width)/radius)/2;
 
-          
+
                 while(angle>Math.PI){
                  font = (font*Math.PI)/angle;
                   context.font =  'bold '+font + 'pt Ubuntu Mono';

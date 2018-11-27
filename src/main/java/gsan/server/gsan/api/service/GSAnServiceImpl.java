@@ -520,6 +520,17 @@ public class GSAnServiceImpl implements GSAnService {
 			finalResult.put("tree", tdt.transform(hierarchy, ic_inc, mapTerm2genes));
 			}
 			
+			List<String> scp =  SetCoverAaron.scp(term2genebs,go,ontology);
+			Set<String> genesTest = new HashSet<>();
+			for(String t: scp) {
+//				System.out.println("Rep? " + go.allStringtoInfoTerm.get(t).toName());
+				genesTest.addAll(go.allStringtoInfoTerm.get(t).geneSet);
+			}
+//			System.out.println(genesTest.size());
+			finalResult.put("scp", scp);
+			finalResult.put("Reduce", Math.floor(scp.size()/termsInc.size()*100)/100);
+
+			
 			
 			Map<String,Map<String, Object>> mapInfo = new HashMap<>();
 //			System.out.println("All terms " + allterms.size());
@@ -538,6 +549,26 @@ public class GSAnServiceImpl implements GSAnService {
 					p.retainAll(allterms);
 				mapTerm.put("parent", p);
 				}
+				
+				if(scp.contains(t)) {
+					mapTerm.put("opacity", 1.);
+				}else {
+					boolean oui = false;
+					
+					for(String s : scp) {
+						if(go.allStringtoInfoTerm.get(t).is_a.descendants.contains(s)) {
+							oui = true;
+							break;
+						}
+					}
+					
+					if(oui) {
+						mapTerm.put("opacity", 1.);	
+					}else {
+						mapTerm.put("opacity", 1.);
+					}
+					
+				}
 				List<String> c = new ArrayList<>(it.is_a.childrens);
 				c.retainAll(allterms);
 				mapTerm.put("children", c);
@@ -552,6 +583,7 @@ public class GSAnServiceImpl implements GSAnService {
 				mapTerm.put("IC", 0);
 				mapTerm.put("geneSet", new ArrayList<String>());
 				mapTerm.put("children", ontology);
+				mapTerm.put("opacity", 1.);
 				mapInfo.put("GO", mapTerm);
 			
 			
@@ -579,16 +611,7 @@ public class GSAnServiceImpl implements GSAnService {
 
 			finalResult.put("terms", mapInfo);
 			log.debug("Computing Synthetic algorithm...");
-			List<String> scp =  SetCoverAaron.scp(term2genebs,go,ontology);
-			Set<String> genesTest = new HashSet<>();
-			for(String t: scp) {
-//				System.out.println("Rep? " + go.allStringtoInfoTerm.get(t).toName());
-				genesTest.addAll(go.allStringtoInfoTerm.get(t).geneSet);
-			}
-//			System.out.println(genesTest.size());
-			finalResult.put("scp", scp);
-			finalResult.put("Reduce", Math.floor(scp.size()/termsInc.size()*100)/100);
-
+			
 			Map<String,Object> map = new HashMap<>(finalResult);
 			map.put("msg", msg_code);
 			map.put("boolean", true);
