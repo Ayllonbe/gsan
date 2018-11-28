@@ -4,7 +4,6 @@ gsanServer.png
 mvnw
 mvnw.*
 PostgreSQL_*
-requeriments.txt
 target
 src/main/resources/application.properties
 src/main/resources/static/ontology/*
