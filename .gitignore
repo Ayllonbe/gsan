@@ -1,7 +1,6 @@
 gsanlogfile*
 .gitignore.*
 gsanServer.png
-Dockerfile
 mvnw
 mvnw.*
 PostgreSQL_*
