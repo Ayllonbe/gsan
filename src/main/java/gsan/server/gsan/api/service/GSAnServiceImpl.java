@@ -166,10 +166,10 @@ public class GSAnServiceImpl implements GSAnService {
 	}
 	
 	private List<List<String>> getFile(String o) throws IOException{
-		File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
+		//File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
 		List<List<String>> goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+o);
 		 
-		goaTable.addAll(ReadFile.ReadAnnotation(reacf.getAbsolutePath()));
+		//goaTable.addAll(ReadFile.ReadAnnotation(reacf.getAbsolutePath()));
 		return goaTable;
 	}
 	private List<List<String>> getFile(File o) throws IOException{
