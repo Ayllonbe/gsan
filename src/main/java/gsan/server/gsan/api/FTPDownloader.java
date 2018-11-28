@@ -322,10 +322,16 @@ public class FTPDownloader {
 					Reader decoder = new InputStreamReader(is);
 					BufferedReader br = new BufferedReader(decoder);
 					String line;
+					int count=0;
 					StringBuffer sb = new StringBuffer();
 					while ((line = br.readLine()) != null) {
 						sb.append(line+"\n");
 						//System.out.println(line);
+						if(count%100000==0) {
+							System.out.println(count+"\t"+line);
+							
+						}
+						count++;
 					}
 					PrintWriter pw = new PrintWriter(annotationFile);
 

@@ -38,7 +38,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		// debug
 		//System.out.println("Removing the json...");
 		Path dir = Paths.get("src/main/tmp/results/");
-
+		if(dir.toFile().exists()) {
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.json")) {
 		    for (Path file : stream) {
 		    	Files.delete(file);
@@ -46,6 +46,9 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		}else {
+			dir.toFile().mkdirs();
 		}
 		 // Commenter pour l'instance, mais important
 		File goFile = new File(path+GOOWL);

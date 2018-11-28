@@ -28,34 +28,34 @@ public static void initializeOrGet(String GOOWL) {
 		/*
 		 * INIT TEST HUMAN integration
 		 */
-		File pathways = new File("src/main/resources/static/integration/ReactomePathways.txt");
-		File rel = new File("src/main/resources/static/integration/ReactomePathwaysRelation.txt");
-		String reac = "R";
-		GlobalOntology reactome = GlobalGraph.getGraph(pathways, rel,reac);
-		go.allStringtoInfoTerm.putAll(reactome.allStringtoInfoTerm);
-		
-		for(String author : go.IC2DS.keySet()) {
-			go.IC2DS.get(author).putAll(reactome.IC2DS.get(author));
-			
-		}
-		
-		
-		go.subontology.putAll(reactome.subontology);
-		go.sourceSet.addAll(reactome.sourceSet);
-		
-		
-		String doid = "src/main/resources/static/integration/doid.owl";
-		args[0] = doid;
-		args[1] = "DO";
-		GlobalOntology DO =GlobalOntology.informationOnt(args);
-		go.allStringtoInfoTerm.putAll(DO.allStringtoInfoTerm);
-		
-		for(String author : go.IC2DS.keySet()) {
-			go.IC2DS.get(author).putAll(DO.IC2DS.get(author));
-			
-		}
-		go.subontology.putAll(DO.subontology);
-		go.sourceSet.addAll(DO.sourceSet);
+//		File pathways = new File("src/main/resources/static/integration/ReactomePathways.txt");
+//		File rel = new File("src/main/resources/static/integration/ReactomePathwaysRelation.txt");
+//		String reac = "R";
+//		GlobalOntology reactome = GlobalGraph.getGraph(pathways, rel,reac);
+//		go.allStringtoInfoTerm.putAll(reactome.allStringtoInfoTerm);
+//		
+//		for(String author : go.IC2DS.keySet()) {
+//			go.IC2DS.get(author).putAll(reactome.IC2DS.get(author));
+//			
+//		}
+//		
+//		
+//		go.subontology.putAll(reactome.subontology);
+//		go.sourceSet.addAll(reactome.sourceSet);
+//		
+//		
+//		String doid = "src/main/resources/static/integration/doid.owl";
+//		args[0] = doid;
+//		args[1] = "DO";
+//		GlobalOntology DO =GlobalOntology.informationOnt(args);
+//		go.allStringtoInfoTerm.putAll(DO.allStringtoInfoTerm);
+//		
+//		for(String author : go.IC2DS.keySet()) {
+//			go.IC2DS.get(author).putAll(DO.IC2DS.get(author));
+//			
+//		}
+//		go.subontology.putAll(DO.subontology);
+//		go.sourceSet.addAll(DO.sourceSet);
 		
 //		for(String sub : go.subontology.keySet()) {
 //			OntoInfo oi = go.subontology.get(sub);
