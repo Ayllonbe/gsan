@@ -67,7 +67,10 @@ public static void initializeOrGet(String GOOWL) {
 		 * END Test
 		 */
 		goBase = go;
-		
+//		
+//		System.out.println(go.getPercentile(25, "mazandu", "GO"));
+//		System.out.println(go.getPercentile(50, "mazandu", "GO"));
+//		System.out.println(go.getPercentile(75, "mazandu", "GO"));
 		
 	}
 	public static GlobalOntology getGraph(boolean prok) {

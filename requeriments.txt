@@ -1,4 +1,4 @@
-cluster_2.0.7-1.tar.gz
-getopt_1.20.2.tar.gz
-optparse_1.6.0.tar.gz
-fastcluster_1.1.25.tar.gz
+cluster
+getopt
+optparse
+fastcluster

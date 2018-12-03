@@ -53,8 +53,8 @@ public class Communication {
 //		System.out.println("[Communication] Enter to R program");
 		
 		
-		File Rfile = new File("src/main/resources/Scripts/clusteranalisis.R");
-//		System.out.println("Rscript "+Rfile+ " --file " + new File(file).getAbsolutePath() + " -m "+method+" --outFolder " +new File("src/main/tmp/").getAbsolutePath()+" -o "+out);
+		File Rfile = new File("Scripts/clusteranalisis.R");
+		System.out.println("Rscript "+Rfile+ " --file " + new File(file).getAbsolutePath() + " -m "+method+" --outFolder " +new File("src/main/tmp/").getAbsolutePath()+" -o "+out);
 		//com.log.debug("Rscript "+Rfile+ " --file " + new File(file).getAbsolutePath() + " -m "+method+" --outFolder " +new File("src/main/tmp/").getAbsolutePath()+" -o "+out);
 		Process p;
 		try {
