@@ -15,4 +15,5 @@ src/main/java/gsan/server/singleton/AnalysisNAR.java
 top10DO.tsv
 .settings
 bin
+gsan_cert
 
