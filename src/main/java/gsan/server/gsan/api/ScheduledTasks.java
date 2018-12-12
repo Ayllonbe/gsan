@@ -29,7 +29,7 @@ public class ScheduledTasks {
 	 */
 
 	//@Scheduled(cron="0 0 12 * * ?")
-	@Scheduled(cron="0 0 * * * ?")
+	@Scheduled(cron="0 0 0 * * ?")
 	public void performTask() throws IOException {
 		
 		FTPDownloader.DownloadGOA();

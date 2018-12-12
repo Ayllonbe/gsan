@@ -67,6 +67,8 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 	public double aggregateIC = 0;
 	public double sIC = 0.;
 	public double ivalue = 0.;
+	
+	public Map<String, List<String>> xrefs;
 
 	public InfoTerm(){
 		this.id = new String();
@@ -86,6 +88,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.geneSet = new HashSet<String>();
 		this.genome = new HashSet<String>();
 		this.bits = new BitSet();
+		this.xrefs = new HashMap<>();
 	}
 	public InfoTerm(String id, double level,boolean prok,String ontology){
 		this.id = id;
@@ -107,6 +110,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.genome = new HashSet<String>();
 		this.bits = new BitSet();
 		this.sValue = new HashMap<>();
+		this.xrefs = new HashMap<>();
 	}
 	public InfoTerm(String id, double level, String ontology){
 		this.id = id;
@@ -127,6 +131,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.genome = new HashSet<String>();
 		this.bits = new BitSet();
 		this.sValue = new HashMap<>();
+		this.xrefs = new HashMap<>();
 	}
 	public InfoTerm(InfoTerm it){
 		this.id = it.id;
@@ -149,6 +154,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		this.bits = new BitSet();
 		this.sValue = new HashMap<>(it.sValue);
 		this.top = it.top;
+		this.xrefs = it.xrefs;
 	}
 	public InfoTerm(List<InfoTerm> ti){
 		Set<String> anc = new HashSet<String>();
@@ -164,6 +170,7 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		Set<String> combi = new HashSet<String>();
 		Set<String> genome = new HashSet<String>();
 		Set<String> g = new HashSet<String>();
+		Map<String,Set<String>> xr = new HashMap<>();
 		String id = new String();
 		String name = new String();
 		this.bits = new BitSet();
@@ -209,7 +216,24 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 		nunoOrg += t.ICs.get(5);
 		
 		this.bits.or(t.bits);
+	
+		for(String x: t.xrefs.keySet()) {
+			if(xr.containsKey(x)) {
+				xr.get(x).addAll(t.xrefs.get(x));
+			}else{
+				xr.put(x, new HashSet<>());
+				xr.get(x).addAll(t.xrefs.get(x));
+			}
 		}
+		
+	
+		
+		}
+		this.xrefs =  new HashMap<>();
+		for(String x: xr.keySet()) {
+			this.xrefs.put(x, new ArrayList<String>(xr.get(x)));
+		}
+		
 		this.geneSet = new HashSet<String>(g);
 		this.genome = new HashSet<String>(genome);
 		this.h_scores = average(d);

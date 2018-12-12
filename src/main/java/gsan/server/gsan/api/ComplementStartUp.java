@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -23,6 +24,9 @@ import gsan.server.gsan.api.service.jpa.IntegrationSourcesRepository;
 import gsan.server.gsan.api.service.model.DownloadInformation;
 import gsan.server.gsan.api.service.model.IntegrationSource;
 import gsan.server.singleton.graphSingleton;
+//import it.ozimov.springboot.mail.model.Email;
+//import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
+//import it.ozimov.springboot.mail.service.EmailService;
 
 @Component
 public class ComplementStartUp  implements ApplicationListener<ApplicationReadyEvent>{
@@ -33,10 +37,73 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 	private IntegrationSourcesRepository integrationRepository;
 	@Autowired
 	private DownloadInformationRepository downloadRepository;
+	
+	
+
+//	public void sendEmailWithoutTemplating() throws UnsupportedEncodingException, MessagingException{
+//		 
+//		 Properties properties = System.getProperties();
+//		
+////		 Setup mail server
+//	      properties.setProperty("mail.smtp.host","smtpauth.u-bordeaux.fr");
+//	      properties.setProperty("mail.smtp.port","465");
+//	      properties.setProperty("mail.smtp.user", "securite@labri.fr");
+//	      properties.setProperty("mail.smtp.ssl.enable", "true");
+//	      properties.setProperty("mail.smtp.timeout", "5000");
+//	      Session session = Session.getDefaultInstance(properties);
+//	      
+//	      MimeMessage message = new MimeMessage(session);
+//
+//	         // Set From: header field of the header.
+//	         message.setFrom(new InternetAddress("gsan@labri.fr"));
+//
+//	         // Set To: header field of the header.
+//	         message.addRecipient(Message.RecipientType.TO,new InternetAddress("ayllonbenitez.aaron@gmail.com"));
+//
+//	         // Set Subject: header field
+//	         message.setSubject("This is the Subject Line!");
+//
+//	         // Create the message part 
+//	         BodyPart messageBodyPart = new MimeBodyPart();
+//
+//	         // Fill the message
+//	         messageBodyPart.setText("This is message body");
+////	         
+//	         // Create a multipar message
+//	         Multipart multipart = new MimeMultipart();
+//
+//	         // Set text message part
+//	         multipart.addBodyPart(messageBodyPart);
+//
+//	         // Part two is attachment
+//	         
+//	         multipart.addBodyPart(messageBodyPart);
+//
+//	         // Send the complete message parts
+//	         message.setContent(multipart );
+//
+//	         // Send message
+//	         Transport.send(message);
+//	         System.out.println("Sent message successfully....");
+//	      // Get the default Session object.
+//	}
+
+	
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
 		// debug
 		//System.out.println("Removing the json...");
+//		
+//		try {
+//			sendEmailWithoutTemplating();
+//		} catch (UnsupportedEncodingException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (MessagingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+	
 		Path dir = Paths.get("src/main/tmp/results/");
 		if(dir.toFile().exists()) {
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.json")) {
