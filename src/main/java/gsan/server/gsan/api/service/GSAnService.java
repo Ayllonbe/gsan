@@ -1,10 +1,8 @@
 package gsan.server.gsan.api.service;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.multipart.MultipartFile;
 
 import gsan.server.gsan.api.service.jpa.taskRepository;
 import gsan.server.gsan.api.service.model.task;

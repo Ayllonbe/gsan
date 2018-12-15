@@ -158,13 +158,5 @@ public class ScheduledTasks {
 		}
 	}
 	
-//	@Autowired
-//	private IntegrationSourcesRepository integrationRepository;
-//	@Scheduled(cron="*/15 * * * * ?")
-//	public void CheckGoInDB() throws IOException {
-//		List<IntegrationSource> listis = integrationRepository.findAll();
-//		for(IntegrationSource is:listis) {
-//			System.out.println(is.getId() +"\t" +is.getName() +"\t" +is.getfilename());
-//		}
-//	}
+
 }

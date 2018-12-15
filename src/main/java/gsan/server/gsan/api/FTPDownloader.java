@@ -19,8 +19,6 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
-import gsan.server.gsan.api.service.model.DownloadInformation;
-import gsan.server.gsan.api.service.model.IntegrationSource;
 import gsan.server.singleton.graphSingleton;
 
 public class FTPDownloader {
@@ -362,102 +360,5 @@ public class FTPDownloader {
 		}
 	}
 
-	public static boolean DownloadOntology(IntegrationSource is) {
-		File srcPath = new File("src/main/resources/static/ontology/");
-		if(!srcPath.exists()) {
-			srcPath.mkdirs();
-		}
-		try {
-			FTPDownloader ftpDownloader;
-			//System.out.println(file);
-			DownloadInformation di = is.getDownloadInformation();
-			switch (di.type_download) {
-			case "ftp":
-				System.out.println(di.auth+" "+ di.passw);
-				ftpDownloader=
-						new FTPDownloader(di.uri, di.auth, di.passw);
-				break;
-
-			case "DL":
-				ftpDownloader=
-				new FTPDownloader(di.uri, di.auth, di.passw);
-				break;
-			default:
-				ftpDownloader=
-				new FTPDownloader(di.uri, di.auth, di.passw);
-				break;
-			}
-
-			String annotationFile;
-			if(is.file_name2 =="") {
-				annotationFile = "src/main/resources/static/ontology/"+is.file_name1;
-				return GetOntologyFTP(ftpDownloader, annotationFile, is, di);
-			}else {
-				annotationFile = "src/main/resources/static/ontology/"+is.file_name1;
-				return GetOntologyFTP(ftpDownloader, annotationFile, is, di);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
-	}
-	public static boolean GetOntologyFTP(FTPDownloader ftpDownloader, String annotationFile,IntegrationSource is, DownloadInformation di) {
-		File created_file = new File(annotationFile);
-		long localLong = created_file.lastModified() ;
-
-		long ftpLong = ftpDownloader.viewFile(di.pathway+is.file_name1,is.file_name1);
-		Timestamp ts_ftp = new Timestamp(ftpLong);
-		Timestamp ts_local = new Timestamp(localLong);
-		if(ts_ftp.after(ts_local)) {
-
-			System.out.println("Are there some modification in the file?\n- " + true);
-			InputStream inputS = ftpDownloader.downloadFile(di.pathway+is.file_name1);
-
-			System.out.println("FTP File downloaded successfully");
-
-
-
-
-			System.out.println("Reading GO file");
-
-			try {
-
-				Reader decoder = new InputStreamReader(inputS);
-				BufferedReader br = new BufferedReader(decoder);
-				String line;
-				StringBuffer sb = new StringBuffer();
-				while ((line = br.readLine()) != null) {
-					sb.append(line+"\n");
-					//System.out.println(line);
-				}
-				PrintWriter pw = new PrintWriter(annotationFile);
-
-				pw.print(sb);
-				pw.close();
-
-
-				created_file.setLastModified(ftpLong);
-
-				// read from your scanner
-				ftpDownloader.disconnect();
-				return true;
-			}
-			catch(IOException ex) {
-				// there was some connection problem, or the file did not exist on the server,
-				// or your URL was not in the right format.
-				// think about what to do now, and put it here.
-				ex.printStackTrace(); // for now, simply output it.
-				ftpDownloader.disconnect();
-				return false;
-			}
-
-		}else {
-			System.out.println("Are there some modification in the file?\n- " + false);
-			ftpDownloader.disconnect();
-			return false;
-		}
-
-	}
 }
 
