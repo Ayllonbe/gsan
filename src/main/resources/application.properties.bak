@@ -4,12 +4,6 @@ server.port=8282
 server.tomcat.max-threads=4
 server.error.whitelabel.enabled = false
 server.error.include-stacktrace=always
-
-
-# Max file size.
-spring.servlet.multipart.max-file-size=150MB
-# Max request size.
-spring.servlet.multipart.max-request-size=150MB
 #logging
 logging.level.root= WARN
 logging.level.org.springframework.web= ERROR
@@ -37,23 +31,15 @@ spring.jpa.hibernate.naming.implicit-strategy = org.hibernate.boot.model.naming.
 spring.jpa.properties.hibernate.format_sql=true
 
 #Mailing
-#spring.mail.host=smtpauth.u-bordeaux.fr
-#spring.mail.port=465
-#spring.mail.defaultEncoding=UTF-8
-#spring.mail.properties.mail.smtp.user=securite@labri.fr
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
 spring.mail.username=gsan.taskresult@gmail.com
 spring.mail.password=9y7YTA5O
-#spring.mail.properties.mail.smtp.ssl.enable=true
 spring.mail.properties.mail.smtp.starttls.enable=true
-spring.mail.properties.mail.smtp.starttls.required=false
-spring.mail.properties.mail.smtp.auth=false
-spring.mail.properties.mail.smtp.connectiontimeout=false
-spring.mail.properties.mail.smtp.timeout=10000
-spring.mail.properties.mail.smtp.writetimeout=10000
-#spring.mail.scheduler.persistence.enabled=false
-#spring.mail.scheduler.persistence.redis.embedded=false
-#spring.mail.scheduler.persistence.redis.enabled=false
+spring.mail.properties.mail.smtp.starttls.required=true
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.connectiontimeout=5000
+spring.mail.properties.mail.smtp.timeout=5000
+spring.mail.properties.mail.smtp.writetimeout=5000
 
 version.number=@application.version.number@

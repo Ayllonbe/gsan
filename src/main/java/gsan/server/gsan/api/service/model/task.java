@@ -65,6 +65,9 @@ public class task  implements Serializable{
 	public boolean getError(){
 		return this.error;
 	}
+	public Timestamp getDate(){
+		return this.date;
+	}
 	public int getMSGError(){
 		return this.msg_code;
 	}	

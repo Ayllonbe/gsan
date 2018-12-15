@@ -1,5 +1,4 @@
 package gsan.server.gsan.api.service;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -58,6 +57,8 @@ public class GSAnServiceImpl implements GSAnService {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					t.setError(true);
+					t.setMSGError(6);
 					GOA=null;
 				}
 					
@@ -66,7 +67,6 @@ public class GSAnServiceImpl implements GSAnService {
 			process.putAll(gsanService(query,GOA,go , inc, ontology, ssMethod,
 					simRepFilter, covering, geneSupport,  percentile, prok));
 		
-			
 			finishing(tR,t, process);		
 		
 	}
@@ -86,6 +86,7 @@ public class GSAnServiceImpl implements GSAnService {
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
+					
 					e1.printStackTrace();
 					GOA=null;
 				}
@@ -104,9 +105,9 @@ public class GSAnServiceImpl implements GSAnService {
 	
 	@Override
 	@Async("workExecutor")
-	public void runService(taskRepository tR, task t,List<String> query, File goa_file, boolean IEA,int ic_inc,List<String> ontology,
+	public void runService(taskRepository tR, task t,List<String> query, boolean IEA,int ic_inc,List<String> ontology,
 			String ssMethod, double simRepFilter, double covering,
-			int geneSupport,  int percentile, boolean prok) {
+			int geneSupport,  int percentile, boolean prok,  String goa_file) {
 			Map<String,Object> process = new HashMap<>();
 			
 			log.debug("Beging process n° " + t.getId());
@@ -115,11 +116,13 @@ public class GSAnServiceImpl implements GSAnService {
 			Annotation GOA ;
 		
 				try {
-					List<List<String>> 	goaTable = getFile(goa_file);
+					List<List<String>> 	goaTable = getGAFFile(goa_file);
 				GOA = new Annotation(goaTable, go, true);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
+					t.setError(true);
+					t.setMSGError(6);
 					e1.printStackTrace();
 					GOA=null;
 				}
@@ -129,7 +132,6 @@ public class GSAnServiceImpl implements GSAnService {
 			process.putAll(gsanService(query,GOA,go , ic_inc, ontology, ssMethod,
 					simRepFilter, covering, geneSupport,  percentile, prok));
 		
-			
 			finishing(tR,t, process);	
 	}
 	
@@ -145,7 +147,7 @@ public class GSAnServiceImpl implements GSAnService {
 			pw.print(jo.toJSONString());
 			pw.close();
 			boolean finish = (boolean)  process.get("boolean");
-			if(finish)
+			if(finish && (int) process.get("msg") == 0)
 				t.setfinish(true);
 			else
 				t.setError(true);
@@ -172,10 +174,31 @@ public class GSAnServiceImpl implements GSAnService {
 		//goaTable.addAll(ReadFile.ReadAnnotation(reacf.getAbsolutePath()));
 		return goaTable;
 	}
-	private List<List<String>> getFile(File o) throws IOException{
-		List<List<String>> goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+o.getAbsolutePath());
+	private List<List<String>> getGAFFile(String o) throws IOException{
+		
+		
+		List<List<String>> gafList = new ArrayList<>();
+		try {
+			
+			String[] arr = o.split("\n");
+			
+			for(String a : arr) {
+				if(!a.contains("#")) {
+				List<String> line = new ArrayList<String>();
+				String[] col = a.split("\t");
+				for(String c : col) {
+					line.add(c);
+				}
+				gafList.add(line);
+			}
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		 
-		return goaTable;
+		return gafList;
 	}
 	
 	
@@ -202,9 +225,15 @@ public class GSAnServiceImpl implements GSAnService {
 		Map<String,Double> Mappercentile = new HashMap<>();
 		log.debug("Charging annotated gene in GO terms");
 			go.AddTermToGenome(GOA);	
-		log.debug("Computing ICs...");
+		try {
+			log.debug("Computing ICs...");
 			go.addAnnotationICs();
-			go.AggregateIC();
+			go.AggregateIC();}
+		catch(Exception e) {
+			log.error("Imposible to charge the IC. Normally the annotation file is broken.");
+			msg_code = 6;
+		}
+			
 			log.debug("Computing Percentiles...");	
 			for(String subont : go.sourceSet) {
 //				System.out.println(subont);
@@ -225,7 +254,7 @@ public class GSAnServiceImpl implements GSAnService {
 				termsInc.addAll(termsonto);
 		}
 		if(termsInc.isEmpty()){
-			msg_code = 3;
+			msg_code = msg_code>0?msg_code: 3;
 			throw new java.lang.NullPointerException("line 178 - termsInc is empty");
 			}
 
@@ -373,6 +402,7 @@ public class GSAnServiceImpl implements GSAnService {
 					tailmin, simRepFilter, covering, geneSupport);
 			rep.addAll(ar.run( go, listTerm,GOAincom,percentile));
 			error = ar.errorMsg;
+			//System.out.println("ATENTIION " + error);
 			}
 			
 			if(rep.isEmpty()) {
@@ -380,6 +410,7 @@ public class GSAnServiceImpl implements GSAnService {
 			
 				
 			}
+			
 			List<String> allRepresentatives = new ArrayList<>();
 	
 			Set<String> repRes = new HashSet<>(); 

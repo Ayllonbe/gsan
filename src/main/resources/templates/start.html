@@ -4,12 +4,12 @@
 	<div class="content" >
 		<div th:insert="index"></div>
 		<!-- Scrollable div with main content -->
-		
+
 			<div class="row" id="rowStart" style="width:100%">
 				<div class="col-xs-12 col-md-5">
 				<div class="pageClass">
 					<h1>
-						Analysis 
+						Analysis
 					</h1>
 					<h3>Gene input</h3>
 
@@ -39,8 +39,8 @@
 									}
 								}
 							</script>
-							
-							
+
+
 							 <i class="fa fa-info-circle" rel="tooltip"
 								title="## Gene input ##
 The gene input consider only the official gene symbol. The genes can be delimited by:
@@ -50,22 +50,22 @@ The gene input consider only the official gene symbol. The genes can be delimite
 	3. Line breaks
 	4. Comma
 	5. Semicolon
-	
+
 	It is possible to insert a file in text-plain format."
 ></i>
 						<br>
 						<button id="clear">Clear</button>
 						<script>
-						
+
 						$("#clear").click(function(){
-							$("#queryText").val("Put here the official gene symbol...")	
+							$("#queryText").val("Put here the official gene symbol...")
 						});
-						
+
 						</script>
 						<h6>OR insert a file in csv, tsv or txt file</h6>
 						<input type="file" id="queryFile" name="profile_pic"
 							accept=".csv, .tsv, .txt">
-						
+
 					</div>
 					<h3>Genome annotation input</h3>
 					<div>
@@ -75,13 +75,13 @@ The gene input consider only the official gene symbol. The genes can be delimite
 								<OPTION value="danio_rerio">danio_rerio
 								<OPTION value="saccharomyces_cerevisiae">saccharomyces_cerevisiae
 
-								
+
 								<OPTION value="escherichia_coli">escherichia_coli
 								<OPTION value="mus_musculus">mus_musculus
 								<OPTION value="arabidopsis_thaliana">arabidopsis_thaliana
 
 
-								
+
 								<OPTION value="canis_lupus">canis_lupus
 								<OPTION value="sus_scrofa">sus_scrofa
 								<OPTION value="rattus_norvegicus">rattus_norvegicus
@@ -90,11 +90,11 @@ The gene input consider only the official gene symbol. The genes can be delimite
 								<OPTION value="bos_taurus">bos_taurus
 								<OPTION value="drosophila_melanogaster">drosophila_melanogaster
 
-								
+
 								<OPTION value="caenorhabditis_elegans">caenorhabditis_elegans
 
 
-								
+
 								<OPTION value="input">input
 						</SELECT>
 						</label> <span> <i class="fa fa-info-circle" rel="tooltip"
@@ -104,38 +104,30 @@ Choose the stored organism. If your organism is not in the list, you can choice 
 						</span> <br>
 						<div id="gafHide" style="display: none">
 							<p>Please, use a gaf file format.</p>
-							<input type="file" id="GAF" name="GAF"
-								accept=".tsv,.csv,.txt,.gaf"> <br>
+							<input type="file" id="GAF" name="GAF"> <br>
 						</div>
 						<script>
-							
 
+							 if($("#organism").val()== "input"){
+
+								 $("#gafHide").show();
+	 							//$('#prok').bootstrapToggle('enable')
+	 							} else{
+	 							$("#gafHide").hide();
+							}
 							 $("#organism").change(function(event) {
-							/* if(event.target.value == "escherichia_coli"){
-							 $('#prok').bootstrapToggle('enable')
-							 $('#prok').bootstrapToggle('on');
-							 $('#prok').val("on");
-							 $('#prok').bootstrapToggle('disable')
 
-
-							 }else{
-							 $('#prok').bootstrapToggle('enable')
-							 $('#prok').bootstrapToggle('off');
-							 $('#prok').val("off");
-							 $('#prok').bootstrapToggle('disable')
-							 }
-							 */
 							 if(event.target.value == "input"){
-							 $("#gafHide").show();
+							$("#gafHide").show();
 							 //$('#prok').bootstrapToggle('enable')
 							 } else{
-							 $("#gafHide").hide();
+							$("#gafHide").hide();
 							// $('#prok').bootstrapToggle('disable')
 							 }
 
 
 							 });
-							 
+
 						</script>
 
 						<br>
@@ -148,7 +140,7 @@ Choose the stored organism. If your organism is not in the list, you can choice 
 							Considering IEA:&nbsp; <input id="iea" checked
 								data-toggle="toggle" data-onstyle="primary" data-size="mini"
 								type="checkbox"> <i class="fa fa-info-circle"
-								rel="tooltip" title="## Infered Electronic Analysis ## 
+								rel="tooltip" title="## Infered Electronic Analysis ##
 Choose if the annotation with IEA evidence are considered or not in the analysis. IEA are annotation created without curator review."></i>
 
 						</div>
@@ -162,13 +154,13 @@ Choose the sub-ontology independently or together."></i>
 							value="GO:0003674"> <label for="MF">molecular_function</label>
 						<input class="ontologies" id="CC" type="checkbox"
 							value="GO:0005575"> <label for="CC">cellular_component</label>
-						<input class="ontologies" id="DO" type="checkbox"
+					<!--	<input class="ontologies" id="DO" type="checkbox"
 							value="DOID:4"> <label for="DO">disease</label>
 						<input class="ontologies" id="R" type="checkbox"
-							value="reac"> <label for="R">reactome</label>
-						<!-- 
+							value="reac"> <label for="R">reactome</label>-->
+						<!--
 						<input class="ontologies" id="all" type="checkbox" value="all">
-						 
+
 						<label for="all">all </label>
 						-->
 						<!-- (doesn't work) -->
@@ -319,26 +311,51 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 					<button type="button" id="run" class="btn-circle btn-xl">
 						<i class="glyphicon glyphicon-play"></i>
 					</button>
+					<span id="uploading" style="display: none;">
+					Uploading GAF file: <span id="percentage"></span>
+					</span>
+					<span id="uploaded" style="display: none;">
+						GAF file uploaded.
+					</span>
 
 					<br><br>
 
 
 					<script>
-						var genesFile = []
 
+						var fileGAF = "";
+						$("#GAF")
+								.change(
+										function(e) {
+											//var ext = $("input#GAF")
+												//	.val().split(".").pop()
+												//	.toLowerCase();
+
+									//		if ($.inArray(ext, [ "txt", "csv",
+									//				"tsv", ".gaf" ]) == -1) {
+									//			alert('Please upload a .gaf,.txt,.csv or .tsv file');
+									//			return false;
+									//		}
+                    fileGAF = e.target.files.item(0);
+
+
+
+
+										});
+
+						var genesFile = []
 						$("#queryFile")
 								.change(
 										function(e) {
-											var ext = $("input#queryFile")
-													.val().split(".").pop()
+											var ext = $("input#queryFile").val()
+													.split(".").pop()
 													.toLowerCase();
-
+											//console.log(ext);
 											if ($.inArray(ext, [ "txt", "csv",
-													"tsv", ".gaf" ]) == -1) {
-												alert('Please upload a .gaf,.txt,.csv or .tsv file');
+													"tsv" ]) == -1) {
+												alert('Please upload a .txt,.csv or .tsv file');
 												return false;
 											}
-
 											if (e.target.files != undefined) {
 												var reader = new FileReader();
 												reader.onload = function(e) {
@@ -358,26 +375,7 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 																.item(0));
 
 											}
-
-											return false;
-
-										});
-
-						var fileGAF = "";
-						$("#GAF")
-								.change(
-										function(e) {
-											var ext = $("input#GAF").val()
-													.split(".").pop()
-													.toLowerCase();
-											//console.log(ext);
-											if ($.inArray(ext, [ "txt", "csv",
-													"tsv" ]) == -1) {
-												alert('Please upload a .txt,.csv or .tsv file');
 												return false;
-											}
-											fileGAF = e.target.files.item(0);
-
 										});
 
 						$("#run")
@@ -388,12 +386,12 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 											if (genesFile.length === 0) { // Observamos si los genes han sido cargados en un fichero.
 
 												genes = genes.concat(document.getElementById("queryText").value.split(/[\n|\t|;|,]/g));
-												console.log(genes);
-						
+												//console.log(genes);
+
 											}
 											var organism = document
 													.getElementById("organism").value;
-					
+
 											if (genes.includes("Put here the official gene symbol...")){
 												alert("Please, the gene input is required!");
 											return false;
@@ -408,6 +406,10 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 											}
 											else if (organism === "input" && fileGAF === ""){
 												alert("Please, the annotation input is required!");
+												return false;
+											}
+											else if (organism === "input" && fileGAF.size>150000000 ){
+												alert("The maximal size allowed is 150MB, If your GAF file is bigger, please contact us.");
 												return false;
 											}
 											else if ($('.ontologies:checked').length === 0){
@@ -457,14 +459,12 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 												/*var genes = "LY6E,IFIT1,OAS1,IFIT1,IFIT3,OAS3,IFIT3,OAS1,OASL,LOC129607,ISG15,HERC5,OAS1,MX1,"+
 												 "BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,"  +
 												 "CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4"*/
-												//console.log(organism);
+												//console.log(organism)
 												if (organism !== "input") {
-													console.log(genes.length);
 													var gf = [ genes.toString() ];
 													var f = new File(gf,
 															"filename.txt");
-													//console.log(f);
-							
+
 													//console.log(gf);
 
 													var formData = new FormData();
@@ -488,14 +488,14 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 
 													xhr.onload = function() {
 														var popUp = window.open(xhr.responseURL,'_blank');
-													
+
 												//console.log(popUp)
-														
-												if (popUp == null || typeof(popUp)=='undefined') { 	
+
+												if (popUp == null || typeof(popUp)=='undefined') {
 													alert("Your browser has activated the popup blocker. If you want to use GSAn, please disable it.")
-													
-												} 
-												else { 	
+
+												}
+												else {
 													popUp.focus();
 												}
 													}
@@ -503,6 +503,9 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 													xhr.send(formData)
 
 												} else {
+													var gf = [ genes.toString() ];
+													var f = new File(gf,
+															"filename.txt");
 													var formData = new FormData();
 													formData.append("query", f);
 													formData.append("useIEA",iea);
@@ -522,20 +525,35 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 															.open("POST",
 																	window.location.protocol+"//"+window.location.host+"/gsanPost","_self");
 
+
+																	xhr.upload.onprogress = function(e) {
+																		$("#uploading").show();
+				    												if (e.lengthComputable) {
+				      													var percentComplete = (e.loaded / e.total) * 100;
+																				percentComplete = Math.floor(percentComplete);
+																				$("#percentage").html(percentComplete);
+				      												//	console.log(percentComplete + '% uploaded');
+																				if(percentComplete===100){
+																					$("#uploading").hide();
+																					$("#uploaded").show();
+																				}
+				    											}
+				  										};
 													xhr.onload = function() {
-														
-														var popUp = window
-																.open(xhr.responseURL,'_blank');
-														if (popUp == null || typeof(popUp)=='undefined') { 	
-															 window.open(xhr.responseURL,''); 
-														} 
-														else { 	
-															popUp.focus();
-														}
+														var popUp = window.open(xhr.responseURL,'_blank');
+
+												//console.log(popUp)
+
+												if (popUp == null || typeof(popUp)=='undefined') {
+													alert("Your browser has activated the popup blocker. If you want to use GSAn, please disable it.")
+
+												}
+												else {
+													popUp.focus();
+												}
 													}
 
 													xhr.send(formData)
-				
 												}
 
 												return false;
@@ -547,19 +565,19 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 				</div>
 				<div id="examples" class="col-xs-12 col-md-6 col-lg-5">
 					<H1>Example to run GSAn</H1>
-					
-					
+
+
 					<h3>Example 1</h3>
-					
+
 					<p>Set of 27 genes annotated as Interferon. This gene set was provided of a module repertoire created from several diseases data-set by <a href="https://www.nature.com/articles/nri3642" target="_blank">Chaussabel et Baldwin.</a></p>
-					
+
 					<button id="example1" class="btn btn-primary btn-sm"
 						style="float: rigth; background-color: #4169E1;">Click to use!</button>
-					
+
 					<h3>Example 2</h3>
-					
+
 					<p>Set of 81 genes annotated as regulation of antigen presentation and immune response. This gene set was provided of a module repertoire created from five human vaccines by <a href="https://www.nature.com/articles/ni.2789" target="_blank">Li et al.</a></p>
-					
+
 					<button id="example2" class="btn btn-primary btn-sm"
 						style="float: rigth; background-color: #4169E1;">Click to use!</button>
 					<br><br>
@@ -576,7 +594,7 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 						});
 						</script>
 				</div>
-			
+
 
 		</div>
 
@@ -591,7 +609,7 @@ This values is crucial to compute the incomplete annotation. Using the GO struct
 				//placement : 'right'
 		//	});
 		//});
-		
+
 	$(document).ready(function(){
     $("[rel=tooltip]").popover({ placement: 'right'});
 });

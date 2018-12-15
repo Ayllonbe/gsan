@@ -48,17 +48,17 @@ representative.forEach(function(x){
   cells.push(dic[x].onto);
   cells.push(Math.floor(dic[x].IC*100)/100);
   cells.push(dic[x].geneSet.length);
-  
+
   if(scp.includes(x)){
 	  cells.push(true);
   }else{
 	  cells.push(false);
   }
- 
+
 r.push(cells);
 })
 
-$("#tableResult").append('<H3>There are '+representative.length+' representative terms and '+scp.length +' syntethic terms annotating ' +recoverGenes.size +' out of '+genes.length+' genes</H3>');
+$("#tableResult").append('<H3>There are '+representative.length+' representative terms and '+scp.length +' synthetic terms annotating ' +recoverGenes.size +' out of '+genes.length+' genes</H3>');
 var table = new Table()
 
 //sets table data and builds it
@@ -69,7 +69,7 @@ table
     .setTableID('tableRep')
     .build()
 
-$("#tableResult").append('<button class="btnCsv" style="float:right"><i class="fa fa-download"></i>&nbsp;Export CSV</button>');
+$("#tableResult").append('<button class="btnCsv" style="float:right;font-family: sans-serif;font-size:18px;"><i class="fa fa-download"></i>&nbsp;Export CSV</button>');
 
 motvis(dic,representative,genes,data.tree);
 

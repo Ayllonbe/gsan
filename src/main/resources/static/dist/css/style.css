@@ -3,6 +3,7 @@ html, body {
     margin:0;
     padding:0;
     background-color: #F5F5F5;
+    overflow-x:hidden;
 }
 header{
     width: 100%;
@@ -24,7 +25,7 @@ header h2{
   font-size:35px;
 }
 .popover{
-    width:250px;    
+    width:250px;
 }
 .content {
     position:relative;
@@ -108,9 +109,9 @@ header h2{
 
 #examples{
 	height: 100%;
-	
-    
-     
+
+
+
 }
 #loadingPage {
 padding-top: 100px;
@@ -221,7 +222,7 @@ table {
     th {
     background-color: #5f81e8;
     color: white;
-} 
+}
 /*
     td {
         border: 1px solid;
@@ -242,4 +243,3 @@ table {
     .tablink:hover {
         background-color: #777;
     }
- 

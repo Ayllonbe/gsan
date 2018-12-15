@@ -85,7 +85,7 @@ public class Communication {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				com.error = 3;
+				com.error = 4;
 				com.log.error(e.getLocalizedMessage());
 				com.log.error("[R comand] "+line);
 			}

@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -31,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
@@ -103,7 +106,7 @@ public class GSAnController {
 	}
 
 
-	@RequestMapping("/doc")
+	@RequestMapping("/documentation")
 	public String documentation(Model m) {
 		m.addAttribute("version", versionNumber);
 		return "doc";
@@ -115,7 +118,7 @@ public class GSAnController {
 		return "contact";
 	}
 
-	@RequestMapping("/charts")
+	@RequestMapping("/visualization")
 	public String visu(Model m) {
 		m.addAttribute("version", versionNumber);
 		return "Chart";
@@ -161,7 +164,7 @@ public class GSAnController {
 			String org = ChooseAnnotation.annotation(goaOrg, true);
 			String goaFile = "src/main/resources/static/AssociationTAB/"+org;
 			File goaf = new File(goaFile);
-			System.out.println(goaOrg+"\t"+org+"\t" + df.format(goaf.lastModified()));
+		//	System.out.println(goaOrg+"\t"+org+"\t" + df.format(goaf.lastModified()));
 			instance = new HashMap<>();
 
 			instance.put("name", goaOrg);
@@ -181,7 +184,7 @@ public class GSAnController {
 		return "releases";
 	}
 
-	@RequestMapping("/visualization")
+	@RequestMapping("/results")
 	public String uploadJSON(Model model,
 			@RequestParam(name = "file",defaultValue="@null") MultipartFile json
 			) {
@@ -200,26 +203,26 @@ public class GSAnController {
 
 	}
 
-	@RequestMapping(value = "/api/foo.csv")
-	public void fooAsCSV(HttpServletResponse response) {         
-		response.setContentType("text/plain; charset=utf-8");
-		try {
-			response.getWriter().print("a,b,c\n1,2,3\n3,4,5");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	@RequestMapping(value = "/api/foo.csv")
+//	public void fooAsCSV(HttpServletResponse response) {         
+//		response.setContentType("text/plain; charset=utf-8");
+//		try {
+//			response.getWriter().print("a,b,c\n1,2,3\n3,4,5");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 	@RequestMapping("/wait")
 	String running() {
 		return "wait";
 	}
 
-	@RequestMapping("/error400")
-	String error400() {
-		return "error";
-	}
+//	@RequestMapping("/error400")
+//	String error400() {
+//		return "error";
+//	}
 
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -240,7 +243,7 @@ public class GSAnController {
 							model.addAttribute("json", jsonData);
 							if(email!=null && email!="") {
 								try {
-									//sendEmailWithoutTemplating(email, t.getId());
+									sendEmailWithoutTemplating(email, t.getId());
 								}
 								catch(Exception e) {
 									log.debug("The email is not valide.");
@@ -281,8 +284,10 @@ public class GSAnController {
 	}
 	//	
 	
+	DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	public void sendEmailWithoutTemplating(String email, UUID id){
+
+	public void sendEmailWithoutTemplating(String email, UUID id) throws UnsupportedEncodingException{
 
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -294,20 +299,32 @@ public class GSAnController {
 			// Set Subject: header field
 			message.setSubject("[GSAn] Analysis finished");
 			
-			// Fill the message
-			helper.setText("Hi,\\nThe analyis is finished and you can access here: https://gsan.labri.fr/"+id);
+			task task = tRepository.getOne(id);
+			LocalDateTime ts = task.getDate().toLocalDateTime();
 
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			System.out.println("The email is incorrect");
-			e.printStackTrace();
+			// Fill the message
+			helper.setText("** This is an automatic email, Please don't reply to it **"+
+					"\n\n"+
+							"Your analysis sent on "+ts.format(format)+" is finished and you can access to the results using the following link:"+
+							"\n https://gsan.labri.fr/"+id+
+							"\n\n"+
+									"Regards,"+
+									"\n\n"+
+									"GSAn team\n\n"+
+									"**  If you have any questions about GSAn, please contact us in  https://gsan.labri.fr/contact **\r\n"
+									);
+	    sender.send(message);
+	    log.debug("Sent message successfully....");
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
-			System.out.println("The email is incorrect");
-			e.printStackTrace();
+			log.error("The email is incorrect");
+			//e.printStackTrace();
+		}catch(MailSendException e) {
+			log.error("The email is null or incorrect");
 		}
-		sender.send(message);
-		System.out.println("Sent message successfully....");
+			
+		
+		
 		// Get the default Session object.
 	}
 
@@ -315,7 +332,7 @@ public class GSAnController {
 	@RequestMapping("/question")
 	public String sendQuestion(@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "email", required = true) String email,
-			@RequestParam(value = "msj", required = true) String msj) {
+			@RequestParam(value = "msj", required = true) String msj) throws UnsupportedEncodingException {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
@@ -325,18 +342,18 @@ public class GSAnController {
 			helper.setTo(new InternetAddress("ayllonbenitez.aaron@gmail.com"));
 			// Set Subject: header field
 			message.setSubject("[GSAn] Question");
-			sender.send(message);
 			// Fill the message
-			helper.setText(msj);
+			helper.setText(msj+" \n Mail:"+email);
+			 sender.send(message);
+			    log.debug("Sent message successfully....");
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					log.error("The email is incorrect");
+					//e.printStackTrace();
+				}catch(MailSendException e) {
+					log.error("The email is null or incorrect");
+				}
 
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		sender.send(message);
 		 message = sender.createMimeMessage();
 		 helper = new MimeMessageHelper(message);
 
@@ -346,16 +363,18 @@ public class GSAnController {
 				helper.setTo(new InternetAddress(email));
 				// Set Subject: header field
 				message.setSubject("[GSAn] Question");
-				message.setText("Thank you for your interest in GSAn, we will contact you as soon as possible.\\nRegards,\\nGSAn team");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (MessagingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		sender.send(message);
-		System.out.println("Mails sended");
+				message.setText("** This is an automatic email, Please don't reply to it **"+
+						"\n\n"+"Thank you for your interest in GSAn, we will contact you as soon as possible.\n\nRegards,\n\nGSAn team");
+				 sender.send(message);
+				 log.debug("Mails sended");
+				    log.debug("Sent message successfully....");
+					} catch (MessagingException e) {
+						// TODO Auto-generated catch block
+						log.error("The email is incorrect");
+						//e.printStackTrace();
+					}catch(MailSendException e) {
+						log.error("The email is null or incorrect");
+					}
 		return "contact";
 	}
 
@@ -421,7 +440,7 @@ public class GSAnController {
 			Model model,
 			@RequestParam(value = "ontology", required = false, defaultValue = "GO:0008150") List<String> top,
 			@RequestParam(value = "query", required = true) MultipartFile file,
-			@RequestParam(value = "uploadFile", required = false,defaultValue = "homo_sapiens") File gaf,
+			@RequestParam(value = "uploadFile", required = true) MultipartFile  gaf,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
 			@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
@@ -450,7 +469,21 @@ public class GSAnController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String gafString  = new String();
+		try {
+			//System.out.println("start");
+			StringWriter writer = new StringWriter();
+			//System.out.println(file.getContentType());
+			IOUtils.copy(gaf.getInputStream(), writer, StandardCharsets.UTF_8);
+			gafString = writer.toString();
+			//System.out.println(theString);
+			
+			//System.out.println("End2");
 
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		if(query.size()>2) {
 			//System.out.println("EMAIL "+email);
@@ -458,8 +491,8 @@ public class GSAnController {
 
 			tRepository.save(t);
 
-			gsanService.runService(tRepository, t, query, gaf, useiea, ic_inc, top,
-					ss, similarityRepValue, covering, geneSupport,percentile,prok);
+			gsanService.runService(tRepository, t, query, useiea, ic_inc, top,
+					ss, similarityRepValue, covering, geneSupport,percentile,prok, gafString);
 			uidd2email.put(t.getId(), email);
 			return "redirect:/"+t.getId();
 		}

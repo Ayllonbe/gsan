@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-	
+
 
 	<div class="content">
 		<div th:insert="index"></div>
@@ -11,13 +11,13 @@
 			<div class="col-xs-12 col-md-12">
 				<div class="pageClass">
 					<h1>
-						Visualization 
+						Visualization
 					</h1>
 					<h3>JSON input</h3>
 
 					<br>
 					<div id="query">
-						<form method="POST" action="/visualization"
+						<form method="POST" action="/results"
 							enctype="multipart/form-data" accept=".json">
 							<input id="queryFile" type="file" name="file" /><br />
 							<button type="submit" id="run" class="btn-circle btn-xl">

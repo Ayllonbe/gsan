@@ -6,7 +6,7 @@
 
 	<groupId>gsan.server</groupId>
 	<artifactId>gsan.api</artifactId>
-	<version>0.1.2</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>gsan.api</name>

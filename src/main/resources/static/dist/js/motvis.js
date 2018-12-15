@@ -119,7 +119,7 @@ function motvis(dictionary, representatives, genes,tree){
   circles.forEach(function(d) {
       if(d.children &&  !saw.includes(d.data.id)){
         saw.push(d.data.id);
-      // Pour associer un color a tous les êlements appelé pareil.  
+      // Pour associer un color a tous les êlements appelé pareil.
       //  var color = node2circles[d.data.id][0].color;
       //  node2circles[d.data.id].forEach(function(x){
       //    x.color = color;
@@ -214,7 +214,8 @@ function motvis(dictionary, representatives, genes,tree){
         /*
         DRAW THE BAR CHART INTO LEAVES CIRCLE
         */
-        if(!circle.children&&(focus===circle||focus===circle.parent|| focus===circle.parent.parent||focus===circle.parent.parent.parent)){
+      //  if(!circle.children&&(focus===circle||focus===circle.parent|| focus===circle.parent.parent||focus===circle.parent.parent.parent)){
+					    if(!circle.children&&(circle.ancestors().includes(focus)||focus===circle)){
             var rectH = ((circleR * Math.pow(2, 1 / 2)) / 2) / dictionary[circle.data.id].terms.length;
               circle.posX = circleX - circleR / 2;//(Math.pow(2, 1 / 2));
               var posY = circleY- dictionary[circle.data.id].terms.length * rectH / 2
