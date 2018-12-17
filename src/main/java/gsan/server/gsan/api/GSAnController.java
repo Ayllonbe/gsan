@@ -331,7 +331,7 @@ public class GSAnController {
 			// Set Subject: header field
 			message.setSubject("[GSAn] Question");
 			// Fill the message
-			helper.setText(msj+" \n Mail:"+email);
+			helper.setText(msj+" \nMail: "+email+" \nName: "+name);
 			 sender.send(message);
 			    log.debug("Sent message successfully....");
 				} catch (MessagingException e) {
@@ -352,9 +352,8 @@ public class GSAnController {
 				// Set Subject: header field
 				message.setSubject("[GSAn] Question");
 				message.setText("** This is an automatic email, Please don't reply to it **"+
-						"\n\n"+"Thank you for your interest in GSAn, we will contact you as soon as possible.\n\nRegards,\n\nGSAn team");
+						"\n\n"+"Dear "+name+",\n\nThank you for your interest in GSAn, we will contact you as soon as possible.\n\nRegards,\n\nGSAn team");
 				 sender.send(message);
-				 log.debug("Mails sended");
 				    log.debug("Sent message successfully....");
 					} catch (MessagingException e) {
 						// TODO Auto-generated catch block
