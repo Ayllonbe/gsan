@@ -41,7 +41,7 @@ public class GSAnServiceImpl implements GSAnService {
 	@Async("workExecutor")
 	public void runService(taskRepository tR, task t,List<String> query, String organism, boolean IEA,int inc,List<String> ontology,
 			String ssMethod, double simRepFilter, double covering,
-			int geneSupport,  int percentile, boolean prok) {
+			int geneSupport,  int percentile, boolean prok,int ids) {
 		Map<String,Object> process = new HashMap<>();
 		
 			log.debug("Beging process n° " + t.getId());
@@ -52,7 +52,7 @@ public class GSAnServiceImpl implements GSAnService {
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, true);
+				GOA = new Annotation(goaTable, go, true,ids);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -74,7 +74,7 @@ public class GSAnServiceImpl implements GSAnService {
 	@Override
 	public Map<String,Object> runService(List<String> query, String organism, boolean IEA,int inc,List<String> ontology,
 			String ssMethod, double simRepFilter, double covering,
-			int geneSupport, int percentile, boolean prok) {
+			int geneSupport, int percentile, boolean prok,int ids) {
 		try {
 			String goa_file = ChooseAnnotation.annotation(organism,IEA);
 			GlobalOntology go = graphSingleton.getGraph(prok);
@@ -82,7 +82,7 @@ public class GSAnServiceImpl implements GSAnService {
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, true);
+				GOA = new Annotation(goaTable, go, true,ids);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -107,7 +107,7 @@ public class GSAnServiceImpl implements GSAnService {
 	@Async("workExecutor")
 	public void runService(taskRepository tR, task t,List<String> query, boolean IEA,int ic_inc,List<String> ontology,
 			String ssMethod, double simRepFilter, double covering,
-			int geneSupport,  int percentile, boolean prok,  String goa_file) {
+			int geneSupport,  int percentile, boolean prok,  String goa_file,int ids) {
 			Map<String,Object> process = new HashMap<>();
 			
 			log.debug("Beging process n° " + t.getId());
@@ -117,7 +117,7 @@ public class GSAnServiceImpl implements GSAnService {
 		
 				try {
 					List<List<String>> 	goaTable = getGAFFile(goa_file);
-				GOA = new Annotation(goaTable, go, true);
+				GOA = new Annotation(goaTable, go, true,ids);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block

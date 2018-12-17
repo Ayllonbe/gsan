@@ -11,17 +11,41 @@
 					<h1>
 						Analysis
 					</h1>
-					<h3>Gene input</h3>
+					<h3>Input</h3>
 
 
 					<div id="query">
 						<textarea class="comments" id="queryText"
-								style="width: 90%; height: 90px;" oninput="printText()">Put here the official gene symbol...</textarea>
+								style="width: 90%; height: 90px;" oninput="printText()">Put here the Official gene symbols or UniprotKB ids...
+							</textarea>
+							  <label>
+							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> UniprotKB</label>
+							  <label>
+							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> Official gene symbol</label>
+
+
 							<script>
+							$(".protORgene").on('click', function() {
+							  // in the handler, 'this' refers to the box clicked on
+							  var $box = $(this);
+							  if ($box.is(":checked")) {
+							    // the name of the box is retrieved using the .attr() method
+							    // as it is assumed and expected to be immutable
+							    var group = "input:checkbox[name='" + $box.attr("name") + "']";
+							    // the checked state of the group/box on the other hand will change
+							    // and the current value is retrieved using .prop() method
+							    $(group).prop("checked", false);
+							    $box.prop("checked", true);
+							  } else {
+							    $box.prop("checked", false);
+							  }
+							});
+
+
 								$("#queryText")
 										.click(
 												function() {
-													if ($.trim($(this).val()) === "Put here the official gene symbol...") {
+													if ($.trim($(this).val()) === "Put here the Official gene symbols or UniprotKB ids...") {
 														$(this).val("");
 													};
 													return false;
@@ -42,7 +66,7 @@
 
 
 							 <i class="fa fa-info-circle" rel="tooltip" data-html="true"
-								title="Gene input" data-content="The gene input consider only the official gene symbol. The genes can be delimited by:<br>
+								title="Gene input" data-content="The gene input consider only the official gene symbol and the UniprotKB ids. The genes can be delimited by:<br>
 
 								&nbsp;	1. Space<br>
 								&nbsp;	2. Tabulation<br>
@@ -53,11 +77,14 @@
 									It is possible to insert a file in text-plain format."
 ></i>
 						<br>
+						<h6>If your gene/protein ids are not Official gene symbols or UniprotKB ids, you can convert them to UniprotKB
+						<br>
+						in <a href="https://www.uniprot.org/uploadlists/"> https://www.uniprot.org/uploadlists/ </a></h6>
 						<button id="clear">Clear</button>
 						<script>
 
 						$("#clear").click(function(){
-							$("#queryText").val("Put here the official gene symbol...")
+							$("#queryText").val("Put here the Official gene symbols or UniprotKB ids...")
 						});
 
 						</script>
@@ -68,8 +95,17 @@
 					</div>
 					<h3>Genome annotation input</h3>
 					<div>
-						<br> <label style="font-weight: normal;">Choose an
-							organisme: <SELECT id="organism" name="organism" size="1">
+						<br>
+						<div class="row">
+							<div class="col-sm-4">
+								<label style="font-weight: normal;">Choose an
+							organism:	<span> <i class="fa fa-info-circle" rel="tooltip"
+									title="Select genome" data-content="Choose the stored organism. If your organism is not in the list, you can choose input and upload a GOA using the gaf 2.0 format."
+									></i>
+								</span></label>
+						</div>
+						<div class="col-sm-4">
+							 <SELECT id="organism" name="organism" size="1">
 								<OPTION value="homo_sapiens" selected>homo_sapiens
 								<OPTION value="danio_rerio">danio_rerio
 								<OPTION value="saccharomyces_cerevisiae">saccharomyces_cerevisiae
@@ -96,11 +132,12 @@
 
 								<OPTION value="input">input
 						</SELECT>
-						</label> <span> <i class="fa fa-info-circle" rel="tooltip"
-							title="Select genome" data-content="Choose the stored organism. If your organism is not in the list, you can choose input and upload a GOA using the gaf 2.0 format."
-							></i>
-						</span> <br>
+
+</div>
+</div>
+<br>
 						<div id="gafHide" style="display: none">
+
 							<p>Please, use a gaf file format.</p>
 							<input type="file" id="GAF" name="GAF"> <br>
 						</div>
@@ -129,27 +166,42 @@
 						</script>
 
 						<br>
-						<div>
+
 							<!--   Prokaryote:&nbsp;
 
       <input id="prok" value="off" disabled="disabled" data-toggle="toggle" data-onstyle="primary" data-size = "mini" type="checkbox">
         <i class="fa fa-info-circle"  rel="tooltip" title="Popover Header" data-content="Some content inside the popover"></i> &nbsp; &nbsp;
-        -->
-							Considering IEA:&nbsp; <input id="iea" checked
-								data-toggle="toggle" data-onstyle="primary" data-size="mini"
-								type="checkbox"> <i class="fa fa-info-circle"
-								rel="tooltip" title="Infered Electronic Analysis" data-content="Choose if the annotation with IEA evidence are considered or not in the analysis. IEA are annotation created without curator review."></i>
+			-->
+			<div class="row">
+				<div class="col-sm-4">
+							Considering IEA:&nbsp;<i class="fa fa-info-circle"
+							rel="tooltip" title="Infered Electronic Analysis" data-content="<ON> means that the analysis will use the IEA annotations"></i>
 
+</div>
+	<div class="col-sm-4">
+
+							 <input id="iea" checked
+								data-toggle="toggle" data-onstyle="primary" data-size="mini"
+								type="checkbox">
 						</div>
-						<br> <label style="font-weight: normal;">Choose an
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-4">
+						<label style="font-weight: normal;">Choose an
 							ontology: <i class="fa fa-info-circle" rel="tooltip"
 							title="Select Ontology" data-content="Subparts of GO (BP, MF, CC, all) to choose for the analysis."></i>
-						</label> <br> <input class="ontologies" id="BP" type="checkbox"
-							value="GO:0008150" checked="checked"> <label for="BP">biological_process</label>
+	</label>
+						</div>
+							<div class="col-sm-6">
+					 <br> <input class="ontologies" id="BP" type="checkbox"
+							value="GO:0008150" checked="checked"> <label for="BP">biological process</label> <br>
 						<input class="ontologies" id="MF" type="checkbox"
-							value="GO:0003674"> <label for="MF">molecular_function</label>
+							value="GO:0003674"> <label for="MF">molecular function</label> <br>
 						<input class="ontologies" id="CC" type="checkbox"
-							value="GO:0005575"> <label for="CC">cellular_component</label>
+							value="GO:0005575"> <label for="CC">cellular component</label>
+						</div>
+					</div>
 					<!--	<input class="ontologies" id="DO" type="checkbox"
 							value="DOID:4"> <label for="DO">disease</label>
 						<input class="ontologies" id="R" type="checkbox"
@@ -163,8 +215,17 @@
 
 
 
-						<br> <label style="font-weight: normal;">Choose an
-							semantic similarity method: <SELECT id="semantic_similarity"
+						<br>
+						<div class="row">
+							<div class="col-sm-4">
+						 <label style="font-weight: normal;">Choose a
+							semantic similarity measure:
+					 <i class="fa fa-info-circle" rel="tooltip"
+							title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms."></i>
+						</label>
+						</div>
+						<div class="col-sm-4">
+							<SELECT id="semantic_similarity"
 							name="semantic_similarity" size="1">
 								<OPTION value="simrel">SimRel
 								<OPTION value="lin">Lin
@@ -178,10 +239,9 @@
 
 									<!--  <OPTION value="wang">Wang-->
 						</SELECT>
-						</label> <i class="fa fa-info-circle" rel="tooltip"
-							title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms."></i>
-						&nbsp;&nbsp;
 
+	</div>
+	</div>
 						<h3>
 							Advanced parameters
 							<button type="button" class="btn btn-default btn-circle"
@@ -212,15 +272,19 @@
 							<div class="row">
 								<div class="col-sm-4">
 									<label style="font-weight: normal;"> Information
-										content: </label> <SELECT id="ic" name="ic" size="1">
+										content:  <i class="fa fa-info-circle" rel="tooltip" title="IC" data-content="Choose the measure to compute the information content score."></i>
+										&nbsp;&nbsp; </label>
+									</div>
+		<div class="col-sm-4">
+
+										<SELECT id="ic" name="ic" size="1">
 										<OPTION value="0">Seco
 										<OPTION value="1">Zhou
 										<OPTION value="2">Sanchez
 										<OPTION value="3" selected>Mazandu
 
 											<!--  <OPTION value="wang">Wang-->
-									</SELECT> <i class="fa fa-info-circle" rel="tooltip" title="IC" data-content="Choose the measure to compute the information content score."></i>
-									&nbsp;&nbsp;
+									</SELECT>
 
 
 								</div>
@@ -263,7 +327,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 										<label class="col-xs-12 col-lg-8 col-form-label"
 											style="font-weight: normal;">Term combined
 											similarity: <i class="fa fa-info-circle" rel="tooltip"
-											title="Jaccard-like gene similarity" data-content="When the algorithm searches the representative, sometimes, more than one representative term can be found. This filter is used to have some difference between them. The similarity used is a jaccard similarity using the genes annotating for each representative terms combined."></i>
+											title="Jaccard-like gene similarity" data-content="When the algorithm searches the representative terms, sometimes, more than one representative term can be found for the same cluster. This filter is used to have some difference between combined representative terms. The similarity used is the jaccard similarity using the genes annotated by each representative terms."></i>
 										</label>
 
 										<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4">
@@ -290,12 +354,15 @@ In the representative algorithm, after clustering method, one or more terms can 
 						</div>
 					</div>
 
+	<div class="row">
+		<div class="col-sm-4">
 
+						Email (OPTIONAL):
+</div>
+<div class="col-sm-4">
+<input type="text" id="inputEmail">
+</div>
 
-					<div class=".email">
-
-						email (OPTIONAL):<br> <input type="text" id="inputEmail"
-							name="email"><br>
 
 					</div>
 					<br>
@@ -310,7 +377,8 @@ In the representative algorithm, after clustering method, one or more terms can 
 					</span>
 
 					<br><br>
-
+					<br><br>
+					<br><br>
 
 					<script>
 
@@ -383,7 +451,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 											var organism = document
 													.getElementById("organism").value;
 
-											if (genes.includes("Put here the official gene symbol...")){
+											if (genes.includes("Put here the Official gene symbols or UniprotKB ids...")){
 												alert("Please, the gene input is required!");
 											return false;
 											}
@@ -407,6 +475,10 @@ In the representative algorithm, after clustering method, one or more terms can 
 												alert("Please, choose at least one ontology");
 												return false;
 											}
+											else if ($('.protORgene:checked').length === 0){
+												alert("Please, choose Gene_symbol or UniprotKB in the Gene input.");
+												return false;
+											}
 											else {
 
 												var iea = document
@@ -423,13 +495,24 @@ In the representative algorithm, after clustering method, one or more terms can 
 																			.push(this.value)
 																			: "0");
 																});
+												var protORgene;
+
+																$('.protORgene')
+																		.each(
+																				function() {
+																					//var sThisVal = (this.checked ? onto.push(this.value) : "0");
+																					if(this.checked){
+																						protORgene = this.value
+																					}
+																				});
+
 
 												var ss = document
 														.getElementById("semantic_similarity").value;
 
 												var repFilter = document
 														.getElementById("similarity_filter").value;
-											//	var gcovering = document
+											//var gcovering = document
 												//		.getElementById("covering").value;
 												var sup = document
 														.getElementById("support").value;
@@ -465,7 +548,8 @@ In the representative algorithm, after clustering method, one or more terms can 
 													formData.append("organism",organism);
 													formData.append("semanticSimilarity",ss);
 													formData.append("simRepValue",repFilter);
-												//	formData.append("covering",gcovering);
+													formData.append("ids",protORgene);
+													//formData.append("covering",gcovering);
 													formData.append("minGeneSupport",sup);
 													formData.append("email",email);
 													formData.append("percentile", per);
@@ -504,7 +588,8 @@ In the representative algorithm, after clustering method, one or more terms can 
 													formData.append("uploadFile",fileGAF);
 													formData.append("semanticSimilarity",ss);
 													formData.append("simRepValue",repFilter);
-												//	formData.append("covering",gcovering);
+													formData.append("ids",protORgene);
+											   //	formData.append("covering",gcovering);
 													formData.append("minGeneSupport",sup);
 													formData.append("email",email);
 													formData.append("percentile", per);

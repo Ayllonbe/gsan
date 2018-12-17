@@ -58,7 +58,7 @@ public class GSAnController {
 
 	@Autowired
 	private GSAnService gsanService;
-	@Autowired 
+	@Autowired
 	private taskRepository tRepository;
 	@Autowired
 	private JavaMailSender sender;
@@ -150,7 +150,7 @@ public class GSAnController {
 				"mus_musculus",
 				"arabidopsis_thaliana",
 				"canis_lupus",
-				"sus_scrofa", 
+				"sus_scrofa",
 				"rattus_norvegicus",
 				"gallus_gallus",
 				"candida_albicans",
@@ -170,7 +170,7 @@ public class GSAnController {
 			instance.put("name", goaOrg);
 			instance.put("file",org);
 			instance.put("date",df.format(goaf.lastModified()));
-			liM.add(instance);	
+			liM.add(instance);
 
 
 		}
@@ -191,7 +191,7 @@ public class GSAnController {
 		model.addAttribute("version", versionNumber);
 		try {
 			byte[] bytes = json.getBytes();
-			String str = new String(bytes, "UTF-8"); 
+			String str = new String(bytes, "UTF-8");
 			model.addAttribute("json", str);
 			return "visual";
 		} catch (Exception e) {
@@ -218,7 +218,7 @@ public class GSAnController {
 		model.addAttribute("version", versionNumber);
 		String email = uidd2email.get(id);
 		try {
-			if(tRepository.existsById(id)) {	
+			if(tRepository.existsById(id)) {
 				task t = tRepository.getOne(id);
 				if(!t.getError()) {
 					if(t.isFinish()) {
@@ -249,7 +249,7 @@ public class GSAnController {
 					}else {
 						return "wait";
 					}
-				}else { 
+				}else {
 					CustomException ce  = CustomException.values()[t.getMSGError()];
 
 					model.addAttribute("status",ce.getstatus());
@@ -270,8 +270,8 @@ public class GSAnController {
 			return "error";
 		}
 	}
-	//	
-	
+	//
+
 	DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
@@ -286,7 +286,7 @@ public class GSAnController {
 			helper.setTo(new InternetAddress(email));
 			// Set Subject: header field
 			message.setSubject("[GSAn] Analysis finished");
-			
+
 			task task = tRepository.getOne(id);
 			LocalDateTime ts = task.getDate().toLocalDateTime();
 
@@ -310,9 +310,9 @@ public class GSAnController {
 		}catch(MailSendException e) {
 			log.error("The email is null or incorrect");
 		}
-			
-		
-		
+
+
+
 		// Get the default Session object.
 	}
 
@@ -374,6 +374,7 @@ public class GSAnController {
 			@RequestParam(value = "organism", required = false,defaultValue = "homo_sapiens") String organism,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
 			@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
+			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
 			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
@@ -408,7 +409,7 @@ public class GSAnController {
 			tRepository.save(t);
 
 			gsanService.runService(tRepository, t, query, organism, useiea, ic_inc, top,
-					ss, similarityRepValue, covering, geneSupport,percentile,prok);
+					ss, similarityRepValue, covering, geneSupport,percentile,prok, ids);
 			uidd2email.put(t.getId(), email);
 			return "redirect:/"+t.getId();
 		}
@@ -430,6 +431,7 @@ public class GSAnController {
 			@RequestParam(value = "uploadFile", required = true) MultipartFile  gaf,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
 			@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
+			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
 			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
@@ -464,7 +466,7 @@ public class GSAnController {
 			IOUtils.copy(gaf.getInputStream(), writer, StandardCharsets.UTF_8);
 			gafString = writer.toString();
 			//System.out.println(theString);
-			
+
 			//System.out.println("End2");
 
 		} catch (IOException e) {
@@ -479,7 +481,7 @@ public class GSAnController {
 			tRepository.save(t);
 
 			gsanService.runService(tRepository, t, query, useiea, ic_inc, top,
-					ss, similarityRepValue, covering, geneSupport,percentile,prok, gafString);
+					ss, similarityRepValue, covering, geneSupport,percentile,prok, gafString,ids);
 			uidd2email.put(t.getId(), email);
 			return "redirect:/"+t.getId();
 		}
@@ -507,6 +509,7 @@ public class GSAnController {
 			@RequestParam(value = "organism", required = false,defaultValue = "homo_sapiens") String organism,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
 			@RequestParam(value = "icIncomplete", required = false, defaultValue = "3" ) int ic_inc,
+			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
 			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
@@ -533,7 +536,7 @@ public class GSAnController {
 			if(query.size()>2) {
 
 				Map<String,Object> map = gsanService.runService(query, organism, useiea, ic_inc, top,
-						ss, similarityRepValue, covering, geneSupport,percentile,prok);
+						ss, similarityRepValue, covering, geneSupport,percentile,prok,ids);
 
 				List<String> rep = new ArrayList<>((Collection<String>)map.get("representatives"));
 				List<String> scp = new ArrayList<>((Collection<String>)map.get("scp"));
@@ -556,7 +559,7 @@ public class GSAnController {
 					sb.append(scp.contains(r)+",");
 					StringBuffer sb_genes = new StringBuffer();
 					for(String g : (List<String>)((Map<String,Object>) terms.get(r)).get("geneSet") ) {
-						sb_genes.append(g+";");	
+						sb_genes.append(g+";");
 					}
 					sb_genes.deleteCharAt(sb_genes.length()-1);
 					sb.append(sb_genes+"\n");
