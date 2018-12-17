@@ -36,6 +36,9 @@ figure {
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
+						<b>NOTE: If the organism is uploaded, verify that the proteins are in the column 1 and the genes in the column 2. In that case,
+						you can use others ids matching with the proteins or genes.</b>
+						<br>
 						<h4>Advanced parameters</h4>
 						<figure>
 							<img src="dist/imgs/fig2.png" alt="" style="width: 100%" />
@@ -76,6 +79,96 @@ figure {
 						</figure>
 						<br>
 						<h2 id="formulas">4. Formulas</h2>
+						<h3>Information content</h3>
+						The information content or IC is a score associated to the terms explaining how the terms are informative.
+						Bigger is the IC, the term is more specific. Two kind of IC are used in GSAn: <i>intrinsic</i> and <i>extrensic</i>.
+						The IC intrinsic use the information provided from the ontology structure and the IC extrensic using the external support.
+						In the most cases, the IC of a term is computed from the probability of the term as follow:
+						<br>
+						<figure style="background-color:white">
+							<img src="dist/imgs/prob.png" alt="" />
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<h4>Resnik ou extrensic</h4>
+						In GSAn, only one kind of IC extrensic was used. The used IC was proposed by <a href="https://arxiv.org/pdf/cmp-lg/9511007.pdf">Resnik</a> in 1995.
+						This IC use the frequency of occurrence of a word in a given document. In the Gene Ontology, the frequency of occurrence (number of genes or proteins) is computed by the GOA file form
+						each organism. This IC is applied in some semantic similarity measures (see below). Thus, the extrensic IC is computed as follow:
+						<br>
+						<figure style="background-color:white">
+							<img src="dist/imgs/ResIC.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<b>Note: a term includes all of genes and proteins associated to it and its descendants using the <i>true path</i>. The <i>true path</i> means the infromation provide by
+						a term is heritate to its descendants, thus a gene associated to a term that it is descendant of other term, this gene is also associated to ancestor term. </b>
+						<br>
+						<h4>Seco</h4>
+						Nuno Seco proposed a IC score using the ontology structure. For that, the probability of a term was computed from division between the number of descendants of the term plus the term itself and
+						the number of descendants of root plus 1. The logarithm of this probability provides a no normalized IC by Seco. To normalize the the score between 0 and 1, the IC is divised by the
+						IC maximal that correspond to terms with 0 descendants. The formula to obtain directly the normalize IC is as follow:
+						<br>
+						<figure style="background-color:white">
+							<img src="dist/imgs/seco.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<h4>Zhou</h4>
+						
+						<figure style="background-color:white">
+							<img src="dist/imgs/zhou.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<h4>Sanchez</h4>
+						<figure style="background-color:white">
+							<img src="dist/imgs/sanchez.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<h4>Mazandu</h4>
+						<figure style="background-color:white">
+							<img src="dist/imgs/mazandu.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<h3>Semantic Similarity</h3>
+						<h4>Resnik</h4>
+						<figure style="background-color:white">
+							<img src="dist/imgs/Resnik.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<h4>Lin</h4>
+						<figure style="background-color:white">
+							<img src="dist/imgs/lin.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<h4>AIC</h4>
+						<figure style="background-color:white">
+							<img src="dist/imgs/aicBIS.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<figure style="background-color:white">
+							<img src="dist/imgs/aic.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<br>
+						<h4>NUnivers</h4>
+						<figure style="background-color:white">
+							<img src="dist/imgs/nunivers.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<h4>Distance Function</h4>
+						<figure style="background-color:white">
+							<img src="dist/imgs/df.png" alt=""/>
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+
 						<br>
 						<br>
 						<br>

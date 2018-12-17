@@ -16,12 +16,12 @@
 
 					<div id="query">
 						<textarea class="comments" id="queryText"
-								style="width: 90%; height: 90px;" oninput="printText()">Put here the Official gene symbols or UniprotKB ids...
+								style="width: 90%; height: 90px;" oninput="printText()">Put here the official gene symbols or UniprotKB ids...
 							</textarea>
 							  <label>
-							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> UniprotKB</label>
+							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> proteins</label>
 							  <label>
-							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> Official gene symbol</label>
+							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> genes</label>
 
 
 							<script>
@@ -45,7 +45,7 @@
 								$("#queryText")
 										.click(
 												function() {
-													if ($.trim($(this).val()) === "Put here the Official gene symbols or UniprotKB ids...") {
+													if ($.trim($(this).val()) === "Put here the official gene symbols or UniprotKB ids...") {
 														$(this).val("");
 													};
 													return false;
@@ -66,7 +66,7 @@
 
 
 							 <i class="fa fa-info-circle" rel="tooltip" data-html="true"
-								title="Gene input" data-content="The gene input consider only the official gene symbol and the UniprotKB ids. The genes can be delimited by:<br>
+								title="Gene input" data-content="The input consider only the official gene symbol and the UniprotKB ids. The genes (or proteins) can be delimited by:<br>
 
 								&nbsp;	1. Space<br>
 								&nbsp;	2. Tabulation<br>
@@ -77,14 +77,14 @@
 									It is possible to insert a file in text-plain format."
 ></i>
 						<br>
-						<h6>If your gene/protein ids are not Official gene symbols or UniprotKB ids, you can convert them to UniprotKB
+						<h6>If your gene/protein ids are not <b>official gene symbols</b> or <b>UniprotKB</b> ids, you can convert them to UniprotKB
 						<br>
 						in <a href="https://www.uniprot.org/uploadlists/"> https://www.uniprot.org/uploadlists/ </a></h6>
 						<button id="clear">Clear</button>
 						<script>
 
 						$("#clear").click(function(){
-							$("#queryText").val("Put here the Official gene symbols or UniprotKB ids...")
+							$("#queryText").val("Put here the official gene symbols or UniprotKB ids...")
 						});
 
 						</script>
@@ -221,18 +221,18 @@
 						 <label style="font-weight: normal;">Choose a
 							semantic similarity measure:
 					 <i class="fa fa-info-circle" rel="tooltip"
-							title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms."></i>
+							title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms. See formulas in documentation"></i>
 						</label>
 						</div>
 						<div class="col-sm-4">
 							<SELECT id="semantic_similarity"
 							name="semantic_similarity" size="1">
-								<OPTION value="simrel">SimRel
+						<!--		<OPTION value="simrel">SimRel-->
 								<OPTION value="lin">Lin
 								<OPTION value="resnik">Resnik
-								<OPTION value="pekarStaab">Pekar & Staab
+							<!--	<OPTION value="pekarStaab">Pekar & Staab-->
 								<OPTION value="distanceFunction">Distance function
-								<OPTION value="ganesan">Ganesan
+							<!--	<OPTION value="ganesan">Ganesan-->
 								<OPTION value="nUnivers">NUnivers
 									<!--  <OPTION value="NUM">NUnivers_Mod  -->
 								<OPTION value="aic" selected>AIC
@@ -272,7 +272,7 @@
 							<div class="row">
 								<div class="col-sm-4">
 									<label style="font-weight: normal;"> Information
-										content:  <i class="fa fa-info-circle" rel="tooltip" title="IC" data-content="Choose the measure to compute the information content score."></i>
+										content:  <i class="fa fa-info-circle" rel="tooltip" title="IC" data-content="Choose the measure to compute the information content score. See formulas in documentation"></i>
 										&nbsp;&nbsp; </label>
 									</div>
 		<div class="col-sm-4">
@@ -451,7 +451,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 											var organism = document
 													.getElementById("organism").value;
 
-											if (genes.includes("Put here the Official gene symbols or UniprotKB ids...")){
+											if (genes.includes("Put here the official gene symbols or UniprotKB ids...")){
 												alert("Please, the gene input is required!");
 											return false;
 											}
