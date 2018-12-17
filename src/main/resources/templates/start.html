@@ -429,8 +429,8 @@ In the representative algorithm, after clustering method, one or more terms can 
 
 												var repFilter = document
 														.getElementById("similarity_filter").value;
-												var gcovering = document
-														.getElementById("covering").value;
+											//	var gcovering = document
+												//		.getElementById("covering").value;
 												var sup = document
 														.getElementById("support").value;
 												var per = document
@@ -465,7 +465,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 													formData.append("organism",organism);
 													formData.append("semanticSimilarity",ss);
 													formData.append("simRepValue",repFilter);
-													formData.append("covering",gcovering);
+												//	formData.append("covering",gcovering);
 													formData.append("minGeneSupport",sup);
 													formData.append("email",email);
 													formData.append("percentile", per);
@@ -504,7 +504,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 													formData.append("uploadFile",fileGAF);
 													formData.append("semanticSimilarity",ss);
 													formData.append("simRepValue",repFilter);
-													formData.append("covering",gcovering);
+												//	formData.append("covering",gcovering);
 													formData.append("minGeneSupport",sup);
 													formData.append("email",email);
 													formData.append("percentile", per);
