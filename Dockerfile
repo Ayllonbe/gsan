@@ -7,12 +7,7 @@ RUN apt-get update \
     locales \
     vim-tiny \
     wget \
-    ca-certificates \
-    && add-apt-repository --enable-source --yes "ppa:marutter/rrutter3.5" \
-    && add-apt-repository --enable-source --yes "ppa:marutter/c2d4u3.5" \
-    && add-apt-repository ppa:webupd8team/java -y \
-    && apt-get update \ 
-    && apt-get install -y --no-install-recommends \   
+    ca-certificates \  
     openjdk-8-jdk\
     maven
 
