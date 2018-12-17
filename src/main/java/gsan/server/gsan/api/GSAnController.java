@@ -374,6 +374,7 @@ public class GSAnController {
 			@RequestParam(value = "organism", required = false,defaultValue = "homo_sapiens") String organism,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
 			@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
+			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
 			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
@@ -408,7 +409,7 @@ public class GSAnController {
 			tRepository.save(t);
 
 			gsanService.runService(tRepository, t, query, organism, useiea, ic_inc, top,
-					ss, similarityRepValue, covering, geneSupport,percentile,prok);
+					ss, similarityRepValue, covering, geneSupport,percentile,prok, ids);
 			uidd2email.put(t.getId(), email);
 			return "redirect:/"+t.getId();
 		}
@@ -430,6 +431,7 @@ public class GSAnController {
 			@RequestParam(value = "uploadFile", required = true) MultipartFile  gaf,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
 			@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
+			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
 			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
@@ -479,7 +481,7 @@ public class GSAnController {
 			tRepository.save(t);
 
 			gsanService.runService(tRepository, t, query, useiea, ic_inc, top,
-					ss, similarityRepValue, covering, geneSupport,percentile,prok, gafString);
+					ss, similarityRepValue, covering, geneSupport,percentile,prok, gafString,ids);
 			uidd2email.put(t.getId(), email);
 			return "redirect:/"+t.getId();
 		}
@@ -507,6 +509,7 @@ public class GSAnController {
 			@RequestParam(value = "organism", required = false,defaultValue = "homo_sapiens") String organism,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
 			@RequestParam(value = "icIncomplete", required = false, defaultValue = "3" ) int ic_inc,
+			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
 			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
@@ -533,7 +536,7 @@ public class GSAnController {
 			if(query.size()>2) {
 
 				Map<String,Object> map = gsanService.runService(query, organism, useiea, ic_inc, top,
-						ss, similarityRepValue, covering, geneSupport,percentile,prok);
+						ss, similarityRepValue, covering, geneSupport,percentile,prok,ids);
 
 				List<String> rep = new ArrayList<>((Collection<String>)map.get("representatives"));
 				List<String> scp = new ArrayList<>((Collection<String>)map.get("scp"));

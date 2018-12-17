@@ -44,7 +44,7 @@ public class Annotation implements Serializable {
 	//	this.percentile = percentile;
 	}
 
-	public Annotation(List<List<String>> table, GlobalOntology gont,boolean bol){
+	public Annotation(List<List<String>> table, GlobalOntology gont,boolean bol, int ids){
 	//	this.percentile = new HashMap<>();
 //		for(String subont : gont.subontology.keySet()) {
 //			System.out.println(subont);
@@ -68,7 +68,7 @@ public class Annotation implements Serializable {
 			for(List<String> line:table){
 //				System.out.println(line);
 				//			log.debug(line);
-				String gene = line.get(2).toLowerCase();
+				String gene = line.get(ids).toLowerCase();
 				if(!gene.equals("") &&!(avoidedEC.contains(line.get(3))||avoidedEC.contains(line.get(6)))){  // 
 					//if(!(line.get(3).equals("NOT")|| line.get(6).equals("ND")  || line.get(6).equals("IEA") )){
 					String term = line.get(4);
