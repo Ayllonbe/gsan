@@ -41,17 +41,16 @@
 							</script>
 
 
-							 <i class="fa fa-info-circle" rel="tooltip"
-								title="## Gene input ##
-The gene input consider only the official gene symbol. The genes can be delimited by:
+							 <i class="fa fa-info-circle" rel="tooltip" data-html="true"
+								title="Gene input" data-content="The gene input consider only the official gene symbol. The genes can be delimited by:<br>
 
-	1. Space
-	2. Tabulation
-	3. Line breaks
-	4. Comma
-	5. Semicolon
+								&nbsp;	1. Space<br>
+								&nbsp;	2. Tabulation<br>
+								&nbsp;	3. Line breaks<br>
+								&nbsp;	4. Comma<br>
+								&nbsp;	5. Semicolon<br>
 
-	It is possible to insert a file in text-plain format."
+									It is possible to insert a file in text-plain format."
 ></i>
 						<br>
 						<button id="clear">Clear</button>
@@ -98,8 +97,7 @@ The gene input consider only the official gene symbol. The genes can be delimite
 								<OPTION value="input">input
 						</SELECT>
 						</label> <span> <i class="fa fa-info-circle" rel="tooltip"
-							title="## Select genome ##
-Choose the stored organism. If your organism is not in the list, you can choice input and upload a GOA using the gaf 2.0 format."
+							title="Select genome" data-content="Choose the stored organism. If your organism is not in the list, you can choose input and upload a GOA using the gaf 2.0 format."
 							></i>
 						</span> <br>
 						<div id="gafHide" style="display: none">
@@ -140,14 +138,12 @@ Choose the stored organism. If your organism is not in the list, you can choice 
 							Considering IEA:&nbsp; <input id="iea" checked
 								data-toggle="toggle" data-onstyle="primary" data-size="mini"
 								type="checkbox"> <i class="fa fa-info-circle"
-								rel="tooltip" title="## Infered Electronic Analysis ##
-Choose if the annotation with IEA evidence are considered or not in the analysis. IEA are annotation created without curator review."></i>
+								rel="tooltip" title="Infered Electronic Analysis" data-content="Choose if the annotation with IEA evidence are considered or not in the analysis. IEA are annotation created without curator review."></i>
 
 						</div>
 						<br> <label style="font-weight: normal;">Choose an
 							ontology: <i class="fa fa-info-circle" rel="tooltip"
-							title="## Select Ontology ##
-Choose the sub-ontology independently or together."></i>
+							title="Select Ontology" data-content="Subparts of GO (BP, MF, CC, all) to choose for the analysis."></i>
 						</label> <br> <input class="ontologies" id="BP" type="checkbox"
 							value="GO:0008150" checked="checked"> <label for="BP">biological_process</label>
 						<input class="ontologies" id="MF" type="checkbox"
@@ -183,8 +179,7 @@ Choose the sub-ontology independently or together."></i>
 									<!--  <OPTION value="wang">Wang-->
 						</SELECT>
 						</label> <i class="fa fa-info-circle" rel="tooltip"
-							title="## Semantic similarity measure ##
-Choose the semantic similarity measure to compute the similarity between terms."></i>
+							title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms."></i>
 						&nbsp;&nbsp;
 
 						<h3>
@@ -224,8 +219,7 @@ Choose the semantic similarity measure to compute the similarity between terms."
 										<OPTION value="3" selected>Mazandu
 
 											<!--  <OPTION value="wang">Wang-->
-									</SELECT> <i class="fa fa-info-circle" rel="tooltip" title="## IC ##
-Choose the measure to compute the information content score."></i>
+									</SELECT> <i class="fa fa-info-circle" rel="tooltip" title="IC" data-content="Choose the measure to compute the information content score."></i>
 									&nbsp;&nbsp;
 
 
@@ -236,7 +230,7 @@ Choose the measure to compute the information content score."></i>
 								<div class="col-xs-8 col-sm-6">
 									<h4 style="font-weight: bold;">Filters:</h4>
 
-									<div class="form-group row">
+					<!--				<div class="form-group row">
 										<label class="col-xs-12 col-lg-8 col-form-label"
 											style="font-weight: normal;">Clustering gene
 											covering: <i class="fa fa-info-circle" rel="tooltip"
@@ -250,13 +244,12 @@ In the representative algorithm, after clustering method, one or more terms can 
 												value=1 min=0 max=1 step="0.01" maxlength="4" size="4">
 
 										</div>
-									</div>
+									</div>-->
 
 									<div class="form-group row">
 										<label class="col-xs-12 col-lg-8 col-form-label"
 											style="font-weight: normal;">Gene support: <i
-											class="fa fa-info-circle" rel="tooltip" title="## Gene support ##
-Any term annotating less genes than the filter value will be removed. The value is adapted depending on the gene set size but can be chosen by the user."></i>
+											class="fa fa-info-circle" rel="tooltip" title="Gene support" data-content="Any term annotating less genes than the filter value will be removed. The value is adapted depending on the gene set size but can be chosen by the user."></i>
 										</label>
 
 
@@ -270,8 +263,7 @@ Any term annotating less genes than the filter value will be removed. The value 
 										<label class="col-xs-12 col-lg-8 col-form-label"
 											style="font-weight: normal;">Term combined
 											similarity: <i class="fa fa-info-circle" rel="tooltip"
-											title="## Jaccard-like gene similarity ##
-When the algorithm search the representative, some time, more than one representative term can be found. This filter is used to have some difference between them. The similarity used is a jaccard similarity using the genes annotating for each representative terms combined."></i>
+											title="Jaccard-like gene similarity" data-content="When the algorithm searches the representative, sometimes, more than one representative term can be found. This filter is used to have some difference between them. The similarity used is a jaccard similarity using the genes annotating for each representative terms combined."></i>
 										</label>
 
 										<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4">
@@ -283,8 +275,7 @@ When the algorithm search the representative, some time, more than one represent
 										<label class="col-xs-12 col-lg-8 col-form-label"
 											style="font-weight: normal;">Percentile: <i
 											class="fa fa-info-circle" rel="tooltip"
-											title="## Incomplete annotation - Percentile ##
-This values is crucial to compute the incomplete annotation. Using the GO structure, we get the IC of each GO term and compute the percentile used here. All value below the IC of the percentile chosen will be removed."></i>
+											title="Incomplete annotation - Percentile" data-content="This values is crucial to compute the incomplete annotation. Using the GO structure, we get the IC of each GO term and compute the percentile used here. All values below the IC of the percentile chosen will be removed."></i>
 										</label>
 										<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
 											<input class="form-control" type="number" id="percentile"

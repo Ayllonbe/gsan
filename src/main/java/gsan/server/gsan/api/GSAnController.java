@@ -203,26 +203,14 @@ public class GSAnController {
 
 	}
 
-//	@RequestMapping(value = "/api/foo.csv")
-//	public void fooAsCSV(HttpServletResponse response) {         
-//		response.setContentType("text/plain; charset=utf-8");
-//		try {
-//			response.getWriter().print("a,b,c\n1,2,3\n3,4,5");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+
 
 	@RequestMapping("/wait")
 	String running() {
 		return "wait";
 	}
 
-//	@RequestMapping("/error400")
-//	String error400() {
-//		return "error";
-//	}
+
 
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
