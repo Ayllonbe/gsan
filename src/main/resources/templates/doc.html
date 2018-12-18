@@ -84,7 +84,7 @@ figure {
 						Bigger is the IC, the term is more specific. Two kind of IC are used in GSAn: <i>intrinsic</i> and <i>extrensic</i>.
 						The IC intrinsic use the information provided from the ontology structure and the IC extrensic using the external support.
 						In the most cases, the IC of a term is computed from the probability of the term as follow:
-						<br>
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/prob.png" alt="" />
 							<!-- <figcaption>Légende associée</figcaption> -->
@@ -93,7 +93,7 @@ figure {
 						In GSAn, only one kind of IC extrensic was used. The used IC was proposed by <a href="https://arxiv.org/pdf/cmp-lg/9511007.pdf">Resnik</a> in 1995.
 						This IC use the frequency of occurrence of a word in a given document. In the Gene Ontology, the frequency of occurrence (number of genes or proteins) is computed by the GOA file form
 						each organism. This IC is applied in some semantic similarity measures (see below). Thus, the extrensic IC is computed as follow:
-						<br>
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/ResIC.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
@@ -106,26 +106,39 @@ figure {
 						Nuno Seco proposed a IC score using the ontology structure. For that, the probability of a term was computed from division between the number of descendants of the term plus the term itself and
 						the number of descendants of root plus 1. The logarithm of this probability provides a no normalized IC by Seco. To normalize the the score between 0 and 1, the IC is divised by the
 						IC maximal that correspond to terms with 0 descendants. The formula to obtain directly the normalize IC is as follow:
-						<br>
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/seco.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
 						<h4>Zhou</h4>
-						
+						The IC created by Seco provides 1 to every leaf in the ontology structure. Considering that, a leaf term with 3 ancestors has the same IC that
+						a leaf term with 50 ancestor. Thus, Zili Zhou proposed a new IC measure combining the IC provided by Seco and the depth notion. The formula is as
+						follow where &delta; corresponds to depth and &sigma; is a changeable  factor between 0 and 1 to adjust the weight of IC or depth of equations. The
+						&sigma; used here is 0.5 according to paper.
+						<br><br>
+
 						<figure style="background-color:white">
 							<img src="dist/imgs/zhou.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
 						<h4>Sanchez</h4>
+						David Sanchez provide a other IC score computed to a term using the number of ancestors and the descendants including only the leaf term.
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/sanchez.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
+						where <i>Anc</i> is the set of ancestors of the term t.
+						<br>
 						<h4>Mazandu</h4>
+						At last, Gaston Mazandu proposed a IC value taking account the possition of the terms in the graph. First, the probability is computed exponentially,
+						from the root to the leaf terms. Each term depends of the probability of its parents divised the children of the parent. Thus, the IC provided by
+						mazandu for a term <i>t</i> is the minus logarithm of the probability.
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/mazandu.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
@@ -133,36 +146,55 @@ figure {
 						<br>
 						<h3>Semantic Similarity</h3>
 						<h4>Resnik</h4>
+						That semantic similarity measure was proposed by Resnik at the same time that the IC, where the similarity between two terms corresponds to
+						IC of their most informative commons ancestor (o currently called the MICA). The equation is as follow and we normalize the measures
+						divising by the IC max.
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/Resnik.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
 						<h4>Lin</h4>
+						To improve the result of Resnik similarity, Lin proposed a other normalization divising two time the IC of MICA by
+						the addition of IC between the compared terms.
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/lin.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
 						<h4>AIC</h4>
+						The aggregate information content or AIC is an alternative proposed by Song et al. combining the semantic value of Wang (does not used here)
+						and the Resnik IC. The semantic value and the semantic weight are computed as follow.
+						<br><br>
+
 						<figure style="background-color:white">
 							<img src="dist/imgs/aicBIS.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
+						The semantic similarity is according to similarity provided by Wang et al. but using the SV and SW shown above as follow:
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/aic.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
-						<br>
-						<br>
+
 						<h4>NUnivers</h4>
+						Using the IC proposed by Mazandu <i>et al.</i>, the similarity of NUnivers between two terms computes the most informative content ancestor
+						divided by the maximal IC between the compared terms.
+						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/nunivers.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
 						<h4>Distance Function</h4>
+						The distance function (DF) combine the edge semantic similarity and node base. The measure uses the jaccard similarity of the union and intersection
+						the ancestor between the terms to compare.
+ <br><br>
+
 						<figure style="background-color:white">
 							<img src="dist/imgs/df.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->

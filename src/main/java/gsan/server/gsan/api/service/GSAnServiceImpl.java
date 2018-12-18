@@ -45,14 +45,14 @@ public class GSAnServiceImpl implements GSAnService {
 		Map<String,Object> process = new HashMap<>();
 		
 			log.debug("Beging process n° " + t.getId());
-			String goa_file = ChooseAnnotation.annotation(organism,IEA);
+			String goa_file = ChooseAnnotation.annotation(organism);
 			GlobalOntology go = graphSingleton.getGraph(prok);
 			log.debug("Charging Annotation file");
 			Annotation GOA ;
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, true,ids);
+				GOA = new Annotation(goaTable, go, IEA,ids);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -76,13 +76,13 @@ public class GSAnServiceImpl implements GSAnService {
 			String ssMethod, double simRepFilter, double covering,
 			int geneSupport, int percentile, boolean prok,int ids) {
 		try {
-			String goa_file = ChooseAnnotation.annotation(organism,IEA);
+			String goa_file = ChooseAnnotation.annotation(organism);
 			GlobalOntology go = graphSingleton.getGraph(prok);
 			Annotation GOA ;
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, true,ids);
+				GOA = new Annotation(goaTable, go,IEA,ids);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block

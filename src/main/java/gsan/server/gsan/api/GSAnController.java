@@ -161,7 +161,7 @@ public class GSAnController {
 		liM = new ArrayList<Map<String,String>>();
 
 		for(String goaOrg:goas) {
-			String org = ChooseAnnotation.annotation(goaOrg, true);
+			String org = ChooseAnnotation.annotation(goaOrg);
 			String goaFile = "src/main/resources/static/AssociationTAB/"+org;
 			File goaf = new File(goaFile);
 		//	System.out.println(goaOrg+"\t"+org+"\t" + df.format(goaf.lastModified()));
