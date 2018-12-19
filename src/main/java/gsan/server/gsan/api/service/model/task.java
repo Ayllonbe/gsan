@@ -36,16 +36,16 @@ public class task  implements Serializable{
     @Column(name = "date")
 	private Timestamp date;
 	
-    @Column(name="email")
-    private String email;
+//    @Column(name="email")
+//    private String email;
+	
+//	public task(){
+//	}
 	
 	public task(){
-	}
-	
-	public task(String email){
 	
 		this.date = getCurrentTimeStamp();
-		this.email = email;
+		//this.email = email;
 		
 	}
 	private static java.sql.Timestamp getCurrentTimeStamp() {
@@ -65,6 +65,9 @@ public class task  implements Serializable{
 	public boolean getError(){
 		return this.error;
 	}
+	public Timestamp getDate(){
+		return this.date;
+	}
 	public int getMSGError(){
 		return this.msg_code;
 	}	
@@ -78,13 +81,13 @@ public class task  implements Serializable{
 	public void setMSGError(int bo){
 		this.msg_code = bo;
 	}
-	
-	public String getEmail(){
-		return this.email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
+//	
+//	public String getEmail(){
+//		return this.email;
+//	}
+//	
+//	public void setEmail(String email) {
+//		this.email = email;
+//	}
 	
 }

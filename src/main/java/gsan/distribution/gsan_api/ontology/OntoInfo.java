@@ -13,6 +13,7 @@ public class OntoInfo{
 	private int nEdgePOf;
 	private int nNodes;
 	private Set<String> leavesISA;
+	private double maxDistance;
 	
 	public OntoInfo() {
 		this.maxdepth = 0;
@@ -20,6 +21,7 @@ public class OntoInfo{
 		this.nEdgeIsA = 0;
 		this.nEdgePOf = 0;
 		this.leavesISA = new HashSet<>();
+		this.maxDistance = 0;
 		
 	}
 	public OntoInfo(OntoInfo oi) {
@@ -28,9 +30,16 @@ public class OntoInfo{
 		this.nEdgeIsA = oi.nEdgeIsA;
 		this.nEdgePOf = oi.nEdgePOf;
 		this.leavesISA = new HashSet<>(oi.leavesISA);
+		this.maxDistance = oi.maxDistance;
 		
 	}
 	
+	public double maxDistance() {
+		return this.maxDistance;
+	}
+	public void setMaxDistance(double md) {
+		this.maxDistance = md;
+	}
 	public double maxDepth() {
 		return this.maxdepth;
 	}

@@ -9,8 +9,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+//import it.ozimov.springboot.mail.configuration.EnableEmailTools;
+
 @SpringBootApplication
 @EnableAsync
+//@EnableEmailTools
 @EnableScheduling
 public class Application {
 

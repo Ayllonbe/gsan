@@ -35,7 +35,7 @@ public class writeSimilarityMatrix {
 		this.file = "";
 	}
 	
-	public void similarityMethod(GlobalOntology go,List<String> terminos) {
+	public void similarityMethod(GlobalOntology go,List<String> terminos, int ic) {
 		Double[][] matrixSS = new Double[terminos.size()][terminos.size()];
 		for(int i = 0; i<terminos.size();i++){
 			String t1 = terminos.get(i);
@@ -91,12 +91,6 @@ StringBuffer sb = new StringBuffer();
 		
 		
 	}
-	
-	public double similarityMethod(GlobalOntology go,String t1, String t2) {
-		return this.mapSS.get(similarity).method(t1, t2, go);
-	
-	}
-		
 	
 	public String getFile() {
 		

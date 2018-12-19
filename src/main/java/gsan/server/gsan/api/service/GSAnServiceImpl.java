@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -14,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +28,6 @@ import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.distribution.gsan_api.read_write.writeSimilarityMatrix;
 import gsan.distribution.gsan_api.run.representative.AlgorithmRepresentative;
 import gsan.distribution.gsan_api.run.representative.Cluster;
-import gsan.distribution.gsan_api.semantic_similarity.SemanticSimilarity;
 import gsan.server.gsan.api.service.jpa.taskRepository;
 import gsan.server.gsan.api.service.model.task;
 import gsan.server.singleton.graphSingleton;
@@ -46,22 +42,24 @@ public class GSAnServiceImpl implements GSAnService {
 	@Async("workExecutor")
 	public void runService(taskRepository tR, task t,List<String> query, String organism, boolean IEA,int inc,List<String> ontology,
 			String ssMethod, double simRepFilter, double covering,
-			int geneSupport,  int percentile, boolean prok) {
+			int geneSupport,  int percentile, boolean prok,int ids) {
 		Map<String,Object> process = new HashMap<>();
 		
 			log.debug("Beging process n° " + t.getId());
-			String goa_file = ChooseAnnotation.annotation(organism,IEA);
+			String goa_file = ChooseAnnotation.annotation(organism);
 			GlobalOntology go = graphSingleton.getGraph(prok);
 			log.debug("Charging Annotation file");
 			Annotation GOA ;
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, IEA);
+				GOA = new Annotation(goaTable, go, IEA,ids);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					t.setError(true);
+					t.setMSGError(6);
 					GOA=null;
 				}
 					
@@ -70,7 +68,6 @@ public class GSAnServiceImpl implements GSAnService {
 			process.putAll(gsanService(query,GOA,go , inc, ontology, ssMethod,
 					simRepFilter, covering, geneSupport,  percentile, prok));
 		
-			
 			finishing(tR,t, process);		
 		
 	}
@@ -78,18 +75,19 @@ public class GSAnServiceImpl implements GSAnService {
 	@Override
 	public Map<String,Object> runService(List<String> query, String organism, boolean IEA,int inc,List<String> ontology,
 			String ssMethod, double simRepFilter, double covering,
-			int geneSupport, int percentile, boolean prok) {
+			int geneSupport, int percentile, boolean prok,int ids) {
 		try {
-			String goa_file = ChooseAnnotation.annotation(organism,IEA);
+			String goa_file = ChooseAnnotation.annotation(organism);
 			GlobalOntology go = graphSingleton.getGraph(prok);
 			Annotation GOA ;
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, IEA);
+				GOA = new Annotation(goaTable, go,IEA,ids);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
+					
 					e1.printStackTrace();
 					GOA=null;
 				}
@@ -108,9 +106,9 @@ public class GSAnServiceImpl implements GSAnService {
 	
 	@Override
 	@Async("workExecutor")
-	public void runService(taskRepository tR, task t,List<String> query, File goa_file, boolean IEA,int ic_inc,List<String> ontology,
+	public void runService(taskRepository tR, task t,List<String> query, boolean IEA,int ic_inc,List<String> ontology,
 			String ssMethod, double simRepFilter, double covering,
-			int geneSupport,  int percentile, boolean prok) {
+			int geneSupport,  int percentile, boolean prok,  String goa_file,int ids) {
 			Map<String,Object> process = new HashMap<>();
 			
 			log.debug("Beging process n° " + t.getId());
@@ -119,11 +117,13 @@ public class GSAnServiceImpl implements GSAnService {
 			Annotation GOA ;
 		
 				try {
-					List<List<String>> 	goaTable = getFile(goa_file);
-				GOA = new Annotation(goaTable, go, IEA);
+					List<List<String>> 	goaTable = getGAFFile(goa_file);
+				GOA = new Annotation(goaTable, go, true,ids);
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
+					t.setError(true);
+					t.setMSGError(6);
 					e1.printStackTrace();
 					GOA=null;
 				}
@@ -133,7 +133,6 @@ public class GSAnServiceImpl implements GSAnService {
 			process.putAll(gsanService(query,GOA,go , ic_inc, ontology, ssMethod,
 					simRepFilter, covering, geneSupport,  percentile, prok));
 		
-			
 			finishing(tR,t, process);	
 	}
 	
@@ -149,7 +148,7 @@ public class GSAnServiceImpl implements GSAnService {
 			pw.print(jo.toJSONString());
 			pw.close();
 			boolean finish = (boolean)  process.get("boolean");
-			if(finish)
+			if(finish && (int) process.get("msg") == 0)
 				t.setfinish(true);
 			else
 				t.setError(true);
@@ -171,16 +170,37 @@ public class GSAnServiceImpl implements GSAnService {
 	
 	private List<List<String>> getFile(String o) throws IOException{
 		File reacf = new File ("src/main/resources/static/integration/reac_human.gaf");
-		File doid = new File ("src/main/resources/static/integration/gene_hsa2doidNOIEA.gaf");
+		File doid = new File ("src/main/resources/static/integration/DO_ANNOT/human_doid.gaf");
 		List<List<String>> goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+o);
 		goaTable.addAll(ReadFile.ReadAnnotation(reacf.getAbsolutePath()));
 		goaTable.addAll(ReadFile.ReadAnnotation(doid.getAbsolutePath()));
 		return goaTable;
 	}
-	private List<List<String>> getFile(File o) throws IOException{
-		List<List<String>> goaTable = ReadFile.ReadAnnotation("src/main/resources/static/AssociationTAB/"+o.getAbsolutePath());
+	private List<List<String>> getGAFFile(String o) throws IOException{
+		
+		
+		List<List<String>> gafList = new ArrayList<>();
+		try {
+			
+			String[] arr = o.split("\n");
+			
+			for(String a : arr) {
+				if(!a.contains("#")) {
+				List<String> line = new ArrayList<String>();
+				String[] col = a.split("\t");
+				for(String c : col) {
+					line.add(c);
+				}
+				gafList.add(line);
+			}
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		 
-		return goaTable;
+		return gafList;
 	}
 	
 	
@@ -207,9 +227,15 @@ public class GSAnServiceImpl implements GSAnService {
 		Map<String,Double> Mappercentile = new HashMap<>();
 		log.debug("Charging annotated gene in GO terms");
 			go.AddTermToGenome(GOA);	
-		log.debug("Computing ICs...");
+		try {
+			log.debug("Computing ICs...");
 			go.addAnnotationICs();
-			go.AggregateIC();
+			go.AggregateIC();}
+		catch(Exception e) {
+			log.error("Imposible to charge the IC. Normally the annotation file is broken.");
+			msg_code = 6;
+		}
+			
 			log.debug("Computing Percentiles...");	
 			for(String subont : go.sourceSet) {
 //				System.out.println(subont);
@@ -230,7 +256,7 @@ public class GSAnServiceImpl implements GSAnService {
 				termsInc.addAll(termsonto);
 		}
 		if(termsInc.isEmpty()){
-			msg_code = 3;
+			msg_code = msg_code>0?msg_code: 3;
 			throw new java.lang.NullPointerException("line 178 - termsInc is empty");
 			}
 
@@ -339,8 +365,7 @@ public class GSAnServiceImpl implements GSAnService {
 
 			
 			log.debug("Computing GS2...");
-			double gs2 = GS2(genesList, gene2term, go); // C'est le vrai GS2
-			
+			double gs2 = GS2(genesList, gene2term, go);
 			finalResult.put("GeneSet", genesList);
 			Set<String> annotatedGS = new HashSet<>();
 			
@@ -355,33 +380,6 @@ public class GSAnServiceImpl implements GSAnService {
 			go.getLocalInformation();
 
 			Set<String> termsDic = new HashSet<>();
-			
-			
-			/*
-			 * TEST
-			 */
-			
-			Set<String> geneS = new HashSet<>();
-			Set<String> geneQ = new HashSet<>();
-			
-			for(String g : genesList) {
-				if(GOAincom.annotation.containsKey(g)) {
-				Set<String> ts = new HashSet<>(GOAincom.annotation.get(g).getTerms("GO:0008150"));
-				if(ts.size()>=5) {
-					geneS.add(g);
-				}
-				if(ts.size()>=15) {
-					geneQ.add(g);
-				}
-				
-				}
-			}
-			
-			System.out.println("% Genes with more than 5 terms: " + ((double)geneS.size()/genesList.size()*100) );
-			System.out.println("% Genes with more than 15 terms: " + ((double)geneQ.size()/genesList.size()*100) );
-			/*
-			 * ENDTEST
-			 */
 			for(String t :termsInc) {
 				termsDic.add(t);
 				termsDic.addAll(go.allStringtoInfoTerm.get(t).is_a.ancestors);
@@ -400,12 +398,13 @@ public class GSAnServiceImpl implements GSAnService {
 			listTerm.retainAll(go.allStringtoInfoTerm.get(ont).is_a.descendants);
 			log.debug("Writing Similarity Matrix...");
 			writeSimilarityMatrix wSS = new writeSimilarityMatrix(ssMethod);
-			wSS.similarityMethod(go, listTerm);
+			wSS.similarityMethod(go, listTerm, icSimilarity.intValue());
 			
             AlgorithmRepresentative ar = new AlgorithmRepresentative(ic_inc, ont, wSS.getFile(), "average",
 					tailmin, simRepFilter, covering, geneSupport);
 			rep.addAll(ar.run( go, listTerm,GOAincom,percentile));
 			error = ar.errorMsg;
+			//System.out.println("ATENTIION " + error);
 			}
 			
 			if(rep.isEmpty()) {
@@ -413,6 +412,7 @@ public class GSAnServiceImpl implements GSAnService {
 			
 				
 			}
+			
 			List<String> allRepresentatives = new ArrayList<>();
 	
 			Set<String> repRes = new HashSet<>(); 
@@ -491,10 +491,7 @@ public class GSAnServiceImpl implements GSAnService {
 
 			}
 			remove.clear();
-		//
-		// To remove the part of parents if the union of genes of child is the same number
-		//	of genes of his child part.
-		//
+
 			for(int i = 0; i<allRepresentatives.size();i++) {
 				InfoTerm ti = go.allStringtoInfoTerm.get(allRepresentatives.get(i));
 				for(int j= i+1; j<allRepresentatives.size();j++) {
@@ -528,7 +525,47 @@ public class GSAnServiceImpl implements GSAnService {
 
 			}
 			
-		
+			/*
+			 * BEGIN TEST
+			 */
+//			remove.clear();
+//			//Map<String,String> removeTOadd = new HashMap<>();
+//			if(ontology.contains("reac")){
+//			
+//				System.out.println("here");
+//			for(String rt : repRes) {
+//
+//				System.out.println(go.allStringtoInfoTerm.get(rt).top + "  " + go.allStringtoInfoTerm.get(rt).name);
+//				if(go.allStringtoInfoTerm.get(rt).top.equals("reac")) {
+//					String termGO = graphSingleton.MappingReac2GO().get(rt);
+//					System.out.println(termGO+"####");
+//					if(termGO!=null) {
+//						if(repRes.contains(termGO)) {
+//							go.allStringtoInfoTerm.get(termGO).top = go.allStringtoInfoTerm.get(termGO).top +"_"+
+//						go.allStringtoInfoTerm.get(rt).top;
+//							
+//							InfoTerm itn = new InfoTerm(go.allStringtoInfoTerm.get(termGO).top, 0, go.allStringtoInfoTerm.get(termGO).top);
+//							itn.name = go.allStringtoInfoTerm.get(go.allStringtoInfoTerm.get(termGO).top).name +"_"+
+//									go.allStringtoInfoTerm.get(go.allStringtoInfoTerm.get(rt).top).name;
+//							go.allStringtoInfoTerm.put(go.allStringtoInfoTerm.get(termGO).top, itn);
+//							term2genebs.get(termGO).or(term2genebs.get(rt));
+//							remove.add(rt);
+//						}
+//					}
+//				}
+//			}
+//			for(String rem : remove) { 
+//				term2genebs.remove(rem);	
+//				repRes.remove(rem);
+//				
+//
+//			}
+//			
+//		}
+			
+			/*
+			 * ENDTEST
+			 */
 			if(!hierarchy.isEmpty()) {
 			List<String> line1 = new ArrayList<String>(ontology);
 			line1.retainAll(hierarchy.keySet());
@@ -556,6 +593,17 @@ public class GSAnServiceImpl implements GSAnService {
 			finalResult.put("tree", tdt.transform(hierarchy, ic_inc, mapTerm2genes));
 			}
 			
+			List<String> scp =  SetCoverAaron.scp(term2genebs,go,ontology);
+			Set<String> genesTest = new HashSet<>();
+			for(String t: scp) {
+//				System.out.println("Rep? " + go.allStringtoInfoTerm.get(t).toName());
+				genesTest.addAll(go.allStringtoInfoTerm.get(t).geneSet);
+			}
+//			System.out.println(genesTest.size());
+			finalResult.put("scp", scp);
+			finalResult.put("Reduce", Math.floor(scp.size()/termsInc.size()*100)/100);
+
+			
 			
 			Map<String,Map<String, Object>> mapInfo = new HashMap<>();
 //			System.out.println("All terms " + allterms.size());
@@ -574,6 +622,26 @@ public class GSAnServiceImpl implements GSAnService {
 					p.retainAll(allterms);
 				mapTerm.put("parent", p);
 				}
+				
+				if(scp.contains(t)) {
+					mapTerm.put("opacity", 1.);
+				}else {
+					boolean oui = false;
+					
+					for(String s : scp) {
+						if(go.allStringtoInfoTerm.get(t).is_a.descendants.contains(s)) {
+							oui = true;
+							break;
+						}
+					}
+					
+					if(oui) {
+						mapTerm.put("opacity", 1.);	
+					}else {
+						mapTerm.put("opacity", 1.);
+					}
+					
+				}
 				List<String> c = new ArrayList<>(it.is_a.childrens);
 				c.retainAll(allterms);
 				mapTerm.put("children", c);
@@ -586,14 +654,9 @@ public class GSAnServiceImpl implements GSAnService {
 				Map<String, Object> mapTerm = new HashMap<>();
 				mapTerm.put("name", "Gene Ontology");
 				mapTerm.put("IC", 0);
-				//Set<String> gs = new HashSet<>();
-//				for(String top : ontology) {
-//					InfoTerm it = go.allStringtoInfoTerm.get(top);
-//					//gs.addAll(it.geneSet);
-//							
-//				}
 				mapTerm.put("geneSet", new ArrayList<String>());
 				mapTerm.put("children", ontology);
+				mapTerm.put("opacity", 1.);
 				mapInfo.put("GO", mapTerm);
 			
 			
@@ -621,24 +684,6 @@ public class GSAnServiceImpl implements GSAnService {
 
 			finalResult.put("terms", mapInfo);
 			log.debug("Computing Synthetic algorithm...");
-			List<String> scp =  SetCoverAaron.scp(term2genebs,go,ontology);
-			Set<String> genesTest = new HashSet<>();
-			for(String t: scp) {
-//				System.out.println("Rep? " + go.allStringtoInfoTerm.get(t).toName());
-				genesTest.addAll(go.allStringtoInfoTerm.get(t).geneSet);
-			}
-//			System.out.println(genesTest.size());
-			finalResult.put("scp", scp);
-			finalResult.put("Reduce", Math.floor(scp.size()/termsInc.size()*100)/100);
-			
-			
-			
-//			Set<InfoTerm> test = new HashSet<>();
-//			for( Cluster c : rep) {
-//				//for(InfoTerm ir : c.representatives) System.out.println("Rep " + ir.toName());
-//				test.addAll(c.representatives);
-//			}
-			//			FIS fis = new FIS(test,geneSupport);
 			
 			Map<String,Object> map = new HashMap<>(finalResult);
 			map.put("msg", msg_code);
@@ -670,64 +715,11 @@ public class GSAnServiceImpl implements GSAnService {
 		return set;
 	}
 
-//	public static double GS2(List<String> symbols, Annotation goa, GlobalOntology go) {
-//
-//		Map<String, Set<String>> map = new HashMap<>();
-//		List<String> genePresent = new ArrayList<>();
-//		for(String s : symbols) {
-//			if(goa.annotation.containsKey(s)) {
-//				genePresent.add(s);
-//				for(String t : goa.annotation.get(s).terms) {
-//					if(!map.containsKey(t)) {
-//						map.put(t, new HashSet<>());
-//						map.get(t).add(s);
-//					}else {
-//						map.get(t).add(s);
-//					}
-//					for(String anc : go.allStringtoInfoTerm.get(t).is_a.ancestors) {
-//						if(!map.containsKey(anc)) {
-//							map.put(anc, new HashSet<>());
-//							map.get(anc).add(s);
-//						}else {
-//							map.get(anc).add(s);
-//						}
-//					}
-//				}
-//			}
-//		}
-//		int H = genePresent.size()-1;
-//		double dd = 0.;
-//		for(String s : genePresent) {
-//			int ng = goa.annotation.get(s).terms.size();
-//			double sum = 0.;
-//			for(String t : goa.annotation.get(s).terms) {
-//				List<String> lt = new ArrayList<String>();
-//				lt.add(t);
-//				lt.addAll(go.allStringtoInfoTerm.get(t).is_a.ancestors);
-//				int san = lt.size();
-//				double rank = 0.;
-//				for(String anc : lt) {
-//					Set<String> set = new HashSet<>(map.get(anc));
-//					set.remove(s);
-//					rank = rank + ((double)set.size()/(double)H);
-//
-//				}
-//				sum = sum + (1/(double)san) * rank;
-//
-//			}
-//			if(Double.isNaN(dd)) {
-//				System.exit(0);
-//			}
-//			dd = dd + (1./(double)ng) * sum;
-//		}
-//
-//		return (1/(double)genePresent.size()) * dd;
-//	}
 	public static double GS2(List<String> symbols,Map<String,Set<String>> gene2rep, GlobalOntology go) {
 
 		Map<String, Set<String>> map = new HashMap<>();
 		List<String> genePresent = new ArrayList<>();
-		for(String s : symbols) { // modificado, normalmente es symbol
+		for(String s : symbols) {
 			if(gene2rep.containsKey(s)) {
 				genePresent.add(s);
 				for(String t : gene2rep.get(s)) {
@@ -777,8 +769,6 @@ public class GSAnServiceImpl implements GSAnService {
 		return (1/(double)genePresent.size()) * dd;
 	}
 	
-
-	
 	public String onto2simpleName(String onto) {
 		String t = new String();
 		switch (onto) {
@@ -795,7 +785,9 @@ public class GSAnServiceImpl implements GSAnService {
 			t= "reac";
 			break;
 		default:
-			t="other";
+			t=onto.replace("biological_process", "BP")
+			.replace("molecular_function", "MF")
+			.replace("cellular_component", "CC");
 			break;
 		}
 		return t;

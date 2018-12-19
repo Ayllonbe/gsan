@@ -81,7 +81,32 @@ public class GlobalOntology {
 		
 				
 	}
-
+	public static void main(String[] args) {
+		//String GOOWL = "doid.owl";
+		//String path = "src/main/resources/static/integration/";
+		String GOOWL = "go.owl";
+		String path = "src/main/resources/static/ontology/";
+		File owlf = new File(path+GOOWL);
+		
+	 	if(owlf.exists()) {
+			System.out.println(owlf.getAbsolutePath());
+		}else {
+			System.out.println("The file don't exist");
+		}
+		String[] arg = new String[2];
+		arg[0] = owlf.getAbsolutePath();
+		arg[1] = "DO";
+		// Charge ontology, resoner ontology and recover information
+		GlobalOntology go= GlobalOntology.informationOnt(arg);
+		
+		
+		for(String goT : go.allStringtoInfoTerm.keySet()) {
+			System.out.println("#### "+go.allStringtoInfoTerm.get(goT).name);
+			for(Entry<String,List<String>> x : go.allStringtoInfoTerm.get(goT).xrefs.entrySet()) {
+				System.out.println(x.getKey() + " ===> "+ x.getValue());
+			}
+		}
+	}
 	@SuppressWarnings("static-access")
 	public GlobalOntology(OWLOntologyManager manager, OWLReasonerFactory reasonerFactory,String source)
 			throws OWLException, MalformedURLException {
@@ -162,9 +187,10 @@ public class GlobalOntology {
 		this.subontology.get(top).setnumberedge(nisA, npartOf);
 		this.subontology.get(top).addAllLeavesISA(leavesISA);
 		this.Leaves(); // Get the leaves terms in is a taxonomy
-		this.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
 		this.GetICs(); // Add the Intrinsic IC for every GO term
 		this.goUniverseIC(); // Add the GO Universal IC Mazandu et al 2013.
+		
+		this.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
 		Map<String, DescriptiveStatistics> mapSeco = new HashMap<>();
 		Map<String, DescriptiveStatistics> mapZhou = new HashMap<>();
 		Map<String, DescriptiveStatistics> mapSanchez = new HashMap<>();
@@ -412,10 +438,15 @@ public class GlobalOntology {
 		OWLAnnotationProperty ids = df.getOWLAnnotationProperty(oboinowl);
 		//OWLAnnotationProperty labels = df.getRDFSLabel();
 		
+		oboinowl = IRI.create(URLDecoder.decode("http://www.geneontology.org/formats/oboInOwl#hasDbXref", "UTF-8"));
+		OWLAnnotationProperty xref = df.getOWLAnnotationProperty(oboinowl);
+		//OWLAnnotationProperty labels = df.getRDFSLabel();
+		
 		
 		
 		oboinowl = IRI.create(URLDecoder.decode("http://www.w3.org/2002/07/owl#deprecated", "UTF-8"));
 		OWLAnnotationProperty deprecated = df.getOWLAnnotationProperty(oboinowl);
+		
 		
 		
 		
@@ -426,6 +457,8 @@ public class GlobalOntology {
 
 		for(OWLClass r:onto){ // For each owlclass child of owl:Thing
 
+			
+			
 			boolean sino = false; // boolean to ask if the terms is despreciated 
 			for(OWLAnnotation oa : EntitySearcher.getAnnotations(r.getIRI(), ontology,deprecated))
 				sino = oa.isDeprecatedIRIAnnotation();
@@ -456,6 +489,7 @@ public class GlobalOntology {
 			for(OWLAnnotation oa : EntitySearcher.getAnnotations(sub.getIRI(), ontology,ids))
 				top = ((OWLLiteral)oa.getValue()).getLiteral();
 			
+			
 			this.subontology.put(top,new OntoInfo()); // put the GO id in the global list 
 			Hashtable<String,InfoTerm> info =new Hashtable<String, InfoTerm>(); // Creation of a HashTable of String to InfoTerm class
 			TreeSet<OWLClass> list2 = new TreeSet<OWLClass>(); //Pivote set
@@ -478,6 +512,25 @@ public class GlobalOntology {
 						for(OWLAnnotation oa : EntitySearcher.getAnnotations(pere.getIRI(), ontology,ids))
 							id = ((OWLLiteral)oa.getValue()).getLiteral();
 						boolean prok = false;
+						
+						Map<String,List<String>> mapXR = new HashMap<>();
+						
+						if(EntitySearcher.getAnnotations(pere.getIRI(), ontology,xref).size()>0){
+						
+						for(OWLAnnotation oa : EntitySearcher.getAnnotations(pere.getIRI(), ontology,xref)) {
+							String xr = ((OWLLiteral)oa.getValue()).getLiteral();
+							if(xr.contains(":")) {
+							String[] x = xr.split(":");
+							if(mapXR.containsKey(x[0])) {
+								mapXR.get(x[0]).add(x[1]);
+							}else {
+								mapXR.put(x[0], new ArrayList<String>());
+								mapXR.get(x[0]).add(x[1]);
+							}
+							}
+						}
+					}
+						
 						for(OWLAnnotation oa : EntitySearcher.getAnnotations(pere.getIRI(), ontology,subset))
 						{
 						
@@ -492,7 +545,7 @@ public class GlobalOntology {
 						
 						InfoTerm iT = new InfoTerm(id,level,prok,source); // Create InfoTerm class to this owl class
 						iT.name = new String(); // get GO name and add in InfoTerm class
-		
+						iT.xrefs.putAll(mapXR);
 						List<String> labelaxioms = new ArrayList<String>();
 						for(OWLAnnotationAssertionAxiom oa : EntitySearcher.getAnnotationAssertionAxioms(pere.getIRI(), ontology))
 							{
@@ -768,9 +821,20 @@ public class GlobalOntology {
 			simpleHierarchy.completingThePath(); // Get PartOf terms (method created for me)
 			simpleHierarchy.Leaves(); // Get the leaves terms in is a taxonomy
 			//			simpleHierarchy.Both(); // create
-			simpleHierarchy.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
+			
 			simpleHierarchy.GetICs(); // Add the Intrinsic IC for every GO term
 			simpleHierarchy.goUniverseIC(); // Add the GO Universal IC Mazandu et al 2013.
+			
+			simpleHierarchy.GetDistanceTerms(); // Recover all distance between terms in the taxonomy
+			
+			for(String o : simpleHierarchy.subontology.keySet()) {
+				List<Double> dist = new ArrayList<Double>();
+				for(String t : simpleHierarchy.subontology.get(o).getLeavesISA()) {
+					InfoTerm it = simpleHierarchy.allStringtoInfoTerm.get(t);
+					dist.add(it.distancias.get(o));
+				}
+				simpleHierarchy.subontology.get(o).setMaxDistance(Collections.max(dist));
+			}
 			
 			
 			Map<String, DescriptiveStatistics> mapSeco = new HashMap<>();
@@ -1210,16 +1274,22 @@ public class GlobalOntology {
 			Edges[] lien;
 			ArrayList<Edges> e = new ArrayList<Edges>();
 			InfoTerm it = this.allStringtoInfoTerm.get(m);
+			double icC = it.ICs.get(1);
 			for(String pere : it.is_a.parents){
-				Edges ed = new Edges(this.allStringtoInfoTerm.get(m),this.allStringtoInfoTerm.get(pere),1.0);
+				InfoTerm itP = this.allStringtoInfoTerm.get(pere);
+				double icP = itP.ICs.get(1);
+				
+				Edges ed = new Edges(it,this.allStringtoInfoTerm.get(pere),Math.abs(icP-icC));
+//				Edges ed = new Edges(it,this.allStringtoInfoTerm.get(pere),1);
+				
 				e.add(ed);
 				edges.add(ed);
 			}
-			for(String pere : it.part_of.ancestors){
-				Edges ed = new Edges(this.allStringtoInfoTerm.get(m),this.allStringtoInfoTerm.get(pere),1.0);
-				e.add(ed);
-				edges.add(ed);
-			}
+//			for(String pere : it.part_of.ancestors){
+//				Edges ed = new Edges(this.allStringtoInfoTerm.get(m),this.allStringtoInfoTerm.get(pere),1.0);
+//				e.add(ed);
+//				edges.add(ed);
+//			}
 			// To save distances for each node
 			lien =  new Edges[e.size()];
 			for(int n = 0; n<e.size();n++){
@@ -1231,6 +1301,7 @@ public class GlobalOntology {
 		// Saving distance for each terms
 		this.SaveDistance();
 	}
+	
 	/**
 	 * Method depends of GetDistanceTerms. That method compute A* algorithm to get the distance between two terms
 	 */

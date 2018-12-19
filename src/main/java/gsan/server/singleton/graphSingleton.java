@@ -1,6 +1,11 @@
 package gsan.server.singleton;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
 import gsan.distribution.gsan_api.ontology.integration.GlobalGraph;
@@ -8,7 +13,7 @@ import gsan.distribution.gsan_api.ontology.integration.GlobalGraph;
 public class graphSingleton {
 	
 	private static GlobalOntology goBase;
-
+    private static Map<String,String> reac2go;
 
 		
 public static void initializeOrGet(String GOOWL) {
@@ -23,8 +28,45 @@ public static void initializeOrGet(String GOOWL) {
 		String[] args = new String[2];
 		args[0] = owlf.getAbsolutePath();
 		args[1] = "GO";
+		
+		
 		// Charge ontology, resoner ontology and recover information
 		GlobalOntology go= GlobalOntology.informationOnt(args);
+		
+		
+		File reacIDS = new File("src/main/resources/static/integration/reactome_stable_ids.txt");
+		List<String> lines;
+		Map<String,String> old2stable = new HashMap<>();
+		try {
+			lines = Files.readAllLines(reacIDS.toPath());
+			for(String l : lines) {
+				if(!l.contains("#")) {
+				String[] line = l.split("\t");
+				old2stable.put(line[1], line[0]);
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		reac2go = new HashMap<>();	
+		for(String t : go.allStringtoInfoTerm.keySet()) {
+			
+			if(go.allStringtoInfoTerm.get(t).xrefs.containsKey("Reactome")) {
+				for(String re : go.allStringtoInfoTerm.get(t).xrefs.get("Reactome")) {
+					if(reac2go.containsKey(re)) {
+						System.out.println("Error, Reactome Exist");
+					}else {
+						if(old2stable.containsKey(re)) {
+							//System.out.println(old2stable.get(re));
+							reac2go.put(old2stable.get(re), t);
+						}
+					}
+				}
+			}
+			
+		}
 		/*
 		 * INIT TEST HUMAN integration
 		 */
@@ -82,6 +124,11 @@ public static void initializeOrGet(String GOOWL) {
 		
 		return new GlobalOntology(goBase);
 		}
+	}
+	public static HashMap<String,String> MappingReac2GO() {
+		
+		return new HashMap<String,String>(reac2go);
+		
 	}
 	
 	

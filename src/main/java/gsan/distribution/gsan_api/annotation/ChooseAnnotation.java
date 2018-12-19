@@ -4,7 +4,7 @@ package gsan.distribution.gsan_api.annotation;
 
 public class ChooseAnnotation {
 
-	public static String annotation(String organism, boolean iea){
+	public static String annotation(String organism){
 
 		String goa_file;
 		
@@ -15,7 +15,7 @@ public class ChooseAnnotation {
 			break;
 		case "danio_rerio":
 			goa_file ="goa_zebrafish.gaf";
-			break;
+			break; 
 		case "saccharomyces_cerevisiae":
 			goa_file ="goa_yeast.gaf";
 			break;
@@ -51,6 +51,7 @@ public class ChooseAnnotation {
 			break;
 		case "caenorhabditis_elegans":
 			goa_file ="goa_worm.gaf";
+			break;
 		default:
 			goa_file = "goa_human.gaf";
 			break;
