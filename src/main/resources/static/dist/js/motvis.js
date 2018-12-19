@@ -232,7 +232,7 @@ function motvis(dictionary, representatives, genes,tree){
 
                 var RectY = posY + rectH * i ;// Y position
 
-                var posW =circleR * (-Math.log(dictionary[obj.parent.data.id].IC) / (-Math.log( Maxv))); // WIDTH
+                var posW =circleR * (dictionary[obj.parent.data.id].IC / Maxv); // WIDTH
                 var rectNode = {};
                 rectNode.name =  dictionary[obj.parent.data.id].name;
                 rectNode.IC =  dictionary[obj.parent.data.id].IC
@@ -384,7 +384,7 @@ function motvis(dictionary, representatives, genes,tree){
      var number = Math.trunc(Maxv)+1;
      number = number.toString()
      context.fillText(number, focus.posX+focus.axisWitdh-context.measureText(number).width,focus.axisY + font/1.5);
-     var pvaluestr = "log(Information content) (log(IC))"
+     var pvaluestr = "Information content (IC)"
      context.fillText(pvaluestr, focus.posX-context.measureText(pvaluestr).width/2+focus.axisWitdh/2,focus.axisY+font);
       };
   }

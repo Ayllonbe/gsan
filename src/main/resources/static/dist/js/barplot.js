@@ -33,12 +33,7 @@ data.forEach(function(d){
 var posText = maxSizeText;
 var posPlot = 2*tierceWidth
 width = maxSizeText + 2*tierceWidth;
-maxIC1 = Math.floor(maxIC);
-if(maxIC>maxIC1){
-  maxIC = maxIC1 +1;
-}else{
-  maxIC = maxIC1;
-}
+maxIC = Math.floor(maxIC+1);
 // set the ranges
 var y = d3.scaleBand()
           .range([height, 0])
@@ -194,7 +189,7 @@ g.append("text")
 g.append("text")
 .attr("x", posText + posPlot/2+10+(posPlot/4))
 .attr("y", height +30)
-.text("log(Information Content)")
+.text("Information Content")
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
 .attr("font-size","12px");
