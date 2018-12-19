@@ -23,7 +23,7 @@ figure {
 
 					<br>
 					<div class="container">
-						<p>GSAn is a new alternative to gene set analysis exploiting the semantic of concepts in the Gene Ontology (GO). Combining data mining and combinatorial algorithms, GSAn provides a reduced and synthetic number of GO terms resuming the biological role of the gene set (or gene product set) input. In the 1st version, GSAn includes the three ontologies of GO: biological process (BP), molecular function (MF) and cellular component (CC). The sections of interest are:</p>
+						<p>GSAn is a new alternative to gene set analysis exploiting the semantic of concepts in the Gene Ontology (GO). Combining data mining and combinatorial algorithms, GSAn provides a reduced and synthetic number of GO terms resuming the biological role of the gene set input. In the 1st version, GSAn includes the three ontologies of GO: biological process (BP), molecular function (MF) and cellular component (CC). The sections of interest are:</p>
 						<h2>Summary</h2>
 						<a href="#startAnalysis"><h3>1. Start Analysis</h3></a>
 					 <a href="#visualization"><h3>2. Visualization</h3></a>
@@ -36,8 +36,8 @@ figure {
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
-						<b>NOTE: If the organism is uploaded, verify that the proteins are in the column 1 and the genes in the column 2. In that case,
-						you can use others ids matching with the proteins or genes.</b>
+						<b>NOTE: If the organism is uploaded, users have to verify that the proteins are in the first column and the genes in the second column. In that case,
+						you can use other ids matching with the proteins or genes.</b>
 						<br>
 						<h4>Advanced parameters</h4>
 						<figure>
@@ -66,8 +66,8 @@ figure {
 						</figure>
 						<br>
 						<h4>Bubble chart</h4>
-						<p>We show in the result a visualization combining two class: node-link and space-filling visualization.
-						These visualizations are dynamics and you can zoom to get a deeper information. The complete information about this visualization can be found in <a href="https://ieeexplore.ieee.org/document/8107965">Ayllon-Benitez et al.</a></p>
+						<p>We display results according to a visualization combining two classes: node-link and space-filling visualization.
+						These visualizations are dynamic and users can zoom to get a deeper information. The complete information about this visualization can be found in <a href="https://ieeexplore.ieee.org/document/8107965">Ayllon-Benitez et al.</a></p>
 						<figure>
 							<img src="dist/imgs/Result3.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
@@ -80,20 +80,20 @@ figure {
 						<br>
 						<h2 id="formulas">4. Formulas</h2>
 						<h3>Information content</h3>
-						The information content, or IC, is a score associated with the terms, explaining how much the terms are informative.
-						 The bigger the IC is, the more specific the IC is. Two kinds of IC are used in GSAn: intrinsic and extrinsic.
-						 The intrinsic IC uses the information provided from the ontology structure and the extrinsic IC uses the external support.
+						The information content, or IC, is a score associated with the terms, explaining how much they are informative.
+						 The bigger the IC is, the more specific the term is. Two kinds of IC are used in GSAn: intrinsic and extrinsic.
+						 The intrinsic IC uses only information available within the ontology structure and the extrinsic IC uses external information.
 						 In most cases, the IC of a term is computed from the probability of the term as follows:
 						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/prob.png" alt="" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
-						<h4>Resnik ou extrinsic</h4>
-						In GSAn, only one kind of IC extrinsic was used. The used IC was proposed by <a href="https://arxiv.org/pdf/cmp-lg/9511007.pdf">Resnik</a> in 1995.
+						<h4>Resnik or extrinsic</h4>
+						In GSAn, only one kind of extrinsic IC is used. The used IC was proposed by <a href="https://arxiv.org/pdf/cmp-lg/9511007.pdf">Resnik</a> in 1995.
 						This IC uses the frequency of occurrence of a word in a given document.
-						In the Gene Ontology, the frequency of occurrence (number of genes or proteins) is computed by the GOA file from each organism.
-						This IC is applied with some semantic similarity measures (see below). Thus, the extrinsic IC is computed as follows:
+						In the Gene Ontology, the frequency of occurrence (number of genes) is computed according to the GOA file of each organism.
+						This IC is applied with some semantic similarity measures (see formulas below). Thus, the extrinsic IC is computed as follows:
 
 						<br><br>
 						<figure style="background-color:white">
@@ -101,15 +101,15 @@ figure {
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
-						<b>Note: a term includes all of the genes and proteins associated with it and its descendants using the  <i>true path</i>.
-							 The  <i>true path</i> means that the information provided by a term is inherited to its descendants, thus if a gene is associated with
-							 a term that is the descendant of another term, then this gene is also associated with the ancestor term.</b>
+						<b>Note: a term includes all the genes and proteins associated with it and its descendants using the  <i>true path</i>.
+							 The <i>true path</i> means that the information provided by a term is inherited by its descendants, thus if a gene is associated with
+							 a term that is descendant of another term, then this gene is also associated with the ancestor term.</b>
 							<br><br>
 						<h4>Seco</h4>
-						<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.59.2199&rep=rep1&type=pdf">Seco <i>et al</i></a>. proposed an IC score using the ontology structure. For that, the probability of a term was computed from the division
-						between the number of descendants of the term plus the term itself and the number of descendants of root plus 1. The logarithm of
-						 this probability provides a not normalized IC by Seco. To normalize the score between 0 and 1, the IC is then divided by the maximal IC
-						  that corresponds to terms with 0 descendants. The formula to directly obtain the normalized IC is as follows:
+						<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.59.2199&rep=rep1&type=pdf">Seco <i>et al</i></a>. proposed an IC score using the ontology structure. For that, the probability of a term was computed from the ratio
+						between the number of descendants of the term plus the term itself and the number of descendants of the root term plus 1. The logarithm of
+						 this probability provides an IC that is not normalized. To normalize the score between 0 and 1, the IC is then divided by the maximal IC
+						  that corresponds to terms with no descendants. To directly obtain the normalized IC, the following formula is used:
 						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/seco.png" alt=""/>
@@ -118,10 +118,9 @@ figure {
 						<br>
 						<h4>Zhou</h4>
 						The IC created by Seco gives 1 to every leaf in the ontology structure.
-						Considering that, a leaf term with 3 ancestors has the same IC that a leaf term with 50 ancestors.
+						Considering that, a leaf term with 3 ancestors has the same IC than a leaf term with 50 ancestors.
 						Thus, <a href="https://ieeexplore.ieee.org/document/4813554">Zhou <i>et al</i></a>. proposed a new IC measure combining the IC provided by Seco and the depth notion.
-						The formula is as follow where &delta; corresponds to depth and &sigma; is a changeable factor between 0 and 1 to
-						adjust the weight of IC or depth of equations. The &sigma; used here is 0.5 according to the paper.
+						The formula is as follows
 						<br><br>
 
 						<figure style="background-color:white">
@@ -129,21 +128,24 @@ figure {
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
+						 where &delta; corresponds to the depth and &sigma; is a changeable factor between 0 and 1 to
+						adjust the weight of IC or depth of equations. The &sigma; used here is 0.5 according to the paper.
+						<br>
 						<h4>Sanchez</h4>
 						<a href="https://www.sciencedirect.com/science/article/abs/pii/S0950705110001619">Sánchez <i>et al</i></a>. suggested the IC model which is directly proportional to the number of ontological
 						ancestors of the term and inversely proportional to leaves connected to the term. Thus, the specificity should be
-						captured without any tuning factor and taking account the depth in the ontology. Thus, the IC value is computed as follows
+						captured without any tuning factor and taking account the depth in the ontology. Thus, the IC value is computed as follows:
 						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/sanchez.png" alt=""/>
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
-						where <i>Anc</i> is the set of ancestors of the term t.
+						where <i>Anc</i> is the set of ancestors of term t.
 						<br>
 						<h4>Mazandu</h4>
 					At last, <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3775452/pdf/BMRI2013-292063.pdf">Mazandu and Mulder</a>. proposed an IC value taking into account the position of the terms in the graph.
-					First, the probability is computed exponentially, from the root to the leaf terms. Each term depends on
+					First, the probability is computed exponentially, from the root term to the leaf terms. Each term depends on
 					the probability of its parents divided by the children of the parent. Thus, the IC provided by Mazandu for a term <i>t</i>
 					is the minus logarithm of the probability.
 						<br><br>
@@ -154,9 +156,9 @@ figure {
 						<br>
 						<h3>Semantic Similarity</h3>
 						<h4>Resnik</h4>
-						That semantic similarity measure was proposed by <a href="https://arxiv.org/pdf/cmp-lg/9511007.pdf">Resnik</a> at the same time that the IC,
-						where the similarity between two terms corresponds to the IC of their most informative commons ancestor
-						(or currently called the MICA). The equation is as follow and we normalize the measures by dividing them by the IC max.
+						That semantic similarity measure was proposed by <a href="https://arxiv.org/pdf/cmp-lg/9511007.pdf">Resnik</a> at the same time than the IC,
+						where the similarity between two terms corresponds to the IC of their most informative common ancestors
+						(or currently called the MICA). The equation is as follow and we normalized the measures by dividing them by the IC max:
 						<br><br>
 						<figure style="background-color:white">
 							<img src="dist/imgs/Resnik.png" alt=""/>
@@ -164,7 +166,7 @@ figure {
 						</figure>
 						<br>
 						<h4>Lin</h4>
-						To improve the result of Resnik similarity,
+						To improve the results of Resnik's similarity,
 						<a href="http://l2r.cs.uiuc.edu/~danr/Teaching/CS598-05/Papers/Lin-Sim.pdf">Lin</a> proposed another normalization by dividing twice the IC of MICA by the addition of IC between the compared terms.
 						<br><br>
 						<figure style="background-color:white">
@@ -173,8 +175,8 @@ figure {
 						</figure>
 						<br>
 						<h4>AIC</h4>
-						The aggregate information content or AIC is an alternative proposed by <a href="https://ieeexplore.ieee.org/document/6682909">Song <i>et al</i>.</a>
-						combining the semantic value of Wang (does not used here) and the Resnik IC. The semantic value and the semantic weight are computed as follows:
+						The aggregate information content or AIC is an alternative measure proposed by <a href="https://ieeexplore.ieee.org/document/6682909">Song <i>et al</i>.</a>
+						combining the semantic value of Wang (not used here) and the Resnik IC. The semantic value and the semantic weight are computed as follows:
 
 						<br><br>
 
@@ -191,7 +193,7 @@ figure {
 						</figure>
 
 						<h4>NUnivers</h4>
-						Using the IC proposed by  <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3775452/pdf/BMRI2013-292063.pdf">Mazandu and Mulder</a>., the similarity of NUnivers between two terms computes
+						Using the IC proposed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3775452/pdf/BMRI2013-292063.pdf">Mazandu and Mulder</a>., the similarity of NUnivers between two terms computes
 						the most informative content ancestor divided by the maximal IC between the compared terms.
 						<br><br>
 						<figure style="background-color:white">
@@ -200,8 +202,8 @@ figure {
 						</figure>
 						<br>
 						<h4>Distance Function</h4>
-						The distance function (DF) (used by <a href="https://www.thieme-connect.com/products/ejournals/abstract/10.3414/ME13-02-0026">Quesada-Martinez <i>et al</i>.</a>) combines the edge semantic similarity and node base.
-					  The measure uses the jaccard similarity of the union and intersection of the ancestor between the terms to compare.
+						The distance function (DF) (used by <a href="https://www.thieme-connect.com/products/ejournals/abstract/10.3414/ME13-02-0026">Quesada-Martinez <i>et al</i>.</a>) combines the edge semantic similarity and node based.
+					  The measure uses the Jaccard similarity of the union and intersection of the ancestor between the terms to compare.
  <br><br>
 
 						<figure style="background-color:white">
