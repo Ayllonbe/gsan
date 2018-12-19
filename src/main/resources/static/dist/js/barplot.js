@@ -33,7 +33,12 @@ data.forEach(function(d){
 var posText = maxSizeText;
 var posPlot = 2*tierceWidth
 width = maxSizeText + 2*tierceWidth;
-maxIC = Math.floor(maxIC+1);
+maxIC1 = Math.floor(maxIC);
+if(maxIC>maxIC1){
+  maxIC = maxIC1 +1;
+}else{
+  maxIC = maxIC1
+}
 // set the ranges
 var y = d3.scaleBand()
           .range([height, 0])
