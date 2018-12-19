@@ -27,11 +27,17 @@ scpDic.push(dic[x]);
 });
 
 
-//console.log("GeneSet SCP " + recoverGenes.size);
+console.log("GeneSet SCP " + recoverGenes.size);
 gauge(gs2,"#gs2");
-gauge(recoverGenes.size/genes.length,"#recoverGenes");
+var rg = Annotgenes.length/genes.length;
+gauge(rg,"#recoverGenes");
+$(".rg").append('<p>'+(Math.round(rg*100))+ '% of genes are annotated in the used GOA file.</p>');
+
 //gauge(reduceterm,"#reduce");
-gauge(recoverGenes.size/Annotgenes.length,"#recoverAnnotGenes");
+var rag = recoverGenes.size/Annotgenes.length;
+$(".rag").append('<p>'+(Math.round(rag*100))+ '% of genes covered by GSAn.</p>');
+gauge(rag,"#recoverAnnotGenes");
+$(".gs2").append('<p>The groupwise similarity between genes of the set is '+(Math.round(gs2*100))+ '%</p>');
 
 
 
@@ -58,7 +64,7 @@ representative.forEach(function(x){
 r.push(cells);
 })
 
-$("#tableResult").append('<H3>There are '+representative.length+' representative terms and '+scp.length +' synthetic terms annotating ' +recoverGenes.size +' out of '+genes.length+' genes</H3>');
+$("#tableResult").append('<H3>GSAn retained '+representative.length+' terms, '+scp.length +' of them being synthetic<br>  ' +recoverGenes.size +' out of '+genes.length+' genes are covered</H3>');
 var table = new Table()
 
 //sets table data and builds it

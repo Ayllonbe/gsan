@@ -55,16 +55,21 @@
 
 
 <span><a href="/"><img src="dist/imgs/logo.png" alt="[img:gsan]" height="55" width="55" style="position:absolute;top:2.5px;left: 10px;"/></a>
-  <h2 style="display:inline;position:absolute;top:0px;left:50px;"><b>G</b>ene <b>S</b>et <b>An</b>notation_<i style="font-size:25px;">an alternative to enrichment analysis</i></h2></span>
+  <h2 style="display:inline;position:absolute;top:0px;left:50px;"><b>G</b>ene <b>S</b>et <b>An</b>notation - <i style="font-size:25px;">an alternative to enrichment analysis</i></h2></span>
 
 </header>
 <!-- Fixed size after header-->
     <!-- Always on top. Fixed position, fixed width, relative to content width-->
-    <div class="sidebar1">
+    <div class="sidebar1" id="sidNav">
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="active treeview menu-open">
+        <li class="treeview menu-open">
           <a href="/">
             <i class="fa fa-home"></i> <span>Home</span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="start">
+            <i class="fa fa-arrow-circle-right"></i> <span>Start Analysis</span>
           </a>
         </li>
         <li class="treeview">
@@ -78,11 +83,7 @@
             <i class="fa fa-upload"></i> <span>Data input</span>
           </a>
         </li>-->
-        <li>
-          <a href="start">
-            <i class="fa fa-arrow-circle-right"></i> <span>Start Analysis</span>
-          </a>
-        </li>
+
 
         <!--  <li class="treeview">
           <a href="wait">
@@ -90,15 +91,30 @@
           </a>
         </li>-->
 
-        <li><a href="documentation"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
-        <li><a href="releases"><i class="fa fa-tag"></i> <span>Releases</span></a></li>
-        <li>
+        <li class="treeview"><a href="documentation"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
+        <li class="treeview"><a href="releases"><i class="fa fa-tag"></i> <span>Releases</span></a></li>
+        <li class="treeview">
           <a href="contact">
             <i class="fa fa-envelope"></i> <span>Contact</span>
           </a>
         </li>
   </ul>
     </div>
+    <script>
+
+    // Add active class to the current button (highlight it)
+    $("#sidNav").ready(function(){
+      $('.treeview a').each(function() {
+        console.log($(this).prop('href'));
+        if ($(this).prop('href') == window.location.href) {
+          $(this).addClass('current');
+        }
+      });
+    });
+
+
+
+    </script>
 
 <!-- Always at the end of the page -->
 <footer>

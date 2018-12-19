@@ -68,6 +68,10 @@ header h2{
     -ms-box-sizing:border-box;
     box-sizing:border-box;
 }
+.current {
+  font-weight: bold;
+   text-decoration: underline;
+}
 .sidebar1 i, .sidebar1 span{
 
   color: white;

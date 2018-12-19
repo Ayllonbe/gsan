@@ -390,7 +390,7 @@ public class GSAnController {
 			StringWriter writer = new StringWriter();
 			//	System.out.println(file.getContentType());
 			IOUtils.copy(file.getInputStream(), writer, StandardCharsets.UTF_8);
-			String theString = writer.toString().toLowerCase();
+			String theString = writer.toString();
 			String[] sa = theString.split(",");
 			//	System.out.println("End1");
 			for(String s :sa) {
@@ -446,7 +446,7 @@ public class GSAnController {
 			StringWriter writer = new StringWriter();
 			//System.out.println(file.getContentType());
 			IOUtils.copy(file.getInputStream(), writer, StandardCharsets.UTF_8);
-			String theString = writer.toString().toLowerCase();
+			String theString = writer.toString();
 			String[] sa = theString.split(",");
 			//System.out.println("End1");
 			for(String s :sa) {
@@ -523,7 +523,7 @@ public class GSAnController {
 			try {
 				StringWriter writer = new StringWriter();
 				IOUtils.copy(file.getInputStream(), writer, StandardCharsets.UTF_8);
-				String theString = writer.toString().toLowerCase();
+				String theString = writer.toString();
 				String[] sa = theString.replaceAll("\"", "").replaceAll("\n", "").split(",");
 				for(String s :sa) {
 					query.add(s);

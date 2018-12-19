@@ -215,11 +215,8 @@ public class GSAnServiceImpl implements GSAnService {
 		String author = ICauthor(ic_inc);
 		//	goaTable = ReadFile.ReadAnnotation(goaf.getAbsolutePath());
 		//System.out.println("src/main/resources/static/AssociationTAB/"+goa_file);
-		
-//		for(String goa : GOA.annotation.keySet()) {
-//			System.out.println("\t" + goa + " " +GOA.annotation.get(goa).getTerms().size());
-//			
-//		}
+	
+
 			
 //		System.out.println("end test");
 		Map<String,Double> Mappercentile = new HashMap<>();
@@ -255,7 +252,7 @@ public class GSAnServiceImpl implements GSAnService {
 		}
 		if(termsInc.isEmpty()){
 			msg_code = msg_code>0?msg_code: 3;
-			throw new java.lang.NullPointerException("line 178 - termsInc is empty");
+			throw new java.lang.NullPointerException("line 255 - termsInc is empty");
 			}
 
 

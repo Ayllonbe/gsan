@@ -2,6 +2,7 @@ package gsan.distribution.gsan_api.annotation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -69,6 +70,7 @@ public class Annotation implements Serializable {
 //				System.out.println(line);
 				//			log.debug(line);
 				String gene = line.get(ids).toLowerCase();
+				List<String> synonyms = Arrays.asList(line.get(10).toLowerCase().split("[|]"));
 				if(!gene.equals("") &&!(avoidedEC.contains(line.get(3))||avoidedEC.contains(line.get(6)))){  // 
 					//if(!(line.get(3).equals("NOT")|| line.get(6).equals("ND")  || line.get(6).equals("IEA") )){
 					String term = line.get(4);
@@ -79,15 +81,28 @@ public class Annotation implements Serializable {
 						this.annotation.get(gene).setSymbol(gene);
 
 					}
+					for(String syn : synonyms) {
+						if(!this.annotation.containsKey(syn)) {
+							this.annotation.put(syn, new AnnotationProperty(syn));
+							this.annotation.get(syn).setSymbol(syn);
+
+						}
+					}
 					if(gont.allStringtoInfoTerm.containsKey(term)) {
 
 						if(gont.allStringtoInfoTerm.get(term).getRegulatesClass()!=null) {
 							String regTerm = gont.allStringtoInfoTerm.get(term).getRegulatesClass();
 							InfoTerm it_reg = gont.allStringtoInfoTerm.get(regTerm);
 							this.annotation.get(gene).setTerm(regTerm,it_reg.top);
+							for(String syn : synonyms) {
+									this.annotation.get(syn).setTerm(regTerm,it_reg.top);
+							}
 						}else {
 							InfoTerm it= gont.allStringtoInfoTerm.get(term);
 							this.annotation.get(gene).setTerm(term, it.top);
+							for(String syn : synonyms) {
+								this.annotation.get(syn).setTerm(term,it.top);
+						}
 
 						}
 
@@ -251,7 +266,7 @@ public class Annotation implements Serializable {
 
 		Set<String> newlistterm = new HashSet<String>();
 		for(String p:this.annotation.keySet()){
-			newlistterm.addAll(this.annotation.get(p).getTerms(ontology));
+			newlistterm.addAll(this.annotation.get(p.toLowerCase()).getTerms(ontology));
 		}
 		return new ArrayList<String>(newlistterm);
 	}
@@ -260,7 +275,7 @@ public class Annotation implements Serializable {
 
 		List<String> newlistterm = new ArrayList<String>();
 		for(String p:this.annotation.keySet()){
-			newlistterm.addAll(this.annotation.get(p).getTerms(ontology));
+			newlistterm.addAll(this.annotation.get(p.toLowerCase()).getTerms(ontology));
 		}
 		return newlistterm;
 	}
@@ -269,7 +284,7 @@ public class Annotation implements Serializable {
 		List<String> newlistterm = new ArrayList<String>();
 		for(String p:new HashSet<String>(genes)){
 			if(this.annotation.containsKey(p)) {
-				newlistterm.addAll(this.annotation.get(p).getTerms(ontology));
+				newlistterm.addAll(this.annotation.get(p.toLowerCase()).getTerms(ontology));
 			}
 		}
 		return newlistterm;
@@ -280,12 +295,12 @@ public class Annotation implements Serializable {
 		Set<String> genesNoNoted = new HashSet<>();
 
 		for(String p:new HashSet<String>(genes)){
-			if(!this.annotation.containsKey(p)) {
+			if(!this.annotation.containsKey(p.toLowerCase())) {
 				genesNoNoted.add(p);
 				//log.debug(p);
 			}else {
 
-				List<String> termes = this.annotation.get(p).getTerms(top);
+				List<String> termes = this.annotation.get(p.toLowerCase()).getTerms(top);
 
 				if(termes.isEmpty()) {
 					genesNoNoted.add(p);
@@ -333,7 +348,7 @@ public class Annotation implements Serializable {
 				//log.debug(p);
 			}else {
 
-				List<String> termes = this.annotation.get(p).getTerms(top);
+				List<String> termes = this.annotation.get(p.toLowerCase()).getTerms(top);
 
 				if(termes.isEmpty()) {
 					genesNoNoted.add(p);
@@ -374,7 +389,7 @@ public class Annotation implements Serializable {
 			if(!this.annotation.containsKey(p)) {
 //				count ++ ;
 			}else {
-				newlistterm.addAll(this.annotation.get(p).getTerms(ontology));
+				newlistterm.addAll(this.annotation.get(p.toLowerCase()).getTerms(ontology));
 
 			}
 		}
@@ -383,7 +398,7 @@ public class Annotation implements Serializable {
 	}
 
 	public AnnotationProperty get(String prote){
-		return this.annotation.get(prote);
+		return this.annotation.get(prote.toLowerCase());
 
 	}
 	public boolean containsKey(String prote){

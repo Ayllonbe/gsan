@@ -16,12 +16,12 @@
 
 					<div id="query">
 						<textarea class="comments" id="queryText"
-								style="width: 90%; height: 90px;" oninput="printText()">Put here the gene or uniprot ids...
+								style="width: 90%; height: 90px;" oninput="printText()">Put here the Official gene symbols or UniprotKB ids...
 							</textarea>
 							  <label>
-							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> proteins</label>
+							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> UniprotKB</label>
 							  <label>
-							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> genes</label>
+							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> Official gene symbol</label>
 
 
 							<script>
@@ -45,7 +45,7 @@
 								$("#queryText")
 										.click(
 												function() {
-													if ($.trim($(this).val()) === "Put here the gene or uniprot ids...") {
+													if ($.trim($(this).val()) === "Put here the Official gene symbols or UniprotKB ids...") {
 														$(this).val("");
 													};
 													return false;
@@ -77,14 +77,14 @@
 									It is possible to insert a file in text-plain format."
 ></i>
 						<br>
-						<h6>If your gene/protein ids are not official gene symbols or UniprotKB ids, you can convert them to UniprotKB
+						<h6>If your gene/protein ids are not Official gene symbols or UniprotKB ids, you can convert them to UniprotKB
 						<br>
 						in <a href="https://www.uniprot.org/uploadlists/"> https://www.uniprot.org/uploadlists/ </a></h6>
 						<button id="clear">Clear</button>
 						<script>
 
 						$("#clear").click(function(){
-							$("#queryText").val("Put here the gene or uniprot ids...")
+							$("#queryText").val("Put here the Official gene symbols or UniprotKB ids...")
 						});
 
 						</script>
@@ -540,7 +540,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 															"filename.txt");
 
 													//console.log(gf);
-
+console.log("Hola " + window.location.pathname.replace("\/",""));
 													var formData = new FormData();
 													formData.append("query", f);
 													formData.append("useIEA",iea);
