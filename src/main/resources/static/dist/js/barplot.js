@@ -33,7 +33,12 @@ data.forEach(function(d){
 var posText = maxSizeText;
 var posPlot = 2*tierceWidth
 width = maxSizeText + 2*tierceWidth;
-maxIC = Math.floor(maxIC+1);
+maxIC1 = Math.floor(maxIC);
+if(maxIC>maxIC1){
+  maxIC = maxIC1 +1;
+}else{
+  maxIC = maxIC1;
+}
 // set the ranges
 var y = d3.scaleBand()
           .range([height, 0])
@@ -91,7 +96,7 @@ var g=    svg.append("g")
     .enter().append("rect")
       .attr("class", "bar1")
       .attr("x", function(d) { return posText + posPlot/2+10; })
-      .attr("width", function(d) {return Math.log(d.IC)/Math.log(maxIC) * posPlot/2; } )
+      .attr("width", function(d) {return d.IC/maxIC * posPlot/2; } )
       .attr("y", function(d) { return y(d.name); })
       .attr("fill", "#68a9ff" )
       .attr("height", y.bandwidth())
