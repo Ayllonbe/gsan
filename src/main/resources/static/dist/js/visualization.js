@@ -27,7 +27,7 @@ scpDic.push(dic[x]);
 });
 
 
-console.log("GeneSet SCP " + recoverGenes.size);
+//console.log("GeneSet SCP " + recoverGenes.size);
 gauge(gs2,"#gs2");
 gauge(recoverGenes.size/genes.length,"#recoverGenes");
 //gauge(reduceterm,"#reduce");

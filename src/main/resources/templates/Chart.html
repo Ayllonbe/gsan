@@ -17,7 +17,7 @@
 
 					<br>
 					<div id="query">
-						<form method="POST" action="/results"
+						<form id="form1" method="POST" action="/results"
 							enctype="multipart/form-data" accept=".json">
 							<input id="queryFile" type="file" name="file" /><br />
 							<button type="submit" id="run" class="btn-circle btn-xl">
@@ -35,6 +35,7 @@
 
 
 	<script>
+
 $("#queryFile").change(function(e) {
 var ext = $("#queryFile").val().split(".").pop().toLowerCase();
 
@@ -43,6 +44,35 @@ alert('Please upload a .json file');
 return false;
 }
 });
+
+$("#run").click(function(x){
+	if($("#queryFile").val()===""){
+		alert("Please, upload a .json file before visualize.");
+		x.preventDefault();
+	}else{
+input = document.getElementById('queryFile').files[0];
+
+var reader =  new FileReader();
+
+
+reader.onloadend = function(e) {
+  var text = reader.result;
+	var jobj = JSON.parse(text);
+	if(jobj.terms===undefined  || jobj.GS2===undefined || jobj.representatives===undefined || jobj.tree === undefined || jobj.AnnotatedGeneSet===undefined || jobj.GeneSet===undefined || jobj.scp === undefined){
+		alert("Please, use the right format to json file");
+
+}else {
+		$("#form1").submit();
+}
+}
+x.preventDefault();
+reader.readAsText(input);
+
+
+	}
+
+
+})
 
 </script>
 

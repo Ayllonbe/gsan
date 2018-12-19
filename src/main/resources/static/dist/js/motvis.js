@@ -127,7 +127,7 @@ function motvis(dictionary, representatives, genes,tree){
   //  console.log(dictionary[d.data.id].name +" " +node2circles[d.data.id].length);
   }
   });
-  console.log(circles.length);
+//  console.log(circles.length);
   /*
   PREPARING THE FIRST RENDERING. x and y show the original position.
   */
@@ -225,7 +225,7 @@ function motvis(dictionary, representatives, genes,tree){
                 return dictionary[obj1].IC - dictionary[obj2].IC;
               });
               circle.axisY = posY + rectH * (dictionary[circle.data.id].terms.length);
-              circle.axisWitdh = (circleR* (-Math.log( Maxv))) / (-Math.log( Maxv));
+              circle.axisWidth = (circleR* ( Maxv) / Maxv);
               circle.rectnodes = [];
               genes2circles[circle.data.id].forEach(function(obj,i){
 
@@ -258,7 +258,7 @@ function motvis(dictionary, representatives, genes,tree){
 //            return dictionary[obj1].IC - dictionary[obj2].IC;
 //          });
 //          circle.axisY = posY + rectH * (dictionary[circle.data.id].terms.length);
-//          circle.axisWitdh = (circleR* (-Math.log( Maxv))) / (-Math.log( Maxv));
+//          circle.axisWidth = (circleR* (-Math.log( Maxv))) / (-Math.log( Maxv));
 //          circle.rectnodes = [];
 //
 //          genes2circles[circle.data.id].forEach(function(obj,i){
@@ -375,17 +375,22 @@ function motvis(dictionary, representatives, genes,tree){
      context.fillStyle = 'rgba(192,192,192,'+ opacity+ ')';
      context.fillText(dictionary[focus.data.id].name, circleX-context.measureText(dictionary[focus.data.id].name).width/2, circleY-circleR/2);*/
      context.fillStyle="black";
-    // console.log(focus.posX+" "+focus.axisY+" "+focus.axisWitdh);
-     context.fillRect(focus.posX,focus.axisY,focus.axisWitdh,3);
+  //  console.log(focus.posX+" "+focus.axisY+" "+focus.axisWidth);
+
      context.font = 'italic '+ font/2 + 'pt Arial';
+     context.fillRect(focus.posX,focus.axisY,focus.axisWidth,3);
      context.fillStyle = "black";
      context.fillText("0", focus.posX,focus.axisY+font/1.5);
      context.fillStyle = "black";
-     var number = Math.trunc(Maxv)+1;
+     var number = Math.floor(Maxv);
+     if(Maxv>number){
+       number=number+1;
+     }
      number = number.toString()
-     context.fillText(number, focus.posX+focus.axisWitdh-context.measureText(number).width,focus.axisY + font/1.5);
+    // console.log(number);
+     context.fillText(number, focus.posX+focus.axisWidth-context.measureText(number).width,focus.axisY + font/1.5);//
      var pvaluestr = "Information content (IC)"
-     context.fillText(pvaluestr, focus.posX-context.measureText(pvaluestr).width/2+focus.axisWitdh/2,focus.axisY+font);
+     context.fillText(pvaluestr, focus.posX-context.measureText(pvaluestr).width/2+focus.axisWidth/2,focus.axisY+font);
       };
   }
   /*

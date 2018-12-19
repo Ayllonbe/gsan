@@ -16,7 +16,7 @@
 
 					<div id="query">
 						<textarea class="comments" id="queryText"
-								style="width: 90%; height: 90px;" oninput="printText()">Put here the official gene symbols or UniprotKB ids...
+								style="width: 90%; height: 90px;" oninput="printText()">Put here the gene or uniprot ids...
 							</textarea>
 							  <label>
 							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> proteins</label>
@@ -45,7 +45,7 @@
 								$("#queryText")
 										.click(
 												function() {
-													if ($.trim($(this).val()) === "Put here the official gene symbols or UniprotKB ids...") {
+													if ($.trim($(this).val()) === "Put here the gene or uniprot ids...") {
 														$(this).val("");
 													};
 													return false;
@@ -77,14 +77,14 @@
 									It is possible to insert a file in text-plain format."
 ></i>
 						<br>
-						<h6>If your gene/protein ids are not <b>official gene symbols</b> or <b>UniprotKB</b> ids, you can convert them to UniprotKB
+						<h6>If your gene/protein ids are not official gene symbols or UniprotKB ids, you can convert them to UniprotKB
 						<br>
 						in <a href="https://www.uniprot.org/uploadlists/"> https://www.uniprot.org/uploadlists/ </a></h6>
 						<button id="clear">Clear</button>
 						<script>
 
 						$("#clear").click(function(){
-							$("#queryText").val("Put here the official gene symbols or UniprotKB ids...")
+							$("#queryText").val("Put here the gene or uniprot ids...")
 						});
 
 						</script>
