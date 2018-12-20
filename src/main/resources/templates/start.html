@@ -366,15 +366,9 @@ In the representative algorithm, after clustering method, one or more terms can 
 
 					</div>
 					<br>
-					<button type="button" id="run" class="btn-circle btn-xl">
+					<button type="button" id="run" onclick="openRun()" class="btn-circle btn-xl">
 						<i class="glyphicon glyphicon-play"></i>
 					</button>
-					<span id="uploading" style="display: none;">
-					Uploading GAF file: <span id="percentage"></span>
-					</span>
-					<span id="uploaded" style="display: none;">
-						GAF file uploaded.
-					</span>
 
 					<br><br>
 					<br><br>
@@ -437,204 +431,173 @@ In the representative algorithm, after clustering method, one or more terms can 
 												return false;
 										});
 
-						$("#run")
-								.click(
-										function() {
-											var genes = [];
-
-											if (genesFile.length === 0) { // Observamos si los genes han sido cargados en un fichero.
-
-												genes = genes.concat(document.getElementById("queryText").value.split(/[\n|\t|;|,]/g));
-												//console.log(genes);
-
-											}
-											var organism = document
-													.getElementById("organism").value;
-
-											if (genes.includes("Put here the gene or uniprot ids...")){
-												alert("Please, the gene input is required!");
-											return false;
-											}
-											else if(genes.length ===1 && genes.includes("")){
-												alert("Please, the gene is required!");
-												return false;
-											}
-											else if(genes.length<5){
-												alert("Please, the input must have a minimun of 5 genes");
-												return false;
-											}
-											else if (organism === "input" && fileGAF === ""){
-												alert("Please, the annotation input is required!");
-												return false;
-											}
-											else if (organism === "input" && fileGAF.size>150000000 ){
-												alert("The maximal size allowed is 150MB, If your GAF file is bigger, please contact us.");
-												return false;
-											}
-											else if ($('.ontologies:checked').length === 0){
-												alert("Please, choose at least one ontology");
-												return false;
-											}
-											else if ($('.protORgene:checked').length === 0){
-												alert("Please, choose if the ids are genes or proteins.");
-												return false;
-											}
-											else {
-
-												var iea = document
-														.getElementById("iea").value === "on" ? true
-														: false;
-												var prok = false;//document.getElementById("prok").value==="on"?true:false;
-												var onto = [];
-
-												$('.ontologies')
-														.each(
-																function() {
-																	//var sThisVal = (this.checked ? onto.push(this.value) : "0");
-																	var sThisVal = (this.checked ? onto
-																			.push(this.value)
-																			: "0");
-																});
-												var protORgene;
-
-																$('.protORgene')
-																		.each(
-																				function() {
-																					//var sThisVal = (this.checked ? onto.push(this.value) : "0");
-																					if(this.checked){
-																						protORgene = this.value
-																					}
-																				});
 
 
-												var ss = document
-														.getElementById("semantic_similarity").value;
+						function openRun() {
+							 var genes = [];
 
-												var repFilter = document
-														.getElementById("similarity_filter").value;
-											//var gcovering = document
-												//		.getElementById("covering").value;
-												var sup = document
-														.getElementById("support").value;
-												var per = document
-														.getElementById("percentile").value;
-												var ic = document
-														.getElementById("ic").value;
-												var email = document
-														.getElementById("inputEmail").value;
-												//console.log("EMAIL " + email);
-												email = email === "" ? null
-														: email;
-												//console.log("EMAIL " + email);
-												/*
-												 LY6E,IFIT1,OAS1,IFIT1,IFIT3,OAS3,IFIT3,OAS1,OASL,LOC129607,ISG15,HERC5,OAS1,MX1,BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4
-												 */
+							 if (genesFile.length === 0) { // Observamos si los genes han sido cargados en un fichero.
 
-												/*var genes = "LY6E,IFIT1,OAS1,IFIT1,IFIT3,OAS3,IFIT3,OAS1,OASL,LOC129607,ISG15,HERC5,OAS1,MX1,"+
-												 "BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,"  +
-												 "CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4"*/
-												//console.log(organism)
-												if (organism !== "input") {
-													var gf = [ genes.toString() ];
-													var f = new File(gf,
-															"filename.txt");
+								 genes = genes.concat(document.getElementById("queryText").value.split(/[\n|\t|;|,]/g));
+								 //console.log(genes);
 
-													//console.log(gf);
-console.log("Hola " + window.location.pathname.replace("\/",""));
-													var formData = new FormData();
-													formData.append("query", f);
-													formData.append("useIEA",iea);
-													formData.append("ontology",onto);
-													formData.append("organism",organism);
-													formData.append("semanticSimilarity",ss);
-													formData.append("simRepValue",repFilter);
-													formData.append("ids",protORgene);
-													//formData.append("covering",gcovering);
-													formData.append("minGeneSupport",sup);
-													formData.append("email",email);
-													formData.append("percentile", per);
-													formData.append("ic_incomplete",ic);
-													formData.append("prokaryote", prok);
+							 }
+							 var organism = document
+									 .getElementById("organism").value;
 
-													var xhr = new XMLHttpRequest();
-													xhr
-															.open("POST",
-																	window.location.protocol+"//"+window.location.host+"/gsanGet","_self");
+							 if (genes.includes("Put here the gene or uniprot ids...")){
+								 alert("Please, the gene input is required!");
+							 return false;
+							 }
+							 else if(genes.length ===1 && genes.includes("")){
+								 alert("Please, the gene is required!");
+								 return false;
+							 }
+							 else if(genes.length<5){
+								 alert("Please, the input must have a minimun of 5 genes");
+								 return false;
+							 }
+							 else if (organism === "input" && fileGAF === ""){
+								 alert("Please, the annotation input is required!");
+								 return false;
+							 }
+							 else if (organism === "input" && fileGAF.size>150000000 ){
+								 alert("The maximal size allowed is 150MB, If your GAF file is bigger, please contact us.");
+								 return false;
+							 }
+							 else if ($('.ontologies:checked').length === 0){
+								 alert("Please, choose at least one ontology");
+								 return false;
+							 }
+							 else if ($('.protORgene:checked').length === 0){
+								 alert("Please, choose if the ids are genes or proteins.");
+								 return false;
+							 }
+							 else {
 
-													xhr.onload = function() {
-														var popUp = window.open(xhr.responseURL,'_blank');
+								 var iea = document
+										 .getElementById("iea").value === "on" ? true
+										 : false;
+								 var prok = false;//document.getElementById("prok").value==="on"?true:false;
+								 var onto = [];
 
-												//console.log(popUp)
+								 $('.ontologies')
+										 .each(
+												 function() {
+													 //var sThisVal = (this.checked ? onto.push(this.value) : "0");
+													 var sThisVal = (this.checked ? onto
+															 .push(this.value)
+															 : "0");
+												 });
+								 var protORgene;
 
-												if (popUp == null || typeof(popUp)=='undefined') {
-													alert("Your browser has activated the popup blocker. If you want to use GSAn, please disable it.")
-
-												}
-												else {
-													popUp.focus();
-												}
-													}
-
-													xhr.send(formData)
-
-												} else {
-													var gf = [ genes.toString() ];
-													var f = new File(gf,
-															"filename.txt");
-													var formData = new FormData();
-													formData.append("query", f);
-													formData.append("useIEA",iea);
-													formData.append("ontology",onto);
-													formData.append("uploadFile",fileGAF);
-													formData.append("semanticSimilarity",ss);
-													formData.append("simRepValue",repFilter);
-													formData.append("ids",protORgene);
-											   //	formData.append("covering",gcovering);
-													formData.append("minGeneSupport",sup);
-													formData.append("email",email);
-													formData.append("percentile", per);
-													formData.append("ic_incomplete",ic);
-													formData.append("prokaryote", prok);
-
-													var xhr = new XMLHttpRequest();
-													xhr
-															.open("POST",
-																	window.location.protocol+"//"+window.location.host+"/gsanPost","_self");
+												 $('.protORgene')
+														 .each(
+																 function() {
+																	 //var sThisVal = (this.checked ? onto.push(this.value) : "0");
+																	 if(this.checked){
+																		 protORgene = this.value
+																	 }
+																 });
 
 
-																	xhr.upload.onprogress = function(e) {
-																		$("#uploading").show();
-				    												if (e.lengthComputable) {
-				      													var percentComplete = (e.loaded / e.total) * 100;
-																				percentComplete = Math.floor(percentComplete);
-																				$("#percentage").html(percentComplete);
-				      												//	console.log(percentComplete + '% uploaded');
-																				if(percentComplete===100){
-																					$("#uploading").hide();
-																					$("#uploaded").show();
-																				}
-				    											}
-				  										};
-													xhr.onload = function() {
-														var popUp = window.open(xhr.responseURL,'_blank');
+								 var ss = document
+										 .getElementById("semantic_similarity").value;
 
-												//console.log(popUp)
+								 var repFilter = document
+										 .getElementById("similarity_filter").value;
+							 //var gcovering = document
+								 //		.getElementById("covering").value;
+								 var sup = document
+										 .getElementById("support").value;
+								 var per = document
+										 .getElementById("percentile").value;
+								 var ic = document
+										 .getElementById("ic").value;
+								 var email = document
+										 .getElementById("inputEmail").value;
+								 //console.log("EMAIL " + email);
+								 email = email === "" ? null
+										 : email;
+								 //console.log("EMAIL " + email);
+								 /*
+									LY6E,IFIT1,OAS1,IFIT1,IFIT3,OAS3,IFIT3,OAS1,OASL,LOC129607,ISG15,HERC5,OAS1,MX1,BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4
+									*/
 
-												if (popUp == null || typeof(popUp)=='undefined') {
-													alert("Your browser has activated the popup blocker. If you want to use GSAn, please disable it.")
+								 /*var genes = "LY6E,IFIT1,OAS1,IFIT1,IFIT3,OAS3,IFIT3,OAS1,OASL,LOC129607,ISG15,HERC5,OAS1,MX1,"+
+									"BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,"  +
+									"CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4"*/
+								 //console.log(organism)
+								 if (organism !== "input") {
+									 var gf = [ genes.toString() ];
+									 var f = new File(gf,
+											 "filename.txt");
 
-												}
-												else {
-													popUp.focus();
-												}
-													}
+									 var formData = new FormData();
+									 formData.append("query", f);
+									 formData.append("useIEA",iea);
+									 formData.append("ontology",onto);
+									 formData.append("organism",organism);
+									 formData.append("semanticSimilarity",ss);
+									 formData.append("simRepValue",repFilter);
+									 formData.append("ids",protORgene);
+									 //formData.append("covering",gcovering);
+									 formData.append("minGeneSupport",sup);
+									 formData.append("email",email);
+									 formData.append("percentile", per);
+									 formData.append("ic_incomplete",ic);
+									 formData.append("prokaryote", prok);
 
-													xhr.send(formData)
-												}
+									 var xhr = new XMLHttpRequest();
+									 xhr.open("POST",
+													 window.location.protocol+"//"+window.location.host+"/gsanGet",false);
 
-												return false;
-											}
-										});
+
+
+									 xhr.send(formData)
+									 if (xhr.status === 200) {
+  								 window.open(xhr.responseURL,"_blank");
+								 }
+									 //console.log("2." + uri);
+									 //$("#run2").show();
+
+								 } else {
+									 var gf = [ genes.toString() ];
+									 var f = new File(gf,
+											 "filename.txt");
+									 var formData = new FormData();
+									 formData.append("query", f);
+									 formData.append("useIEA",iea);
+									 formData.append("ontology",onto);
+									 formData.append("uploadFile",fileGAF);
+									 formData.append("semanticSimilarity",ss);
+									 formData.append("simRepValue",repFilter);
+									 formData.append("ids",protORgene);
+									//	formData.append("covering",gcovering);
+									 formData.append("minGeneSupport",sup);
+									 formData.append("email",email);
+									 formData.append("percentile", per);
+									 formData.append("ic_incomplete",ic);
+									 formData.append("prokaryote", prok);
+
+									 var xhr = new XMLHttpRequest();
+									 xhr
+											 .open("POST",
+													 window.location.protocol+"//"+window.location.host+"/gsanPost",false);
+
+
+
+									 xhr.send(formData);
+									 if (xhr.status === 200) {
+									 window.open(xhr.responseURL,"_blank");
+									}
+
+
+								 }
+
+								 return false;
+							 }
+										};
 					</script>
 
 				</div>
@@ -652,7 +615,7 @@ console.log("Hola " + window.location.pathname.replace("\/",""));
 
 					<h3>Example 2</h3>
 
-					<p>Set of 81 genes annotated as regulation of antigen presentation and immune response. This gene set was provided of a module repertoire created from five human vaccines by <a href="https://www.nature.com/articles/ni.2789" target="_blank">Li et al.</a></p>
+					<p>Set of 81 genes annotated as regulation of antigen presentation and immune response. This gene set was provided of a module repertoire created from five human vaccines by <a href="https://www.nature.com/articles/ni.2789" target="_blank">Li <i>et al.</i></a></p>
 
 					<button id="example2" class="btn btn-primary btn-sm"
 						style="float: rigth; background-color: #4169E1;">Click to use!</button>
