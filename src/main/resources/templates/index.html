@@ -54,8 +54,12 @@
 
 
 
-<span><a href="/"><img src="dist/imgs/logo.png" alt="[img:gsan]" height="55" width="55" style="position:absolute;top:2.5px;left: 10px;"/></a>
-  <h2 style="display:inline;position:absolute;top:0px;left:50px;"><b>G</b>ene <b>S</b>et <b>An</b>notation - <i style="font-size:25px;">an alternative to enrichment analysis</i></h2></span>
+<span id="bigWidth" style="width:840px;"><a href="/"><img src="dist/imgs/logo.png" alt="[img:gsan]" height="55" width="55" style="position:absolute;top:2.5px;left: 10px;"/></a>
+  <p style="font-size:35px;position:fixed;top:0px;left:70px"><b>G</b>ene <b>S</b>et <b>An</b>notation - <i style="font-size:25px;">an alternative to enrichment analysis</i></p></span>
+  <span id="mediumWidth" style="width:840px;"><a href="/"><img src="dist/imgs/logo.png" alt="[img:gsan]" height="55" width="55" style="position:absolute;top:2.5px;left: 10px;"/></a>
+    <p style="font-size:35px;position:fixed;top:0px;left:70px"><b>G</b>ene <b>S</b>et <b>An</b>notation</p></span>
+    <span id="smallWidth" style="width:840px;"><a href="/"><img src="dist/imgs/logo.png" alt="[img:gsan]" height="55" width="55" style="position:absolute;top:2.5px;left: 10px;"/></a></span>
+
 
 </header>
 <!-- Fixed size after header-->
@@ -113,6 +117,29 @@
     });
 
 
+res($(window).width());
+$(window).on('resize', function(){
+    res($(this).width());
+});
+
+
+  function res(width){
+
+    if(width>840){
+      $("#bigWidth").show();
+      $("#mediumWidth").hide();
+      $("#smallWidth").hide();
+    }else if(width<840 && width>396){
+      $("#bigWidth").hide();
+      $("#mediumWidth").show();
+      $("#smallWidth").hide();
+    }else{
+      $("#bigWidth").hide();
+      $("#mediumWidth").hide();
+      $("#smallWidth").show();
+    }
+
+  }
 
     </script>
 
