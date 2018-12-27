@@ -4,7 +4,7 @@
 
 	<div class="content">
 		<div th:insert="index"></div>
-		
+
 			<!-- Scrollable div with main content -->
 			<div class="row" id="rowStart" style="width: 100%">
 			<div class="col-xs-12 col-md-12">
@@ -24,7 +24,7 @@
 								<textarea id="subject" name="subject" placeholder=""
 									style="height: 200px"></textarea>
 
-								<input type="submit" value="Submit" onclick="send();">
+								<input id="sub" type="submit" value="Submit" onclick="send();">
 							</form>
 							<h3>Other ways to contact us</h3>
 							<p>
@@ -37,14 +37,17 @@
 		</div>
 
 		<script type="text/javascript">
+
 			function send() {
 				var cond1 = ValidateEmail();
 				var cond2 = ValidateName();
 				var cond3 = ValidateMSJ();
 				console.log(cond1 + " " + cond2 + " " + cond3)
 				if (cond1 && cond2 && cond3) {
-					console.log("sended!")
+					$("#sub").hide();
 					sendMail();
+				}else{
+						alert("Please, all fields are mandatory.")
 				}
 			}
 
@@ -55,10 +58,14 @@
 				formData.append("msj", document.form1.subject.value);
 
 				var xhr = new XMLHttpRequest();
-				xhr.open("POST",window.location.protocol+"//"+window.location.host+"/question");
+				xhr.open("POST",window.location.protocol+"//"+window.location.host+"/question",false);
 
 				xhr.send(formData)
-				alert("Email sended succefully.\n\n Thank you for contacting us.")
+				if (xhr.status === 200) {
+				alert("Email sended succefully.\n\n Thank you for contacting us.");
+				window.open(window.location.protocol+"//"+window.location.host+"/contact","_self");
+			 }
+
 
 			}
 
@@ -68,7 +75,7 @@
 					document.form1.email.focus();
 					return true;
 				} else {
-					alert("You have entered an invalid email address!");
+				//	alert("You have entered an invalid email address!");
 					document.form1.email.focus();
 					return false;
 				}
@@ -80,7 +87,7 @@
 					document.form1.name.focus();
 					return true
 				} else {
-					alert("Please introduce the name.");
+				//	alert("Please introduce the name.");
 					document.form1.name.focus();
 					return false;
 				}
@@ -95,7 +102,7 @@
 					document.form1.subject.focus();
 					return true
 				} else {
-					alert("Please introduce the message text.");
+				//	alert("Please introduce the message text.");
 					document.form1.subject.focus();
 					return false;
 				}

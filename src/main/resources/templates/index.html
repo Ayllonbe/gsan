@@ -109,7 +109,6 @@
     // Add active class to the current button (highlight it)
     $("#sidNav").ready(function(){
       $('.treeview a').each(function() {
-        console.log($(this).prop('href'));
         if ($(this).prop('href') == window.location.href) {
           $(this).addClass('current');
         }

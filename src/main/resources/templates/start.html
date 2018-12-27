@@ -153,7 +153,7 @@
 
 
 							 function changingOrganism(str){
-								
+
 								 if(str == "input"){
 								$("#gafHide").show();
 								$("#uni").text("proteins");
@@ -375,10 +375,13 @@ In the representative algorithm, after clustering method, one or more terms can 
 
 					</div>
 					<br>
+						<div class="row">
+							<div class="col-xs-12">
 					<button type="button" id="run" onclick="openRun()" class="btn-circle btn-xl">
 						<i class="glyphicon glyphicon-play"></i>
-					</button>
-
+					</button><span id="completing"></span>
+				</div>
+			</div>
 					<br><br>
 					<br><br>
 					<br><br>
@@ -443,6 +446,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 
 
 						function openRun() {
+							$('#run').prop('disabled', true);
 							 var genes = [];
 
 							 if (genesFile.length === 0) { // Observamos si los genes han sido cargados en un fichero.
@@ -566,11 +570,13 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 xhr.send(formData)
 									 if (xhr.status === 200) {
   								 window.open(xhr.responseURL,"_blank");
+									 $('#run').prop('disabled', false);
 								 }
 									 //console.log("2." + uri);
 									 //$("#run2").show();
 
 								 } else {
+									 console.log("");
 									 var gf = [ genes.toString() ];
 									 var f = new File(gf,
 											 "filename.txt");
@@ -588,17 +594,20 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 formData.append("percentile", per);
 									 formData.append("ic_incomplete",ic);
 									 formData.append("prokaryote", prok);
-
+									 var gogo = false;
 									 var xhr = new XMLHttpRequest();
-									 xhr
+						 xhr
 											 .open("POST",
 													 window.location.protocol+"//"+window.location.host+"/gsanPost",false);
 
 
-
+									$("#completing").text(" Waiting to charge the GAF 2.0 file.")
 									 xhr.send(formData);
+
 									 if (xhr.status === 200) {
+										 $("#completing").text(" Completed.")
 									 window.open(xhr.responseURL,"_blank");
+									 $('#run').prop('disabled', false);
 									}
 
 
@@ -607,6 +616,11 @@ In the representative algorithm, after clustering method, one or more terms can 
 								 return false;
 							 }
 										};
+
+
+
+
+
 					</script>
 
 				</div>
