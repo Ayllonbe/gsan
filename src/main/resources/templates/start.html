@@ -19,9 +19,9 @@
 								style="width: 90%; height: 90px;" oninput="printText()">Put here the Official gene symbols or UniprotKB ids...
 							</textarea>
 							  <label>
-							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> UniprotKB</label>
+							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> <span id="uni">UniprotKB</span></label>
 							  <label>
-							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> Official gene symbol</label>
+							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> <span id="genOf">Official gene symbol</span></label>
 
 
 							<script>
@@ -143,25 +143,34 @@
 						</div>
 						<script>
 
-							 if($("#organism").val()== "input"){
 
-								 $("#gafHide").show();
-	 							//$('#prok').bootstrapToggle('enable')
-	 							} else{
-	 							$("#gafHide").hide();
-							}
+						changingOrganism($("#organism").val());
+
 							 $("#organism").change(function(event) {
-
-							 if(event.target.value == "input"){
-							$("#gafHide").show();
-							 //$('#prok').bootstrapToggle('enable')
-							 } else{
-							$("#gafHide").hide();
-							// $('#prok').bootstrapToggle('disable')
-							 }
-
-
+								 changingOrganism(event.target.value);
 							 });
+
+
+
+							 function changingOrganism(str){
+								
+								 if(str == "input"){
+								$("#gafHide").show();
+								$("#uni").text("proteins");
+							 $("#genOf").text("genes")
+								 //$('#prok').bootstrapToggle('enable')
+							 } else if( str === "candida_albicans"){
+								 $("#gafHide").hide();
+								 $("#uni").text("Candida genome database")
+								 $("#genOf").text("Official gene symbol")
+							 }
+							 else{
+								 $("#uni").text("UniprotKB")
+								$("#genOf").text("Official gene symbol")
+								$("#gafHide").hide();
+								// $('#prok').bootstrapToggle('disable')
+								 }
+							 }
 
 						</script>
 
