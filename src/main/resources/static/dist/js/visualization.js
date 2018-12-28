@@ -53,7 +53,7 @@ representative.forEach(function(x){
   cells.push(dic[x].name);
   cells.push(dic[x].onto);
   cells.push(Math.floor(dic[x].IC*100)/100);
-  //cells.push(dic[x].geneSet.length);
+  cells.push(dic[x].geneSet.length);
 
   if(scp.includes(x)){
 	  cells.push(true);

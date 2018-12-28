@@ -179,8 +179,7 @@
 				var scp = data.scp;
 				var dic = data.terms;
 
-				var h = [ "Id", "Name", "Onto", "IC", "QueryNumber",
-						"CoverNumber", "Synthetic", "Genes" ], r = [];
+				var h = ["GOID","Name","Ontology","IC","Covered genes","Synthetic", "Genes" ], r = [];
 				representative.forEach(function(x) {
 					//console.log(dic[x]);
 					var cells = {};
@@ -188,7 +187,6 @@
 					cells[h[1]] = '"' + dic[x].name + '"';
 					cells[h[2]] = dic[x].onto;
 					cells[h[3]] = Math.floor(dic[x].IC * 100) / 100;
-					cells[h[4]] = genes.length;
 					cells[h[5]] = dic[x].geneSet.length;
 					if (scp.includes(x)) {
 						cells[h[6]] = true;
