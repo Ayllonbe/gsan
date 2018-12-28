@@ -187,14 +187,14 @@
 					cells[h[1]] = '"' + dic[x].name + '"';
 					cells[h[2]] = dic[x].onto;
 					cells[h[3]] = Math.floor(dic[x].IC * 100) / 100;
-					cells[h[5]] = dic[x].geneSet.length;
+					cells[h[4]] = dic[x].geneSet.length;
 					if (scp.includes(x)) {
-						cells[h[6]] = true;
+						cells[h[5]] = true;
 					} else {
-						cells[h[6]] = false;
+						cells[h[5]] = false;
 					}
 
-					cells[h[7]] = dic[x].geneSet.join(";");
+					cells[h[6]] = dic[x].geneSet.join(";");
 					r.push(cells);
 				});
 
