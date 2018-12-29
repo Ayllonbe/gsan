@@ -77,12 +77,26 @@ table
 
 $("#tableResult").append('<button class="btnCsv" style="float:right;font-family: sans-serif;font-size:18px;"><i class="fa fa-download"></i>&nbsp;Export CSV</button>');
 
-motvis(dic,representative,genes,data.tree);
+//motvis(dic,representative,genes,data.tree);
+var circulardiv = document.getElementById("circular"),
+treediv = document.getElementById("treeHIDDEN"),
+width = circulardiv.clientWidth,
+height = circulardiv.clientHeight,
+pack = d3.pack().size([width*0.9 , height*0.9]).padding(0.4);
+motvis(dic,representative,genes,data.tree,width,height,pack,circulardiv,treediv);
 
-window.onresize = function(event) {
+  $(window).resize(function(){
+    circulardiv = document.getElementById("circular"),
+    treediv = document.getElementById("treeHIDDEN");
+    if(width!==circulardiv.clientWidth || height!==circulardiv.clientHeight){
+      console.log("hola");
+      width = circulardiv.clientWidth,
+      height = circulardiv.clientHeight;
+      motvis(dic,representative,genes,data.tree,width,height,pack,circulardiv,treediv);
+    }
 
-	motvis(dic,representative,genes,data.tree);
-};
+});
+
 
 function gauge(value,id) {
 var gauge = gaugeChart()

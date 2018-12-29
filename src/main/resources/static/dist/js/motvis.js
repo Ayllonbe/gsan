@@ -1,12 +1,10 @@
 
-function motvis(dictionary, representatives, genes,tree){
+function motvis(dictionary, representatives, genes,tree,width,height,pack,circulardiv,treediv){
   // Init root node.
   // GLOBAL VARIABLES
 	d3.select("#circular").select("canvas").remove();
 	d3.select("#tree").select("canvas").remove();
-  var circulardiv = document.getElementById("circular"),
-      treediv = document.getElementById("treeHIDDEN"),
-      canvas = d3.select("#circular").append("canvas")
+  var canvas = d3.select("#circular").append("canvas")
               .attr("width",circulardiv.clientWidth)
               .attr("height",circulardiv.clientHeight),// 756),
       canvasTree = d3.select("#tree").append("canvas")
@@ -14,8 +12,7 @@ function motvis(dictionary, representatives, genes,tree){
                   .attr("height",756),
       context = canvas.node().getContext("2d"),
       contextTree = canvasTree.node().getContext("2d"),
-      width = circulardiv.clientWidth,
-      height = circulardiv.clientHeight,//756,
+      //756,
       widthTREE = treediv.clientWidth,
       marginW = width -width*0.75  ,
       marginH = height -height*0.75  ,
@@ -28,7 +25,6 @@ function motvis(dictionary, representatives, genes,tree){
       transform = d3.zoomIdentity,
       x,
       y,
-      pack = d3.pack().size([width*0.9 , height*0.9]).padding(0.4) ,
       additive = TreeColors("add"),
       subtractive = TreeColors("sub"),
       mode = additive;
@@ -56,15 +52,22 @@ function motvis(dictionary, representatives, genes,tree){
 //console.log("Aqui");
 //console.log(gene2terms);
 
-  root = d3.hierarchy(tree).sum(function(d) {
-    return d.size; // Addition of size from leaves to root.
-  }) // somme dès le leaves jusqua le root
-    .sort(function(a, b) {
-      return b.value - a.value;
-    });
-  mode(root); // Take color from TreeColors.js
+  //root = d3.hierarchy(tree).sum(function(d) {
+  //  return d.size; // Addition of size from leaves to root.
+//}) // somme dès le leaves jusqua le root
+//    .sort(function(a, b) {
+//      return b.value - a.value;
+//    });
 
-  //LOCAL VARIABLES
+
+
+
+
+				root = d3.hierarchy(tree)
+    			.sum(function (d) { return d.size })
+        	.sort(function(a, b) { return b.value - a.value }),
+mode(root); // Take color from TreeColors.js
+//LOCAL VARIABLES
   var circles = pack(root).descendants(),
   circleHIDDEN,
   barH;
