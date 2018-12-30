@@ -456,7 +456,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 							 var organism = document
 									 .getElementById("organism").value;
 
-							 if (genes.includes("Put here the gene or uniprot ids...")){
+							 if (genes.includes("Put here the Official gene symbols or UniprotKB ids...")){
 								 alert("Please, the gene input is required!");
 							 return false;
 							 }
@@ -543,7 +543,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 var gstr = genes.toString() ;
 									 var gf = [ ];
 									 gf.push(gstr);
-									 var f = new Blob(gf, { type: "plain/text"}); 
+									 var f = new Blob(gf, { type: "plain/text"});
 
 									 var formData = new FormData();
 									 formData.append("query", f);

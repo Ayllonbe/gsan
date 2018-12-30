@@ -117,6 +117,8 @@ public class GSAnServiceImpl implements GSAnService {
 		
 				try {
 					List<List<String>> 	goaTable = getGAFFile(goa_file);
+					
+					System.out.println(goaTable.get(0));
 				GOA = new Annotation(goaTable, go, true,ids);
 					
 				} catch (IOException e1) {
