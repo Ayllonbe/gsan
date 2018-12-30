@@ -400,7 +400,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									//			return false;
 									//		}
                     fileGAF = e.target.files.item(0);
-										console.log(fileGAF);
+									//	console.log(fileGAF);
 
 
 
@@ -576,6 +576,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 //$("#run2").show();
 
 								 } else {
+									 $("#completing").text(" Waiting to charge the GAF 2.0 file.")
 									 var gstr = genes.toString() ;
 									 var gf = [ ];
 									 gf.push(gstr);
@@ -601,7 +602,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 													 window.location.protocol+"//"+window.location.host+"/gsanPost",false);
 
 
-									$("#completing").text(" Waiting to charge the GAF 2.0 file.")
+
 									 xhr.send(formData);
 
 									 if (xhr.status === 200) {

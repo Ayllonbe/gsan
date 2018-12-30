@@ -118,7 +118,7 @@ public class GSAnServiceImpl implements GSAnService {
 				try {
 					List<List<String>> 	goaTable = getGAFFile(goa_file);
 					
-					System.out.println(goaTable.get(0));
+					//System.out.println(goaTable.get(0));
 				GOA = new Annotation(goaTable, go, true,ids);
 					
 				} catch (IOException e1) {
@@ -185,7 +185,7 @@ public class GSAnServiceImpl implements GSAnService {
 			String[] arr = o.split("\n");
 			
 			for(String a : arr) {
-				if(!a.contains("#")||!a.contains("!") ) {
+				if(!a.contains("#")&&!a.contains("!") ) {
 				List<String> line = new ArrayList<String>();
 				String[] col = a.split("\t");
 				for(String c : col) {
