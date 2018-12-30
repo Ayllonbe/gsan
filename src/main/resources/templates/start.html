@@ -453,6 +453,8 @@ In the representative algorithm, after clustering method, one or more terms can 
 								 genes = genes.concat(document.getElementById("queryText").value.split(/[\n|\t|;|,]/g));
 								 //console.log(genes);
 
+							 }else{
+								 genes = genesFile
 							 }
 							 var organism = document
 									 .getElementById("organism").value;
@@ -576,7 +578,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 //$("#run2").show();
 
 								 } else {
-									 $("#completing").text(" Waiting to charge the GAF 2.0 file.")
+									 $("#completing").html(" Waiting to charge the GAF 2.0 file.")
 									 var gstr = genes.toString() ;
 									 var gf = [ ];
 									 gf.push(gstr);
@@ -606,7 +608,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 xhr.send(formData);
 
 									 if (xhr.status === 200) {
-										 $("#completing").text(" Completed.")
+										 $("#completing").html(" Completed.");
 									 window.open(xhr.responseURL,"_blank");
 									 $('#run').prop('disabled', false);
 									}
