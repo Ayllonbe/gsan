@@ -185,7 +185,7 @@ public class GSAnServiceImpl implements GSAnService {
 			String[] arr = o.split("\n");
 			
 			for(String a : arr) {
-				if(!a.contains("#")) {
+				if(!a.contains("#")||!a.contains("!") ) {
 				List<String> line = new ArrayList<String>();
 				String[] col = a.split("\t");
 				for(String c : col) {
