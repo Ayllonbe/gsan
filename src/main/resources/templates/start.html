@@ -540,7 +540,9 @@ In the representative algorithm, after clustering method, one or more terms can 
 									"CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4"*/
 								 //console.log(organism)
 								 if (organism !== "input") {
-									 var gf = [ genes.toString() ];
+									 var gstr = genes.toString() ;
+									 var gf = [ ];
+									 gf.push(gstr);
 									 var f = new File(gf,
 											 "filename.txt");
 
@@ -574,8 +576,9 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 //$("#run2").show();
 
 								 } else {
-									 console.log("");
-									 var gf = [ genes.toString() ];
+									 var gstr = genes.toString() ;
+									 var gf = [ ];
+									 gf.push(gstr);
 									 var f = new File(gf,
 											 "filename.txt");
 									 var formData = new FormData();
