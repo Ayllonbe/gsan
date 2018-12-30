@@ -543,8 +543,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 var gstr = genes.toString() ;
 									 var gf = [ ];
 									 gf.push(gstr);
-									 var f = new File(gf,
-											 "filename.txt");
+									 var f = new Blob(gf, { type: "plain/text"}); 
 
 									 var formData = new FormData();
 									 formData.append("query", f);
@@ -579,8 +578,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 var gstr = genes.toString() ;
 									 var gf = [ ];
 									 gf.push(gstr);
-									 var f = new File(gf,
-											 "filename.txt");
+									var f = new Blob(gf, { type: "plain/text"});
 									 var formData = new FormData();
 									 formData.append("query", f);
 									 formData.append("useIEA",iea);
