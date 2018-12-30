@@ -377,7 +377,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 							<div class="col-xs-12">
 					<button type="button" id="run" onclick="openRun()" class="btn-circle btn-xl">
 						<i class="glyphicon glyphicon-play"></i>
-					</button><span id="completing"></span>
+					</button><span id="waiting1" style="display:none"> Waiting for the form to be sent.</span><span id="waiting2" style="display:none"> Waiting for the GAF 2.0 file to be loaded and for the form to be sent.</span> <span id="completing" style="display:none"> Form sent.</span>
 				</div>
 			</div>
 					<br><br>
@@ -568,9 +568,13 @@ In the representative algorithm, after clustering method, one or more terms can 
 													 window.location.protocol+"//"+window.location.host+"/gsanGet",false);
 
 
+													 $("#waiting1").show();
+													 $("#completing").hide();
+													xhr.send(formData);
 
-									 xhr.send(formData)
-									 if (xhr.status === 200) {
+													if (xhr.status === 200) {
+													$("#waiting1").hide();
+													$("#completing").show();
   								 window.open(xhr.responseURL,"_blank");
 									 $('#run').prop('disabled', false);
 								 }
@@ -578,7 +582,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 //$("#run2").show();
 
 								 } else {
-									 $("#completing").html(" Waiting to charge the GAF 2.0 file.")
+
 									 var gstr = genes.toString() ;
 									 var gf = [ ];
 									 gf.push(gstr);
@@ -603,12 +607,13 @@ In the representative algorithm, after clustering method, one or more terms can 
 											 .open("POST",
 													 window.location.protocol+"//"+window.location.host+"/gsanPost",false);
 
-
-
+													 $("#waiting2").show();
+													 $("#completing").hide();
 									 xhr.send(formData);
 
 									 if (xhr.status === 200) {
-										 $("#completing").html(" Completed.");
+										 $("#waiting2").hide();
+										 $("#completing").show();
 									 window.open(xhr.responseURL,"_blank");
 									 $('#run').prop('disabled', false);
 									}
