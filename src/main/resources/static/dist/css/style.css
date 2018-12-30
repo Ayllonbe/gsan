@@ -6,17 +6,13 @@ html, body {
     overflow:hidden;
 }
 header{
+
     width: 100%;
     background-color: #4169E1;
     position: fixed;
     top: 0;
     height: 60px !important;
-    z-index: 1;
-    -moz-box-sizing:border-box;
-    -webkit-box-sizing:border-box;
-    -o-box-sizing:border-box;
-    -ms-box-sizing:border-box;
-    box-sizing:border-box;
+    z-index: 100;
 }
 header p{
   color:white;
