@@ -262,6 +262,12 @@ public class GSAnController {
 					return "error";
 				}
 			}else {
+				CustomException ce  = CustomException.values()[2];
+				model.addAttribute("status",ce.getstatus());
+				model.addAttribute("error",ce.getError());
+				model.addAttribute("path",ce.getpath());
+				model.addAttribute("timestamp",new TimeStamp(new Date()).toDateString());
+				model.addAttribute("message",ce.getMSG());
 				log.error("There are no task with this id.");
 				return "error";
 			}

@@ -14,15 +14,15 @@ figure {
 		<div th:insert="index"></div>
 
 		<!-- Scrollable div with main content -->
-		<div class="row" id="rowStart" style="width: 100%">
+		<div class="row" id="rowStart" style="width: 100%"  >
 			<div class="col-xs-12 col-md-12">
-				<div class="pageClass">
+				<div class="pageClass" style="width: 100%">
 					<h1>
 						<i class="fa fa-book"></i> Documentation
 					</h1>
 
 					<br>
-					<div class="container">
+					<div class="container" style="width: 90%">
 						<p>GSAn is a new alternative to gene set analysis exploiting the semantic of concepts in the Gene Ontology (GO). Combining data mining and combinatorial algorithms, GSAn provides a reduced and synthetic number of GO terms resuming the biological role of the gene set input. In the 1st version, GSAn includes the three ontologies of GO: biological process (BP), molecular function (MF) and cellular component (CC). The sections of interest are:</p>
 						<h2>Summary</h2>
 						<a href="#startAnalysis"><h3>1. Start Analysis</h3></a>
@@ -86,7 +86,7 @@ figure {
 						 In most cases, the IC of a term is computed from the probability of the term as follows:
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/prob.png" alt="" />
+							<img src="dist/imgs/prob.png" alt="" style="width: 100%"  />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<h4>Resnik or extrinsic</h4>
@@ -97,7 +97,7 @@ figure {
 
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/ResIC.png" alt=""/>
+							<img src="dist/imgs/ResIC.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -112,7 +112,7 @@ figure {
 						  that corresponds to terms with no descendants. To directly obtain the normalized IC, the following formula is used:
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/seco.png" alt=""/>
+							<img src="dist/imgs/seco.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -124,7 +124,7 @@ figure {
 						<br><br>
 
 						<figure style="background-color:white">
-							<img src="dist/imgs/zhou.png" alt=""/>
+							<img src="dist/imgs/zhou.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -137,7 +137,7 @@ figure {
 						captured without any tuning factor and taking account the depth in the ontology. Thus, the IC value is computed as follows:
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/sanchez.png" alt=""/>
+							<img src="dist/imgs/sanchez.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -150,7 +150,7 @@ figure {
 					is the minus logarithm of the probability.
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/mazandu.png" alt=""/>
+							<img src="dist/imgs/mazandu.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -161,7 +161,7 @@ figure {
 						(or currently called the MICA). The equation is as follow and we normalized the measures by dividing them by the IC max:
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/Resnik.png" alt=""/>
+							<img src="dist/imgs/Resnik.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -170,7 +170,7 @@ figure {
 						<a href="http://l2r.cs.uiuc.edu/~danr/Teaching/CS598-05/Papers/Lin-Sim.pdf">Lin</a> proposed another normalization by dividing twice the IC of MICA by the addition of IC between the compared terms.
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/lin.png" alt=""/>
+							<img src="dist/imgs/lin.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -181,14 +181,14 @@ figure {
 						<br><br>
 
 						<figure style="background-color:white">
-							<img src="dist/imgs/aicBIS.png" alt=""/>
+							<img src="dist/imgs/aicBIS.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
 					The semantic similarity is according to the similarity provided by <a href="https://academic.oup.com/bioinformatics/article/23/10/1274/197095">Wang <i>et al</i>.</a>, but using the SV and SW shown above as follows:
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/aic.png" alt=""/>
+							<img src="dist/imgs/aic.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 
@@ -197,7 +197,7 @@ figure {
 						the most informative content ancestor divided by the maximal IC between the compared terms.
 						<br><br>
 						<figure style="background-color:white">
-							<img src="dist/imgs/nunivers.png" alt=""/>
+							<img src="dist/imgs/nunivers.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -207,7 +207,7 @@ figure {
  <br><br>
 
 						<figure style="background-color:white">
-							<img src="dist/imgs/df.png" alt=""/>
+							<img src="dist/imgs/df.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
