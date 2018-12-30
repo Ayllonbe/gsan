@@ -568,7 +568,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 													 window.location.protocol+"//"+window.location.host+"/gsanGet",false);
 
 
-													 $("#waiting1").show();
+													  document.getElementById("waiting1").style.display = "inline";
 													 $("#completing").hide();
 													xhr.send(formData);
 
@@ -606,8 +606,8 @@ In the representative algorithm, after clustering method, one or more terms can 
 						 xhr
 											 .open("POST",
 													 window.location.protocol+"//"+window.location.host+"/gsanPost",false);
+													 document.getElementById("waiting2").style.display = "inline";
 
-													 $("#waiting2").show();
 													 $("#completing").hide();
 									 xhr.send(formData);
 
