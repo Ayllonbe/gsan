@@ -5,7 +5,7 @@ html, body {
     background-color: #F5F5F5;
     overflow:hidden;
 }
-header{
+#header{
 
     width: 100%;
     background-color: #4169E1;
@@ -20,7 +20,7 @@ header{
     -webkit-transform: translateZ(0);
     -webkit-font-smoothing: antialiased; /* seems to do the same in Safari */
 }
-header p{
+#header p{
   color:white;
   font-size:35px;
   left:70px;
