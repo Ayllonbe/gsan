@@ -8,20 +8,22 @@ html, body {
 
 header{
       width: 100%;
-  position: relative;
+  position: fixed;
       z-index: 100;
 
       top: 0;
       height: 60px !important;
 
 }
-#header{
+#proH{
+    position: fixed;
+    width: 0px;
+    height: 100%;
+}
+header #header{
 
-width: 100%;
-position: fixed;
     background-color: #4169E1;
-    top: 0;
-    height: 60px !important;
+    height: 100%;
 }
 #header p{
   color:white;
@@ -167,7 +169,7 @@ footer {
 
 }
 #pro{
-  position: fixed;
+    position: fixed;
     width: 200px;
     height: 100%;
 background-color: #202020;
