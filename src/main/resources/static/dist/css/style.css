@@ -5,9 +5,10 @@ html, body {
     background-color: #F5F5F5;
     overflow:hidden;
 }
+
 header{
       width: 100%;
-  position: fixed;
+  position: relative;
       z-index: 100;
 
       top: 0;
@@ -16,9 +17,11 @@ header{
 }
 #header{
 
-
+width: 100%;
+position: fixed;
     background-color: #4169E1;
-height: 100%;
+    top: 0;
+    height: 60px !important;
 }
 #header p{
   color:white;
