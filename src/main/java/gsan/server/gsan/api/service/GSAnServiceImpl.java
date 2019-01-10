@@ -183,11 +183,12 @@ public class GSAnServiceImpl implements GSAnService {
 		try {
 			
 			String[] arr = o.split("\n");
-			
+		
 			for(String a : arr) {
-				if(!a.contains("#")&&!a.contains("!") ) {
 				List<String> line = new ArrayList<String>();
 				String[] col = a.split("\t");
+				if(!col[0].contains("#")&&!col[0].contains("!") ) {
+				
 				for(String c : col) {
 					line.add(c);
 				}
@@ -395,9 +396,9 @@ public class GSAnServiceImpl implements GSAnService {
 			listTerm.retainAll(go.allStringtoInfoTerm.get(ont).is_a.descendants);
 			log.debug("Writing Similarity Matrix...");
 			writeSimilarityMatrix wSS = new writeSimilarityMatrix(ssMethod);
-			wSS.similarityMethod(go, listTerm, icSimilarity.intValue());
+			Map<String,Object> mSS = wSS.similarityMethod(go, listTerm, icSimilarity.intValue());
 			
-            AlgorithmRepresentative ar = new AlgorithmRepresentative(ic_inc, ont, wSS.getFile(), "average",
+            AlgorithmRepresentative ar = new AlgorithmRepresentative(ic_inc, ont, mSS, "average",
 					tailmin, simRepFilter, covering, geneSupport);
 			rep.addAll(ar.run( go, listTerm,GOAincom,percentile));
 			error = ar.errorMsg;
@@ -558,7 +559,7 @@ public class GSAnServiceImpl implements GSAnService {
 			}
 //			System.out.println(genesTest.size());
 			finalResult.put("scp", scp);
-			finalResult.put("Reduce", Math.floor(scp.size()/termsInc.size()*100)/100);
+			finalResult.put("Reduce", Math.floor((double)scp.size()/(double)termsInc.size()*100.)/100.);
 
 			
 			

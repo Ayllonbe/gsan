@@ -51,11 +51,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<!-- <dependency>
-    <groupId>it.ozimov</groupId>
-    <artifactId>spring-boot-freemarker-email</artifactId>
-    <version>0.6.3</version>
-</dependency>-->
+		<!-- <dependency> <groupId>it.ozimov</groupId> <artifactId>spring-boot-freemarker-email</artifactId> 
+			<version>0.6.3</version> </dependency> -->
 		<!-- Postgres -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -103,6 +100,12 @@
 			<groupId>org.jgrapht</groupId>
 			<artifactId>jgrapht-core</artifactId>
 			<version>0.9.0</version>
+		</dependency>
+		<!-- RCaller -->
+		<dependency>
+			<groupId>com.github.jbytecode</groupId>
+			<artifactId>RCaller</artifactId>
+			<version>3.0</version>
 		</dependency>
 	</dependencies>
 

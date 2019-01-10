@@ -1,7 +1,5 @@
 package gsan.distribution.gsan_api.run.representative;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
@@ -20,6 +18,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import gsan.distribution.gsan_api.annotation.Annotation;
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
 import gsan.distribution.gsan_api.ontology.InfoTerm;
@@ -28,7 +27,7 @@ public class AlgorithmRepresentative {
 
 	public final int ic_inc;
 	public final String ontologies;
-	public final String fileSS;
+	public final Map<String, Object>fileSS;
 	public final String mhcl;
 	public final double tailmin;
 	public final double filtre;
@@ -38,12 +37,12 @@ public class AlgorithmRepresentative {
 	public int errorMsg = 0;
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public AlgorithmRepresentative(int ic,String ont,String fileSS, String mhcl,
+	public AlgorithmRepresentative(int ic,String ont,Map<String, Object> mSS, String mhcl,
 			double tailmin,double filtre, double precision,int compare) {
 
 		this.ic_inc = ic;
 		this.ontologies = ont;
-		this.fileSS = fileSS;
+		this.fileSS = mSS;
 		this.mhcl = mhcl;
 		this.tailmin = tailmin;
 		this.filtre = filtre;
@@ -56,7 +55,7 @@ public class AlgorithmRepresentative {
 
 	}
 
-	public AlgorithmRepresentative(int ic,String ont, File file, 
+	public AlgorithmRepresentative(int ic,String ont, Map<String, Object> file, 
 			double tailmin,double filtre, double precision,int compare) {
 
 		this.ic_inc = ic;
@@ -67,13 +66,7 @@ public class AlgorithmRepresentative {
 		this.filtre = filtre;
 		this.precision = precision;
 		this.compare = compare;
-		try {
-			this.com = Communication.readFileClustering(file);
-		} catch (NumberFormatException|IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-
+	
 
 	}
 

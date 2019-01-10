@@ -1,8 +1,5 @@
 package gsan.distribution.gsan_api.read_write;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +12,7 @@ public class writeSimilarityMatrix {
 	
 	private String similarity;
 	private Map<String,SemanticSimilarity> mapSS;
-	private String file;
+
 	
 	public writeSimilarityMatrix(String s) {
 //		System.out.println(s);
@@ -32,13 +29,14 @@ public class writeSimilarityMatrix {
 		//this.mapSS.put("wuPalmer", new WP());
 		//this.mapSS.put("wang", new Wang()); // For instance Wang is not appliable.
 		this.similarity = s;
-		this.file = "";
 	}
 	
-	public void similarityMethod(GlobalOntology go,List<String> terminos, int ic) {
+	public Map<String, Object> similarityMethod(GlobalOntology go,List<String> terminos, int ic) {
 		Double[][] matrixSS = new Double[terminos.size()][terminos.size()];
+		String[] names = new String[terminos.size()];
 		for(int i = 0; i<terminos.size();i++){
 			String t1 = terminos.get(i);
+			names[i] = t1;
 			InfoTerm it1 = go.allStringtoInfoTerm.get(t1);
 			matrixSS[i][i] = 1.;
 			for(int j = i+1; j<terminos.size();j++){
@@ -52,49 +50,49 @@ public class writeSimilarityMatrix {
 				matrixSS[j][i] = matrixSS[i][j];
 			}
 		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("table", matrixSS);
+		map.put("names", names);
 		
-StringBuffer sb = new StringBuffer();
+		return map;
 		
-		sb.append(";");
-		for(String t : terminos){
-			sb.append(t+";");
-		}
-	sb.deleteCharAt(sb.length()-1);
-	sb.append("\n");
-
-	for(int i=0; i<terminos.size();i++){
+//StringBuffer sb = new StringBuffer();
+//		
+//		sb.append(";");
+//		for(String t : terminos){
+//			sb.append(t+";");
+//		}
+//	sb.deleteCharAt(sb.length()-1);
+//	sb.append("\n");
+//
+//	for(int i=0; i<terminos.size();i++){
+//		
+//		sb.append(terminos.get(i)+";");
+//		for(int j=0; j<terminos.size();j++){
+//			sb.append(matrixSS[i][j]+";");
+//		
+//		}
+//		
+//		sb.deleteCharAt(sb.length()-1);
+//		
+//		sb.append("\n");
+//	}
+//		
+//		sb.deleteCharAt(sb.length()-1);
+//		float random = Math.round(Math.random()* 10000000);
+//		this.file = "src/main/tmp/"+random+".csv";
+//		try {
+//			PrintWriter writer = new PrintWriter(this.file, "UTF-8");
+//			writer.println(sb);
+//			writer.close();
+//			writer = new PrintWriter(this.file, "UTF-8");
+//			writer.println(sb);
+//			writer.close();
+//		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+//		
 		
-		sb.append(terminos.get(i)+";");
-		for(int j=0; j<terminos.size();j++){
-			sb.append(matrixSS[i][j]+";");
-		
-		}
-		
-		sb.deleteCharAt(sb.length()-1);
-		
-		sb.append("\n");
-	}
-		
-		sb.deleteCharAt(sb.length()-1);
-		float random = Math.round(Math.random()* 10000000);
-		this.file = "src/main/tmp/"+random+".csv";
-		try {
-			PrintWriter writer = new PrintWriter(this.file, "UTF-8");
-			writer.println(sb);
-			writer.close();
-			writer = new PrintWriter(this.file, "UTF-8");
-			writer.println(sb);
-			writer.close();
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		
-		
-	}
-	
-	public String getFile() {
-		
-		return this.file;
 	}
 
 }

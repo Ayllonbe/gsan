@@ -183,7 +183,7 @@
 			<div class="row">
 				<div class="col-sm-4">
 							Considering IEA:&nbsp;<i class="fa fa-info-circle"
-							rel="tooltip" title="Infered Electronic Analysis" data-content="<ON> means that the analysis will use the IEA annotations"></i>
+							rel="tooltip" title="Inferred from Electronic Annotation" data-content="<ON> means that the analysis will use the IEA annotations"></i>
 
 </div>
 	<div class="col-sm-4">
@@ -235,12 +235,12 @@
 						<div class="col-sm-4">
 							<SELECT id="semantic_similarity"
 							name="semantic_similarity" size="1">
-								<OPTION value="simrel">SimRel
+							<!--	<OPTION value="simrel">SimRel-->
 								<OPTION value="lin">Lin
 								<OPTION value="resnik">Resnik
-								<OPTION value="pekarStaab">Pekar & Staab
+							<!--	<OPTION value="pekarStaab">Pekar & Staab-->
 								<OPTION value="distanceFunction">Distance function
-								<OPTION value="ganesan">Ganesan
+							<!--	<OPTION value="ganesan">Ganesan-->
 								<OPTION value="nUnivers">NUnivers
 									<!--  <OPTION value="NUM">NUnivers_Mod  -->
 								<OPTION value="aic" selected>AIC
@@ -489,10 +489,8 @@ In the representative algorithm, after clustering method, one or more terms can 
 								 return false;
 							 }
 							 else {
-
-								 var iea = document
-										 .getElementById("iea").value === "on" ? true
-										 : false;
+								 console.log($('#iea').prop('checked'));
+								 var iea = 	$('#iea').prop('checked');
 								 var prok = false;//document.getElementById("prok").value==="on"?true:false;
 								 var onto = [];
 
@@ -543,6 +541,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 									"BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,"  +
 									"CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4"*/
 								 //console.log(organism)
+
 								 if (organism !== "input") {
 									 var gstr = genes.toString() ;
 									 var gf = [ ];

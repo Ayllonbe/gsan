@@ -85,7 +85,7 @@ figure {
 						 The intrinsic IC uses only information available within the ontology structure and the extrinsic IC uses external information.
 						 In most cases, the IC of a term is computed from the probability of the term as follows:
 						<br><br>
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/prob.png" alt="" style="width: 100%"  />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -96,7 +96,7 @@ figure {
 						This IC is applied with some semantic similarity measures (see formulas below). Thus, the extrinsic IC is computed as follows:
 
 						<br><br>
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/ResIC.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -111,7 +111,7 @@ figure {
 						 this probability provides an IC that is not normalized. To normalize the score between 0 and 1, the IC is then divided by the maximal IC
 						  that corresponds to terms with no descendants. To directly obtain the normalized IC, the following formula is used:
 						<br><br>
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/seco.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -123,7 +123,7 @@ figure {
 						The formula is as follows
 						<br><br>
 
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/zhou.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -136,8 +136,8 @@ figure {
 						ancestors of the term and inversely proportional to leaves connected to the term. Thus, the specificity should be
 						captured without any tuning factor and taking account the depth in the ontology. Thus, the IC value is computed as follows:
 						<br><br>
-						<figure style="background-color:white">
-							<img src="dist/imgs/sanchez.png" alt="" style="width: 100%" />
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
+							<img src="dist/imgs/sanchez.png" alt="" style="width:100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -149,7 +149,7 @@ figure {
 					the probability of its parents divided by the children of the parent. Thus, the IC provided by Mazandu for a term <i>t</i>
 					is the minus logarithm of the probability.
 						<br><br>
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/mazandu.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -160,7 +160,7 @@ figure {
 						where the similarity between two terms corresponds to the IC of their most informative common ancestors
 						(or currently called the MICA). The equation is as follow and we normalized the measures by dividing them by the IC max:
 						<br><br>
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/Resnik.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -169,7 +169,7 @@ figure {
 						To improve the results of Resnik's similarity,
 						<a href="http://l2r.cs.uiuc.edu/~danr/Teaching/CS598-05/Papers/Lin-Sim.pdf">Lin</a> proposed another normalization by dividing twice the IC of MICA by the addition of IC between the compared terms.
 						<br><br>
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/lin.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -180,14 +180,14 @@ figure {
 
 						<br><br>
 
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/aicBIS.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
 					The semantic similarity is according to the similarity provided by <a href="https://academic.oup.com/bioinformatics/article/23/10/1274/197095">Wang <i>et al</i>.</a>, but using the SV and SW shown above as follows:
 						<br><br>
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/aic.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -196,7 +196,7 @@ figure {
 						Using the IC proposed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3775452/pdf/BMRI2013-292063.pdf">Mazandu and Mulder</a>., the similarity of NUnivers between two terms computes
 						the most informative content ancestor divided by the maximal IC between the compared terms.
 						<br><br>
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/nunivers.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
@@ -206,7 +206,7 @@ figure {
 					  The measure uses the Jaccard similarity of the union and intersection of the ancestor between the terms to compare.
  <br><br>
 
-						<figure style="background-color:white">
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/df.png" alt="" style="width: 100%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
