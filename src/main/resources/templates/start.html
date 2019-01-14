@@ -277,7 +277,7 @@
 						</script>
 
 						<div class="container-fluid" style="display: none;">
-							<div class="row">
+						<!--	<div class="row">
 								<div class="col-sm-4">
 									<label style="font-weight: normal;"> Information
 										content:  <i class="fa fa-info-circle" rel="tooltip" title="IC" data-content="Choose the measure to compute the information content score. See documentation for more details."></i>
@@ -291,16 +291,16 @@
 										<OPTION value="2">Sanchez
 										<OPTION value="3" selected>Mazandu
 
-											<!--  <OPTION value="wang">Wang-->
+
 									</SELECT>
 
 
 								</div>
-							</div>
+							</div>-->
 							<br>
 							<div class="row">
 								<div class="col-xs-8 col-sm-6">
-									<h4 style="font-weight: bold;">Filters:</h4>
+							<!--		<h4 style="font-weight: bold;">Filters:</h4>-->
 
 					<!--				<div class="form-group row">
 										<label class="col-xs-12 col-lg-8 col-form-label"
@@ -331,7 +331,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 										</div>
 									</div>
 
-									<div class="form-group row">
+							<!--		<div class="form-group row">
 										<label class="col-xs-12 col-lg-8 col-form-label"
 											style="font-weight: normal;">Term combined
 											similarity: <i class="fa fa-info-circle" rel="tooltip"
@@ -343,15 +343,22 @@ In the representative algorithm, after clustering method, one or more terms can 
 												id="similarity_filter" value=0.5 min=0 max=1 step="0.01">
 										</div>
 									</div>
+								-->
 									<div class="form-group row">
 										<label class="col-xs-12 col-lg-8 col-form-label"
-											style="font-weight: normal;">Percentile: <i
+											style="font-weight: normal;">Incomplet information filter: <i
 											class="fa fa-info-circle" rel="tooltip"
 											title="Incomplete annotation - Percentile" data-content="This value is crucial to compute the incomplete annotation. Using the GO structure, we get the IC of each GO term and compute the percentile used here. All values below the IC of the percentile chosen will be removed."></i>
 										</label>
 										<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
-											<input class="form-control" type="number" id="percentile"
-												value=25 min=1 max=100 step="1">
+											<SELECT id="percentile" name="percentile" size="1">
+											<OPTION value="0">None
+											<OPTION value="10">Low
+											<OPTION value="25" selected>Medium
+											<OPTION value="50">Hard
+
+
+										</SELECT>
 										</div>
 									</div>
 
@@ -517,16 +524,13 @@ In the representative algorithm, after clustering method, one or more terms can 
 								 var ss = document
 										 .getElementById("semantic_similarity").value;
 
-								 var repFilter = document
-										 .getElementById("similarity_filter").value;
+								 //var repFilter = document .getElementById("similarity_filter").value;
 							 //var gcovering = document
 								 //		.getElementById("covering").value;
-								 var sup = document
-										 .getElementById("support").value;
+								 var sup = document .getElementById("support").value;
 								 var per = document
 										 .getElementById("percentile").value;
-								 var ic = document
-										 .getElementById("ic").value;
+							//	 var ic = document.getElementById("ic").value;
 								 var email = document
 										 .getElementById("inputEmail").value;
 								 //console.log("EMAIL " + email);
@@ -554,14 +558,10 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 formData.append("ontology",onto);
 									 formData.append("organism",organism);
 									 formData.append("semanticSimilarity",ss);
-									 formData.append("simRepValue",repFilter);
 									 formData.append("ids",protORgene);
-									 //formData.append("covering",gcovering);
 									 formData.append("minGeneSupport",sup);
 									 formData.append("email",email);
 									 formData.append("percentile", per);
-									 formData.append("ic_incomplete",ic);
-									 formData.append("prokaryote", prok);
 
 									 var xhr = new XMLHttpRequest();
 									 xhr.open("POST",
@@ -593,14 +593,10 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 formData.append("ontology",onto);
 									 formData.append("uploadFile",fileGAF);
 									 formData.append("semanticSimilarity",ss);
-									 formData.append("simRepValue",repFilter);
 									 formData.append("ids",protORgene);
-									//	formData.append("covering",gcovering);
 									 formData.append("minGeneSupport",sup);
 									 formData.append("email",email);
 									 formData.append("percentile", per);
-									 formData.append("ic_incomplete",ic);
-									 formData.append("prokaryote", prok);
 									 var gogo = false;
 									 var xhr = new XMLHttpRequest();
 						 xhr

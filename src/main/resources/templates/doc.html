@@ -105,7 +105,7 @@ figure {
 							 The <i>true path</i> means that the information provided by a term is inherited by its descendants, thus if a gene is associated with
 							 a term that is descendant of another term, then this gene is also associated with the ancestor term.</b>
 							<br><br>
-						<h4>Seco</h4>
+					<!--	<h4>Seco</h4>
 						<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.59.2199&rep=rep1&type=pdf">Seco <i>et al</i></a>. proposed an IC score using the ontology structure. For that, the probability of a term was computed from the ratio
 						between the number of descendants of the term plus the term itself and the number of descendants of the root term plus 1. The logarithm of
 						 this probability provides an IC that is not normalized. To normalize the score between 0 and 1, the IC is then divided by the maximal IC
@@ -113,7 +113,7 @@ figure {
 						<br><br>
 						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/seco.png" alt="" style="width: 100%" />
-							<!-- <figcaption>Légende associée</figcaption> -->
+
 						</figure>
 						<br>
 						<h4>Zhou</h4>
@@ -125,7 +125,7 @@ figure {
 
 						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/zhou.png" alt="" style="width: 100%" />
-							<!-- <figcaption>Légende associée</figcaption> -->
+
 						</figure>
 						<br>
 						 where &delta; corresponds to the depth and &sigma; is a changeable factor between 0 and 1 to
@@ -138,13 +138,16 @@ figure {
 						<br><br>
 						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/sanchez.png" alt="" style="width:100%" />
-							<!-- <figcaption>Légende associée</figcaption> -->
+
 						</figure>
+
 						<br>
 						where <i>Anc</i> is the set of ancestors of term t.
 						<br>
+											-->
 						<h4>Mazandu</h4>
-					At last, <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3775452/pdf/BMRI2013-292063.pdf">Mazandu and Mulder</a>. proposed an IC value taking into account the position of the terms in the graph.
+
+					The intrinsic IC used in GSAn was proposed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3775452/pdf/BMRI2013-292063.pdf">Mazandu and Mulder</a> taking into account the position of the terms in the graph.
 					First, the probability is computed exponentially, from the root term to the leaf terms. Each term depends on
 					the probability of its parents divided by the children of the parent. Thus, the IC provided by Mazandu for a term <i>t</i>
 					is the minus logarithm of the probability.
