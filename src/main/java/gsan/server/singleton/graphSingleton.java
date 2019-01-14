@@ -71,18 +71,10 @@ public static void initializeOrGet(String GOOWL) {
 //		System.out.println(go.getPercentile(75, "mazandu", "GO"));
 		
 	}
-	public static GlobalOntology getGraph(boolean prok) {
-		
-		if(prok) {
-			
-			GlobalOntology go = new GlobalOntology(goBase);
-			//go.prokaryoteOnto(); // Gene Ontology remove the prokaryote subset so I remove that.
-			return go;
-			
-		}else {
+	public static GlobalOntology getGraph() {
 		
 		return new GlobalOntology(goBase);
-		}
+		
 	}
 	
 	

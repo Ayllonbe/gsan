@@ -130,7 +130,7 @@ public class FTPDownloader {
 		String pathEBI = "pub/databases/GO/goa/";
 
 		try {
-			GlobalOntology go = graphSingleton.getGraph(false);
+			GlobalOntology go = graphSingleton.getGraph();
 			for(String file : listFiles) {
 				//System.out.println(file);
 				if(file.contains("gene")) {

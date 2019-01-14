@@ -30,24 +30,24 @@ public class AlgorithmRepresentative {
 	public final Map<String, Object>fileSS;
 	public final String mhcl;
 	public final double tailmin;
-	public final double filtre;
-	public final double precision;
-	public final int compare;
+	public final double simRepFilter;
+	public final double covering;
+	public final int geneSupport;
 	Communication com;
 	public int errorMsg = 0;
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public AlgorithmRepresentative(int ic,String ont,Map<String, Object> mSS, String mhcl,
-			double tailmin,double filtre, double precision,int compare) {
+			double tailmin,double simRepFilter, double covering, int geneSupport) {
 
 		this.ic_inc = ic;
 		this.ontologies = ont;
 		this.fileSS = mSS;
 		this.mhcl = mhcl;
 		this.tailmin = tailmin;
-		this.filtre = filtre;
-		this.precision = precision;
-		this.compare = compare;
+		this.simRepFilter = simRepFilter;
+		this.covering = covering;
+		this.geneSupport = geneSupport;
 		log.debug("Computing hierarchical clustering");
 		this.com = new Communication();
 		this.chargeCom();
@@ -56,16 +56,16 @@ public class AlgorithmRepresentative {
 	}
 
 	public AlgorithmRepresentative(int ic,String ont, Map<String, Object> file, 
-			double tailmin,double filtre, double precision,int compare) {
+			double tailmin,double simRepFilter, double covering,int geneSupport) {
 
 		this.ic_inc = ic;
 		this.ontologies = ont;
 		this.tailmin = tailmin;
 		this.fileSS = null;
 		this.mhcl = null;
-		this.filtre = filtre;
-		this.precision = precision;
-		this.compare = compare;
+		this.simRepFilter = simRepFilter;
+		this.covering = covering;
+		this.geneSupport = geneSupport;
 	
 
 	}
@@ -90,7 +90,7 @@ public class AlgorithmRepresentative {
 //			}
 
 			Map<Integer,List<Representative>> cl2rep = getRepresentative(go,ontologies,ic_inc,  com.clusters, 
-					tailmin, filtre, precision,compare);
+					tailmin, simRepFilter, covering,geneSupport);
 
 			Map<Integer,Integer> cl2nbg = new HashMap<>();
 			for(Entry<Integer,List<Representative>> i : cl2rep.entrySet()){
@@ -142,14 +142,14 @@ public class AlgorithmRepresentative {
 							Set<String> retGen = new HashSet<>(cIT.geneSet);
 							retGen.retainAll(gen);
 
-							if(cIT.ICs.get(ic_inc)>percentile.get(cIT.ontology)&&retGen.size()>compare) {
+							if(cIT.ICs.get(ic_inc)>percentile.get(cIT.ontology)&&retGen.size()>geneSupport) {
 								cl.representatives.add(cIT);
 								genesObserve.addAll(cIT.geneSet);
 								clusterList.add(cl);
 							}
 						}
 					}else {
-						if(it.ICs.get(ic_inc)>percentile.get(it.ontology)&&gen.size()>compare) {
+						if(it.ICs.get(ic_inc)>percentile.get(it.ontology)&&gen.size()>geneSupport) {
 //							System.out.println("Cluster "+it.toName()+" "+it.ICs.get(ic_inc) +" "+it.geneSet);
 							cl.representatives.add(it);
 							genesObserve.addAll(it.geneSet);
@@ -189,7 +189,7 @@ public class AlgorithmRepresentative {
 	}
 
 	public Map<Integer, List<Representative>> getRepresentative(GlobalOntology go,String sub,int ic,
-			Hashtable<Integer,List<String>> clusters,double tailmin,double RepCombinedSimilarity, double precision,double compare) throws Exception
+			Hashtable<Integer,List<String>> clusters,double tailmin,double RepCombinedSimilarity, double covering,double geneSupport) throws Exception
 	{
 		log.debug("Computing Representative Algorithm...");
 		// Default
@@ -220,7 +220,7 @@ public class AlgorithmRepresentative {
 
 			for(String term : termCluster) {
 
-				if(((double)go.allStringtoInfoTerm.get(term).geneSet.size()/(double)genes.size())>=tolerance&&go.allStringtoInfoTerm.get(term).geneSet.size()>=compare) { 
+				if(((double)go.allStringtoInfoTerm.get(term).geneSet.size()/(double)genes.size())>=tolerance&&go.allStringtoInfoTerm.get(term).geneSet.size()>=geneSupport) { 
 
 					st.add(term);
 				}
@@ -259,7 +259,7 @@ public class AlgorithmRepresentative {
 			}else {
 			int ncombi = termCluster.size()>1?((int) Math.floor(Math.sqrt(Math.abs(termCluster.size()/10)-1))+2):1 ; // numero que indica el numero de combinaciones deseadas
 				ncombi = ncombi >6? 6:ncombi;
-			Set<InfoTerm> representatives = new HashSet<>(getManyRep(termCluster,sub,go,ncombi,tailmin,RepCombinedSimilarity,precision,ic));
+			Set<InfoTerm> representatives = new HashSet<>(getManyRep(termCluster,sub,go,ncombi,tailmin,RepCombinedSimilarity,covering,ic));
 			for(InfoTerm res:representatives) {
 				ics_list.add(res.ICs.get(ic));
 				candidate.add(res);
@@ -300,7 +300,7 @@ public class AlgorithmRepresentative {
 		return clu2rep;
 	}
 
-	public static Set<InfoTerm> getManyRep(List<String> termList,String topSubOnt,GlobalOntology go,int ncombi,double tailmin,double RepCombinedSimilarity,double precision,int ic) throws Exception{
+	public static Set<InfoTerm> getManyRep(List<String> termList,String topSubOnt,GlobalOntology go,int ncombi,double tailmin,double RepCombinedSimilarity,double covering,int ic) throws Exception{
 
 		Stack<String> stack = new Stack<String>();
 		/*
@@ -346,7 +346,7 @@ public class AlgorithmRepresentative {
 		/*
 		 * Get the most specific representative terms ancestor of every term in a given cluster
 		 */
-		Set<InfoTerm> candidates =  getOneRep(termSubGraph,topSubOnt, go,termList.size(),precision); 
+		Set<InfoTerm> candidates =  getOneRep(termSubGraph,topSubOnt, go,termList.size(),covering); 
 		Set<InfoTerm> candidateManyRep = new HashSet<InfoTerm>();
 
 		int limit = 2;
@@ -365,7 +365,7 @@ public class AlgorithmRepresentative {
 				}
 				candidateManyRep = new HashSet<InfoTerm>();
 
-				Set<Set<String>> dC  = doCombine(repCan, consideredChildren,termList.size(), go,   RepCombinedSimilarity,limit,precision); // TEST				// Get the most specific terms of the combination
+				Set<Set<String>> dC  = doCombine(repCan, consideredChildren,termList.size(), go,   RepCombinedSimilarity,limit,covering); // TEST				// Get the most specific terms of the combination
 				//System.out.println(dC);
 				for(Set<String> sdc : dC){
 
@@ -413,7 +413,7 @@ public class AlgorithmRepresentative {
 
 	}
 
-	public static Set<InfoTerm> getOneRep(Set<String> termSubGraph,String topSubOnt,GlobalOntology go, int termsize,double precision){
+	public static Set<InfoTerm> getOneRep(Set<String> termSubGraph,String topSubOnt,GlobalOntology go, int termsize,double covering){
 		Stack<String> stack = new Stack<String>(); 
 		stack.push(topSubOnt);
 		Set<InfoTerm> candidateSet = new HashSet<InfoTerm>();
@@ -425,7 +425,7 @@ public class AlgorithmRepresentative {
 				if(termSubGraph.contains(e)){
 					InfoTerm termChildren = go.allStringtoInfoTerm.get(e);
 					//		if(ta.bits.equals(tx.bits)){
-					if((double)termChildren.bits.cardinality()/(double)termsize>=precision){
+					if((double)termChildren.bits.cardinality()/(double)termsize>=covering){
 						stack.push(e);
 						count++;
 					}
@@ -463,7 +463,7 @@ public class AlgorithmRepresentative {
 
 	}
 
-	private static Set<Set<String>> doCombine(InfoTerm ta,List<String> children, int termsize,GlobalOntology go, double RepCombinedSimilarity,int ncombi,double precision) {
+	private static Set<Set<String>> doCombine(InfoTerm ta,List<String> children, int termsize,GlobalOntology go, double RepCombinedSimilarity,int ncombi,double covering) {
 
 
 		Set<List<String>> combinationSet = Combination.ncombination(children ,ncombi);
@@ -501,7 +501,7 @@ public class AlgorithmRepresentative {
 				}
 			}
 
-			if(control==0&&((double)bitset.cardinality()/(double)termsize)>=precision){ // Elegir cuanta precision queremos en el resultado.
+			if(control==0&&((double)bitset.cardinality()/(double)termsize)>=covering){ // Elegir cuanta covering queremos en el resultado.
 
 				Collections.sort(ns);
 				goodCombinedSet.add(new HashSet<String>(ns));
