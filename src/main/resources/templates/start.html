@@ -348,11 +348,11 @@ In the representative algorithm, after clustering method, one or more terms can 
 										<label class="col-xs-12 col-lg-8 col-form-label"
 											style="font-weight: normal;">Incomplet information filter: <i
 											class="fa fa-info-circle" rel="tooltip"
-											title="Incomplete information filter" data-content="Tolerance degree to discard terms with a low specificity. Four levels of tolerance (none, low, medium and hard) can be applied corresponding to the IC distribution of the ontology (equivalent to percentiles 0, 10, 25 and 50 respectively)"></i>
+											title="Incomplete information filter" data-content="Tolerance degree that discards terms with a low specificity. Four levels of tolerance (none, low, medium and hard) are applied corresponding to the IC distribution of the ontology (discarding the terms bellow the percentiles 1, 10, 25 and 50 respectively)"></i>
 										</label>
 										<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
 											<SELECT id="percentile" name="percentile" size="1">
-											<OPTION value="0">None
+											<OPTION value="1">None
 											<OPTION value="10">Low
 											<OPTION value="25" selected>Medium
 											<OPTION value="50">Hard
