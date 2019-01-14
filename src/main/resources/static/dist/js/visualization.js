@@ -8,6 +8,7 @@ var Annotgenes = data.AnnotatedGeneSet;
 var representative = data.representatives;
 var scp = data.scp;
 var dic = data.terms;
+var org = data.organism;
 
 scp.sort(function(a,b){
 	return dic[a].IC - dic[b].IC
@@ -27,15 +28,20 @@ scpDic.push(dic[x]);
 });
 
 
-console.log("GeneSet SCP " + recoverGenes.size);
 gauge(gs2,"#gs2");
 var rg = Annotgenes.length/genes.length;
 gauge(rg,"#recoverGenes");
-$(".rg").append('<p>'+(Math.round(rg*100))+ '% of genes are annotated in the used GOA file.</p>');
-
+if(org===""){
+$(".rg").append('<p>'+(Math.round(rg*100))+ '% of genes are annotated within GOA.</p>');
+}else if(org===undefined){
+  $(".rg").append('<p>'+(Math.round(rg*100))+ '% of genes are annotated within GOA.</p>');
+}else{
+  org = org.replace("_", " ");
+  $(".rg").append('<p>'+(Math.round(rg*100))+ '% of genes are annotated within ' +org+' GOA.</p>');
+}
 //gauge(reduceterm,"#reduce");
 var rag = recoverGenes.size/Annotgenes.length;
-$(".rag").append('<p>'+(Math.round(rag*100))+ '% of genes covered by GSAn.</p>');
+$(".rag").append('<p>'+(Math.round(rag*100))+ '% of genes are covered by GSAn.</p>');
 gauge(rag,"#recoverAnnotGenes");
 $(".gs2").append('<p>The groupwise similarity between genes of the set is '+(Math.round(gs2*100))+ '%</p>');
 
