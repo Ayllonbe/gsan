@@ -25,7 +25,25 @@
 							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> <span id="genOf">Official gene symbol</span></label>
 
 
-							<script>
+							<script th:inline="javascript">
+
+
+							/*<![CDATA[*/
+
+							    var message = /*[[${query}]]*/ 'default';
+							    console.log(message);
+									if(message!=null){
+									message = 	message.replace(/-,/g,"");
+									message = 	message.replace(/-/g,"");
+								$("#queryText").val(message);
+
+									}
+
+							/*]]>*/
+
+
+
+
 							$(".protORgene").on('click', function() {
 							  // in the handler, 'this' refers to the box clicked on
 							  var $box = $(this);
@@ -469,30 +487,37 @@ In the representative algorithm, after clustering method, one or more terms can 
 
 							 if (genes.includes("Put here the Official gene symbols or UniprotKB ids...")){
 								 alert("Please, the gene input is required!");
+								 	$('#run').prop('disabled', false);
 							 return false;
 							 }
 							 else if(genes.length ===1 && genes.includes("")){
 								 alert("Please, the gene is required!");
+								 	$('#run').prop('disabled', false);
 								 return false;
 							 }
 							 else if(genes.length<5){
 								 alert("Please, the input must have a minimun of 5 genes");
+								 	$('#run').prop('disabled', false);
 								 return false;
 							 }
 							 else if (organism === "input" && fileGAF === ""){
 								 alert("Please, the annotation input is required!");
+								 	$('#run').prop('disabled', false);
 								 return false;
 							 }
 							 else if (organism === "input" && fileGAF.size>150000000 ){
 								 alert("The maximal size allowed is 150MB, If your GAF file is bigger, please contact us.");
+								 	$('#run').prop('disabled', false);
 								 return false;
 							 }
 							 else if ($('.ontologies:checked').length === 0){
 								 alert("Please, choose at least one ontology");
+								 	$('#run').prop('disabled', false);
 								 return false;
 							 }
 							 else if ($('.protORgene:checked').length === 0){
 								 alert("Please, choose if the ids are genes or proteins.");
+								 	$('#run').prop('disabled', false);
 								 return false;
 							 }
 							 else {

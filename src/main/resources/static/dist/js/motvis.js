@@ -1,5 +1,5 @@
 
-function motvis(dictionary, representatives, genes,tree,width,height,pack,circulardiv,treediv){
+function motvis(dictionary, scp ,genes,tree,width,height,pack,circulardiv,treediv,bool){
   // Init root node.
   // GLOBAL VARIABLES
 	d3.select("#circular").select("canvas").remove();
@@ -63,14 +63,50 @@ function motvis(dictionary, representatives, genes,tree,width,height,pack,circul
 
 
 
-				root = d3.hierarchy(tree)
+			var	root = d3.hierarchy(tree)
     			.sum(function (d) { return d.size })
-        	.sort(function(a, b) { return b.value - a.value }),
+        	.sort(function(a, b) { return b.value - a.value });
 mode(root); // Take color from TreeColors.js
 //LOCAL VARIABLES
+
   var circles = pack(root).descendants(),
   circleHIDDEN,
   barH;
+console.log(bool);
+
+
+if(bool==0){
+var circlesSCP = [];
+  circles.forEach(function(d){
+
+    if(scp.includes(d.data.id)){
+
+      d.ancestors().forEach(function(x){
+          circlesSCP.push(x);
+      });
+      d.children.forEach(function(x){
+          circlesSCP.push(x);
+      })
+    }
+    d.opacity = 0;
+  });
+  circlesSCP.forEach(function(d){
+
+      d.opacity = 1;
+
+
+
+
+  });
+
+
+}else{
+  circles.forEach(function(d){
+    d.opacity = 1;
+  });
+
+}
+
 
  ////console.log(test);
   ////console.log(Math.max(test) + " " + Math.min(test));
@@ -89,7 +125,7 @@ mode(root); // Take color from TreeColors.js
     d.hTree = 30;
     //str2obj[d.data.name] = d;
     if(d.children){
-          //  console.log(d);
+            //console.log(d);
             dictionary[d.data.id].color = d.color;
             dictionary[d.data.id].r = d.r;
             dictionary[d.data.id].x = d.x;
@@ -203,7 +239,7 @@ mode(root); // Take color from TreeColors.js
 
         context.moveTo(circleX + circleR, circleY);
         context.arc(circleX,circleY,circleR, 0, 2 * Math.PI);
-        context.fillStyle =  d3.hcl(circle.color.h, circle.color.c, circle.color.l,dictionary[circle.data.id].opacity);
+        context.fillStyle =  d3.hcl(circle.color.h, circle.color.c, circle.color.l,circle.opacity);
         context.fill();
       }
       else{
@@ -212,13 +248,13 @@ mode(root); // Take color from TreeColors.js
         */
         context.moveTo(circleX + circleR, circleY );
         context.arc(circleX,circleY,circleR, 0, 2 * Math.PI);
-        context.fillStyle =  d3.rgb(255,255,255, dictionary[circle.parent.data.id].opacity);
+        context.fillStyle =  d3.rgb(255,255,255, circle.parent.opacity);
         context.fill();
         /*
         DRAW THE BAR CHART INTO LEAVES CIRCLE
         */
       //  if(!circle.children&&(focus===circle||focus===circle.parent|| focus===circle.parent.parent||focus===circle.parent.parent.parent)){
-					    if(!circle.children&&(circle.ancestors().includes(focus)||focus===circle)){
+					    if(!circle.children&&(circle.ancestors().includes(focus)||focus===circle)&&circle.parent.opacity==1){
             var rectH = ((circleR * Math.pow(2, 1 / 2)) / 2) / dictionary[circle.data.id].terms.length;
               circle.posX = circleX - circleR / 2;//(Math.pow(2, 1 / 2));
               var posY = circleY- dictionary[circle.data.id].terms.length * rectH / 2
@@ -228,14 +264,14 @@ mode(root); // Take color from TreeColors.js
                 return dictionary[obj1].IC - dictionary[obj2].IC;
               });
               circle.axisY = posY + rectH * (dictionary[circle.data.id].terms.length);
-              circle.axisWidth = (circleR* ( Maxv) / Maxv);
+              circle.axisWidth = (circleR* ( -Math.log(Maxv)) / -Math.log(Maxv));
               circle.rectnodes = [];
               genes2circles[circle.data.id].forEach(function(obj,i){
 
 
                 var RectY = posY + rectH * i ;// Y position
 
-                var posW =circleR * (dictionary[obj.parent.data.id].IC / Maxv); // WIDTH
+                var posW =circleR * (-Math.log(dictionary[obj.parent.data.id].IC) / -Math.log(Maxv)); // WIDTH
                 var rectNode = {};
                 rectNode.name =  dictionary[obj.parent.data.id].name;
                 rectNode.IC =  dictionary[obj.parent.data.id].IC
@@ -245,7 +281,7 @@ mode(root); // Take color from TreeColors.js
                 rectNode.h = rectH - gap;
 
                 circle.rectnodes.push(rectNode);
-                context.fillStyle=d3.hcl(dictionary[obj.parent.data.id].color.h, dictionary[obj.parent.data.id].color.c, dictionary[obj.parent.data.id].color.l,dictionary[obj.parent.data.id].opacity );
+                context.fillStyle=d3.hcl(dictionary[obj.parent.data.id].color.h, dictionary[obj.parent.data.id].color.c, dictionary[obj.parent.data.id].color.l,obj.parent.opacity );
                 context.fillRect(circle.posX,RectY,posW,rectH-gap);
 
                 });
@@ -345,12 +381,12 @@ mode(root); // Take color from TreeColors.js
         circleY = ((circle.y-focus.y)*scale)+y,
         circleR = circle.r*scale;
         if(circle.children){
-          drawTextAlongArc(context,dictionary[circle.data.id].name, circleX, circleY,circleR,opacity);
+          drawTextAlongArc(context,dictionary[circle.data.id].name, circleX, circleY,circleR,circle.opacity);
         }
         else{
          var font = circleR*0.08;
          context.font = font + 'pt Arial';
-         context.fillStyle = "rgba(0, 0, 0," +opacity+")";
+         context.fillStyle = "rgba(0, 0, 0," +circle.opacity+")";
          context.fillText(circle.data.id, circleX-context.measureText(circle.data.id).width/2, circleY-circleR/1.5);
        }
       });
@@ -392,7 +428,7 @@ mode(root); // Take color from TreeColors.js
      number = number.toString()
     // console.log(number);
      context.fillText(number, focus.posX+focus.axisWidth-context.measureText(number).width,focus.axisY + font/1.5);//
-     var pvaluestr = "Information content (IC)"
+     var pvaluestr = "-log(Information content) (-log(IC))"
      context.fillText(pvaluestr, focus.posX-context.measureText(pvaluestr).width/2+focus.axisWidth/2,focus.axisY+font);
       };
   }
@@ -403,11 +439,12 @@ mode(root); // Take color from TreeColors.js
     var point = d3.mouse(this);
     	var node;
     	var minDepth = -Infinity;
+      console.log(circlesSCP);
     	circles.forEach(function(d) {
     		var dx = ((d.x-view[0])*scale)+x - point[0];
     		var dy = ((d.y-view[1])*scale)+y - point[1];
     		var distance = Math.sqrt((dx * dx) + (dy * dy));
-    		if (d.depth >minDepth && distance < d.r*scale) {
+    		if (d.opacity==1 &&d.depth >minDepth && distance < d.r*scale) {
     			minDistance = d.depth;
     			node = d;
     		}
@@ -434,7 +471,7 @@ mode(root); // Take color from TreeColors.js
     		var dx = ((d.x-view[0])*scale)+x - point[0];
     		var dy = ((d.y-view[1])*scale)+y - point[1];
     		var distance = Math.sqrt((dx * dx) + (dy * dy));
-    		if (d.depth >minDepth && distance < d.r*scale) {
+    		if (d.opacity==1 && d.depth >minDepth && distance < d.r*scale) {
     			minDistance = d.depth;
     			node = d;
     		}
@@ -633,7 +670,15 @@ mode(root); // Take color from TreeColors.js
   };
 
 
+
+
+
 };
+
+
+
+
+
 //});
 /*
 DRAW ARC ON CIRCLE (TAKE FFROM INTERNET AND MODIFIED)

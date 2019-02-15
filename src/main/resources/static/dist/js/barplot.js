@@ -96,7 +96,7 @@ var g=    svg.append("g")
     .enter().append("rect")
       .attr("class", "bar1")
       .attr("x", function(d) { return posText + posPlot/2+10; })
-      .attr("width", function(d) {return d.IC/maxIC * posPlot/2; } )
+      .attr("width", function(d) {return -Math.log(d.IC)/-Math.log(maxIC) * posPlot/2; } )
       .attr("y", function(d) { return y(d.name); })
       .attr("fill", "#68a9ff" )
       .attr("height", y.bandwidth())
@@ -118,6 +118,9 @@ var g=    svg.append("g")
 .on('mouseout', function(d) {
   tooltip.transition()
     .style('opacity', 0)
+}).on('click', function(d){
+  console.log("hola");
+  console.log(d);
 });
       g.selectAll(".bar")
           .data(data)
@@ -146,6 +149,9 @@ var g=    svg.append("g")
     .on('mouseout', function(d) {
       tooltip.transition()
         .style('opacity', 0)
+    }).on('click', function(d){
+      console.log("hola");
+      console.log(d);
     });
 
      g.append("g").selectAll("text").data(data).enter().append("text")
@@ -194,7 +200,7 @@ g.append("text")
 g.append("text")
 .attr("x", posText + posPlot/2+10+(posPlot/4))
 .attr("y", height +30)
-.text("Information Content")
+.text("-log(Information Content) (-log(IC))")
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
 .attr("font-size","12px");
