@@ -1389,7 +1389,7 @@ public class GlobalOntology {
 
 			oi.addMaxIC(max);
 
-			//System.out.println("GO Universel " + sub.getKey() + " value = " + max );
+			System.out.println("GO Universel " + sub.getKey() + " value = " + max );
 		}
 
 
