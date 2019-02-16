@@ -425,10 +425,10 @@ var circlesSCP = [];
      if(Maxv>number){
        number=number+1;
      }
-     number = number.toString()
+     number = "-log("+number.toString()+")";
     // console.log(number);
      context.fillText(number, focus.posX+focus.axisWidth-context.measureText(number).width,focus.axisY + font/1.5);//
-     var pvaluestr = "-log(Information content) (-log(IC))"
+     var pvaluestr = "-log(Information content)"
      context.fillText(pvaluestr, focus.posX-context.measureText(pvaluestr).width/2+focus.axisWidth/2,focus.axisY+font);
       };
   }
