@@ -50,7 +50,7 @@ public class ScheduledTasks {
 		
 		boolean cond = false;
 		try {
-			cond = FTPDownloader.DownloadGOOWL("go.owl","http://purl.obolibrary.org/obo/","src/main/resources/static/ontology/");
+			cond = FTPDownloader.DownloadGOOWL("go.owl","http://current.geneontology.org/ontology/","src/main/resources/static/ontology/");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
