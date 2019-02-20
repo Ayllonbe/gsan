@@ -6,6 +6,8 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -37,7 +39,15 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		 // Commenter pour l'instance, mais important
 		File goFile = new File(path+GOOWL);
 		if(!goFile.exists()) {
-			//FTPDownloader.DownloadGOOWL(GOOWL); // Commenter pour l'instance mais important
+			try {
+				FTPDownloader.DownloadGOOWL(GOOWL,"http://purl.obolibrary.org/obo/","src/main/resources/static/ontology/");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Commenter pour l'instance mais important
 		}
 
 		

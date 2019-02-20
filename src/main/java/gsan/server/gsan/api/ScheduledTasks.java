@@ -3,6 +3,7 @@ package gsan.server.gsan.api;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -46,9 +47,17 @@ public class ScheduledTasks {
 	public void performTask() throws IOException {
 		
 		FTPDownloader.DownloadGOA();
-		boolean cond = FTPDownloader.DownloadGOOWL("go.owl");
+		
+		boolean cond = false;
+		try {
+			cond = FTPDownloader.DownloadGOOWL("go.owl","http://purl.obolibrary.org/obo/","src/main/resources/static/ontology/");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(cond)
 			graphSingleton.initializeOrGet("go.owl");
+		
 		log.debug("Checking and Donwloading GO and GOA.");
 
 	}
