@@ -53,6 +53,15 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		
 		
 		graphSingleton.initializeOrGet(path+GOOWL);
+		try {
+			FTPDownloader.DownloadGOOWL(GOOWL,"http://purl.obolibrary.org/obo/","src/main/resources/static/ontology/");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//FTPDownloader.DownloadGOA();
 		
 		System.out.println("Ready to use!");
