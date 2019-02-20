@@ -65,7 +65,13 @@ public static void initializeOrGet(String GOOWL) {
 		 * END Test
 		 */
 		goBase = go;
-//		
+
+	for(String t : go.allStringtoInfoTerm.keySet()) {
+		if(go.allStringtoInfoTerm.get(t).ICs.get(3)>9352.84) {
+			System.out.println(go.allStringtoInfoTerm.get(t).toName()+" "+go.allStringtoInfoTerm.get(t).ICs.get(3));
+		}
+	}
+		
 //		System.out.println(go.getPercentile(25, "mazandu", "GO"));
 //		System.out.println(go.getPercentile(50, "mazandu", "GO"));
 //		System.out.println(go.getPercentile(75, "mazandu", "GO"));
