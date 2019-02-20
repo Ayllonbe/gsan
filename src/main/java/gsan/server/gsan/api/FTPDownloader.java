@@ -330,7 +330,8 @@ public class FTPDownloader {
 					return true;
 			}
 			else {
-				return false;
+					System.out.println(headers.get("Last-Modified").get(0));
+								return false;
 			}
 	  }
 
