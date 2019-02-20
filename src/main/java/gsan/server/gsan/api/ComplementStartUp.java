@@ -40,7 +40,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		File goFile = new File(path+GOOWL);
 		if(!goFile.exists()) {
 			try {
-				FTPDownloader.DownloadGOOWL(GOOWL,"http://purl.obolibrary.org/obo/","src/main/resources/static/ontology/");
+				FTPDownloader.DownloadGOOWL(GOOWL,"http://purl.obolibrary.org/obo/",path);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -52,9 +52,10 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 
 		
 		
-		graphSingleton.initializeOrGet(path+GOOWL);
+		
 		try {
-			FTPDownloader.DownloadGOOWL(GOOWL,"http://current.geneontology.org/ontology/","src/main/resources/static/ontology/");
+			FTPDownloader.DownloadGOOWL(GOOWL,"http://current.geneontology.org/ontology/",path);
+			graphSingleton.initializeOrGet(path+GOOWL);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
