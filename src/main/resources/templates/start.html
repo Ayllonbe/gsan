@@ -31,7 +31,7 @@
 							/*<![CDATA[*/
 
 							    var message = /*[[${query}]]*/ 'default';
-							    console.log(message);
+							  //  console.log(message);
 									if(message!=null){
 									message = 	message.replace(/-,/g,"");
 									message = 	message.replace(/-/g,"");
@@ -71,8 +71,8 @@
 												})
 								function printText() {
 									var x = document
-											.getElementById("queryText").value
-											.split(/[\s|\n|\t|;|,]/g);
+											.getElementById("queryText").value.split(/[\n|\t|;|\s|,]/g).filter(function (el) {return el != "";});
+										//	console.log("TEST "+x);
 									if (x.length > 5) {
 										$("#support")
 												.val(
@@ -455,7 +455,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 													csvval.forEach(function(x) {
 																if (x !== "") {
 
-																	genesFile = genesFile.concat(x.split(/[\n|\t|;|,]/g));
+																	genesFile = genesFile.concat(x.split(/[\n|\t|;|\s|,]/g).filter(function (el) {return el != "";}));
 
 																}
 															});
@@ -476,7 +476,8 @@ In the representative algorithm, after clustering method, one or more terms can 
 
 							 if (genesFile.length === 0) { // Observamos si los genes han sido cargados en un fichero.
 
-								 genes = genes.concat(document.getElementById("queryText").value.split(/[\n|\t|;|,]/g));
+								 genes = genes.concat(document.getElementById("queryText").value.split(/[\n|\t|;|\s|,]/g).filter(function (el) {return el != "";}));
+
 								 //console.log(genes);
 
 							 }else{
@@ -517,11 +518,11 @@ In the representative algorithm, after clustering method, one or more terms can 
 							 }
 							 else if ($('.protORgene:checked').length === 0){
 								 alert("Please, choose if the ids are genes or proteins.");
-								 	$('#run').prop('disabled', false);
+									$('#run').prop('disabled', false);
 								 return false;
 							 }
 							 else {
-								 console.log($('#iea').prop('checked'));
+								// console.log($('#iea').prop('checked'));
 								 var iea = 	$('#iea').prop('checked');
 								 var prok = false;//document.getElementById("prok").value==="on"?true:false;
 								 var onto = [];
