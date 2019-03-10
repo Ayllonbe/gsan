@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -239,7 +241,7 @@ public class GSAnServiceImpl implements GSAnService {
 			log.debug("Reducing annotation...");
 			Annotation  GOAred = Annotation.redondancyReduction(GOA,go);
 			Annotation GOAincom = Annotation.icIncompleteReduction(GOAred,go,ic_inc, Mappercentile);
-
+			System.out.println(GOAincom.annotation.keySet().size());
 		Set<String> termsInc = new HashSet<String>();
 		//System.out.println(ontology);
 		log.debug("Recovering terms to analyse the gene set");
@@ -256,6 +258,7 @@ public class GSAnServiceImpl implements GSAnService {
 
 		Map<String,Object> map = new HashMap<>();
 		
+		System.out.println(termsInc.size());
 		map.putAll(GSAnMethod(genesList, ontology,go,GOAincom, ssMethod, geneSupport,Mappercentile,termsInc));
 		
 		if(msg_code>0) map.put("msg",msg_code);
@@ -344,7 +347,7 @@ public class GSAnServiceImpl implements GSAnService {
 			}
 
 	Map<String,Set<String>> gene2term = new HashMap<>();
-			
+			System.out.println("TermsINC " + termsInc.size());
 			for(String t : termsInc) {
 				InfoTerm it= go.allStringtoInfoTerm.get(t);
 				//System.out.println(it.toName());
@@ -408,7 +411,7 @@ public class GSAnServiceImpl implements GSAnService {
 			
 				
 			}
-			
+			System.out.println(rep.size());
 			List<String> allRepresentatives = new ArrayList<>();
 	
 			Set<String> repRes = new HashSet<>(); 
@@ -417,6 +420,7 @@ public class GSAnServiceImpl implements GSAnService {
 			for(Cluster r :rep) {
 				for(InfoTerm it : r.representatives) {
 					if(it.termcombi.isEmpty()) {
+						
 						allRepresentatives.add(it.id);
 						repRes.add(it.id);
 						BitSet bs = new BitSet();
@@ -427,6 +431,7 @@ public class GSAnServiceImpl implements GSAnService {
 						term2genebs.put(it.id, bs);
 
 					}else {
+						System.out.println("Helo");
 						repRes.addAll(it.termcombi);
 						for(String t : it.termcombi) {
 							allRepresentatives.add(t);
@@ -444,22 +449,14 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			Set<String> remove = new HashSet<>();
 			
-			List<String> repResList = new ArrayList<>(repRes);
-			//System.out.println("MIRAR AQUI "+repResList.size());
+			List<String> repResList = new ArrayList<>(repRes);// Avant eliminer terms
+			System.out.println("MIRAR AQUI "+(new HashSet<>(allRepresentatives)).size());
+//			for(String s : allRepresentatives) {
+//				System.out.println("\t"+go.allStringtoInfoTerm.get(s).name+" "+go.allStringtoInfoTerm.get(s).geneSet.size()+" "+go.allStringtoInfoTerm.get(s).ICs.get(3));
+//			}
 			TransformDagToTree tdt = new TransformDagToTree(go);
 		
-			Map<String, List<String>> hierarchy = tdt.GetHierarchy(GOAincom, repResList, ic_inc);
-//			for(String t : hierarchy.keySet()) {
-//				System.out.println(go.allStringtoInfoTerm.get(t)  + " " + hierarchy.get(t));
-//			}
-			Map<String, Set<String>> mapTerm2genes = new HashMap<>();
 			
-			Set<String> allterms = new HashSet<>(hierarchy.keySet());
-			
-			for(String t : allterms) {
-				mapTerm2genes.put(t, new HashSet<>(go.allStringtoInfoTerm.get(t).geneSet));
-				
-			}
 			
 			
 			for(int i = 0; i<allRepresentatives.size();i++) {
@@ -520,18 +517,33 @@ public class GSAnServiceImpl implements GSAnService {
 				
 
 			}
+			List<String> repResListReduced = new ArrayList<>(repRes);// Apres eliminer terms
+			Map<String, List<String>> hierarchy = tdt.GetHierarchy(repResListReduced, repResList, ic_inc);
+//			for(String t : hierarchy.keySet()) {
+//				System.out.println(go.allStringtoInfoTerm.get(t)  + " " + hierarchy.get(t));
+//			}
+			Map<String, Set<String>> mapTerm2genes = new HashMap<>();
 			
-		
+			Set<String> allterms = new HashSet<>(hierarchy.keySet());
+			
+			for(String t : allterms) {
+				mapTerm2genes.put(t, new HashSet<>(go.allStringtoInfoTerm.get(t).geneSet));
+				
+			}
 			if(!hierarchy.isEmpty()) {
 			List<String> line1 = new ArrayList<String>(ontology);
-			line1.retainAll(hierarchy.keySet());
+			//line1.retainAll(hierarchy.keySet());
 			List<String> line2 = new ArrayList<String>();
 			
 			boolean bol = false;
 			//System.out.println(hierarchy);
 			while(bol==false) {
 				for(String t : line1) {
+					
 					for(String t_ch : hierarchy.get(t)) {
+//						if(!hierarchy.containsKey(t_ch)) {
+//							System.out.println(t_ch);
+//						}
 						mapTerm2genes.get(t).removeAll(mapTerm2genes.get(t_ch));
 						line2.add(t_ch);
 					}
@@ -572,11 +584,11 @@ public class GSAnServiceImpl implements GSAnService {
 				mapTerm.put("geneSet", new ArrayList<String>(mapTerm2genes.get(t)));
 				
 				if(it.toString().equals(it.top)) {
-					mapTerm.put("parent", "GO");
+				//	mapTerm.put("parent", "GO");
 				}else {
 					List<String> p = new ArrayList<>(it.is_a.parents);
 					p.retainAll(allterms);
-				mapTerm.put("parent", p);
+				//mapTerm.put("parent", p);
 				}
 				
 				if(scp.contains(t)) {
@@ -600,7 +612,7 @@ public class GSAnServiceImpl implements GSAnService {
 				}
 				List<String> c = new ArrayList<>(it.is_a.childrens);
 				c.retainAll(allterms);
-				mapTerm.put("children", c);
+				//mapTerm.put("children", c);
 				mapInfo.put(t, mapTerm);
 
 
@@ -611,7 +623,7 @@ public class GSAnServiceImpl implements GSAnService {
 				mapTerm.put("name", "Gene Ontology");
 				mapTerm.put("IC", 0);
 				mapTerm.put("geneSet", new ArrayList<String>());
-				mapTerm.put("children", ontology);
+				//mapTerm.put("children", ontology);
 				mapTerm.put("opacity", 1.);
 				mapInfo.put("GO", mapTerm);
 			
@@ -619,7 +631,7 @@ public class GSAnServiceImpl implements GSAnService {
 			
 		
 			
-			finalResult.put("representatives",new ArrayList<String>(repRes));
+			finalResult.put("representatives", repResListReduced);
 			
 			
 			Map<String,Set<String>> gene2rep = new HashMap<>();

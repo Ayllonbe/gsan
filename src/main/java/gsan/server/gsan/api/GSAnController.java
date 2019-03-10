@@ -46,6 +46,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.RestCom.db2db.db2db;
+
 import gsan.distribution.gsan_api.annotation.ChooseAnnotation;
 import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.server.gsan.api.service.GSAnService;
@@ -75,28 +77,38 @@ public class GSAnController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
-	// Create a new Note
-	@RequestMapping("/note")
-	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object>  createNote(String email) {
-		try {
-			//System.out.println(email);
-			task t= new task();
-			tRepository.save(t);
-			//System.out.println(t.getId());
-			//   TimeUnit.MINUTES.sleep(1);
-			t.setfinish(true);
-			tRepository.save(t);
-		}
-		catch (Exception ex) {
-			return new ResponseEntity<Object>("Error creating the user: " + ex.toString(),HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<Object>("GOOD",HttpStatus.OK);}
+//	// Create a new Note
+//	@RequestMapping("/note")
+//	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<Object>  createNote(String email) {
+//		try {
+//			//System.out.println(email);
+//			task t= new task();
+//			tRepository.save(t);
+//			//System.out.println(t.getId());
+//			//   TimeUnit.MINUTES.sleep(1);
+//			t.setfinish(true);
+//			tRepository.save(t);
+//		}
+//		catch (Exception ex) {
+//			return new ResponseEntity<Object>("Error creating the user: " + ex.toString(),HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//		return new ResponseEntity<Object>("GOOD",HttpStatus.OK);}
 
 	@RequestMapping("/start")
-	public String start(Model m) {
+	public String start(Model m,@RequestParam(value = "query", required = false) String query) {
+		System.out.println(query);
+		
+		m.addAttribute("query",query);
+		System.out.println("hola");
 		m.addAttribute("version", versionNumber);
+		System.out.println("hola");
 		return "start";
+	}
+	@RequestMapping("/idconverter")
+	public String idconverter(Model m) {
+		m.addAttribute("version", versionNumber);
+		return "convert";
 	}
 
 	@RequestMapping("/")
@@ -371,6 +383,7 @@ public class GSAnController {
 		return "contact";
 	}
 
+		
 	@RequestMapping("/gsanGet")
 	public String gsanRun(
 			Model model,
@@ -551,10 +564,11 @@ public class GSAnController {
 				Map<String,Object> terms = (HashMap<String,Object>) map.get("terms");
 
 				StringBuffer sb = new StringBuffer();
-				sb.append("Id,Name,Onto,IC,QueryNumber,AnnotationQueryNumber,CoverNumber,Synthetic,Genes\n");
+				sb.append("SetQuality,Id,Name,Onto,IC,QueryNumber,AnnotationQueryNumber,CoverNumber,Synthetic,Genes\n");
 
 				for(String r : rep) {
 					//System.out.println(terms.get(r));
+					sb.append((Double)map.get("GS2")+",");
 					sb.append(r+",");
 					sb.append("\""+(String)((Map<String,Object>) terms.get(r)).get("name")+"\",");
 					sb.append((String)((Map<String,Object>) terms.get(r)).get("onto")+",");
