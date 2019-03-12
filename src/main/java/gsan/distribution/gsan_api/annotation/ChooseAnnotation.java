@@ -20,7 +20,7 @@ public class ChooseAnnotation {
 			goa_file ="goa_yeast.gaf";
 			break;
 		case "escherichia_coli":
-			goa_file = "gene_association.ecocyc";
+			goa_file = "ecocyc.gaf";
 			break;
 		case "mus_musculus":
 			goa_file ="goa_mouse.gaf";
@@ -41,7 +41,7 @@ public class ChooseAnnotation {
 			goa_file = "goa_chicken.gaf";
 			break;
 		case "candida_albicans":
-			goa_file = "gene_association.cgd";
+			goa_file = "cgd.gaf";
 			break;
 		case "bos_taurus":
 			goa_file = "goa_cow.gaf";
