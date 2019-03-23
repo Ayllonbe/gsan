@@ -63,8 +63,11 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//FTPDownloader.DownloadGOA();
 		
+		File annotations = new File("src/main/resources/static/AssociationTAB");
+		if(!annotations.exists()) {
+		FTPDownloader.DownloadGOA();
+		}
 		System.out.println("Ready to use!");
 
 	}
