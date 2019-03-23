@@ -8,7 +8,8 @@ public enum CustomException {
 	  ,
 	  code1("404", "Bad Request","/start","The number of genes of query for the analysis is not enough. The min number is 5.")
 	  ,
-	code2("500", "Internal Server Error","GSAn","The path where the JSON files are stored doesn't exist. Please contact us to solve this issue.")
+	code2("500", "Internal Server Error","GSAn","There is no result associated with this path. GSAn removes the results after 12h. "
+			+ "If that is not the case, please contact us to solve this issue.")
 	 ,
 	  code3("404", "Bad Request","/start","The gene id of the query doesn't match with the gene id of GOA. Please, check if:\n"
 	  		+ "1) You use the official symbol id.\n"

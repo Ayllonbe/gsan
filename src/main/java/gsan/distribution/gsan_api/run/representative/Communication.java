@@ -1,11 +1,14 @@
 package gsan.distribution.gsan_api.run.representative;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.rcaller.datatypes.DataFrame;
+import com.github.rcaller.rstuff.RCaller;
+import com.github.rcaller.rstuff.RCode;
 
 import gsan.distribution.gsan_api.read_write.Format;
 
@@ -40,74 +43,101 @@ public class Communication {
 	}	
 
 	
-	public static  Communication  comunication(String file, String method) 
+	public static  Communication  comunication(Map<String, Object> fileSS, String method) 
 	{  
+		 RCaller caller = RCaller.create();
+	      RCode code = RCode.create();
+	      
+	      Object[][] o = (Object[][]) fileSS.get("table");
+	      String[] s = (String[]) fileSS.get("names");
+	      
+		
+		  DataFrame df = DataFrame.create(o, s);
+		  code.addRCode("library(\"fastcluster\")");
+	      code.addDataFrame("df", df);
+	      
+	      code.addRCode("d <- as.dist(1-df)");
+	      code.addRCode("h <- hclust(d,\"average\")");
+	      
+	      code.addRCode("silClus <- function(hc.obj,dist.obj,nc){\n" + 
+	      		"  require(cluster)\n" + 
+	      		"  \n" + 
+	      		"  asw <-c()\n" + 
+	      		"  for( k in 2 : nc){\n" + 
+	      		"    sil <- silhouette(cutree(hc.obj,k = k), dist.obj)\n" + 
+	      		"    asw <- c(asw,summary(sil)$avg.width)\n" + 
+	      		"  }\n" + 
+	      		"  \n" + 
+	      		"  \n" + 
+	      		"  #  print(which.max(unlist(l))+1)\n" + 
+	      		"  #print(which.max(asw)+1)\n" + 
+	      		"  # return(which.max(unlist(l))+1)\n" + 
+	      		"  return(which.max(asw)+1)\n" + 
+	      		"}");
+	      
+	      code.addRCode("cl <- silClus(h,d, nrow(df) -1)");
+	      code.addRCode("cutree.obj <- cutree(h,k=cl)\n"
+	      		+ "sil.obj <- summary(silhouette(cutree.obj, d))$clus.avg.widths\n" + 
+	      		"");
+	      code.addRCode("clusters <- c()\n" + 
+		      		"\n" + 
+		      		"termCl <- c()\n" + 
+		      		"\n" + 
+		      		"for(x in 1:cl){\n" + 
+		      		"  namesCluster <- names(cutree.obj[cutree.obj==x])\n" + 
+		      		"  termCl<-c(termCl,length(namesCluster))\n"
+		      		+ "collapseCluster <- gsub(\"[.]\", \":\",paste(namesCluster,collapse=\";\"))\n" + 
+		      		"  clusters <- c(clusters,paste(x,sil.obj[x],collapseCluster,sep=\"\\t\"))\n" + 
+		      		"}");
+	      code.addRCode("Tcl <- length(termCl)\n" + 
+	      		"Tmax <- max(termCl)\n" + 
+	      		"Tmin <- min(termCl)\n" + 
+	      		"Tmean <- mean(termCl)");
+	      code.addRCode("result <- as.list(.GlobalEnv)");
+
+	      caller.setRCode(code);
+	      
+		
+		
+		
+		
+		
 //		Process p = Runtime.getRuntime().exec("python clust.py " + file + " "+method);
 		Communication com = new Communication();
-		float random = Math.round(Math.random()* 1000000000);
-		File fR = new File(file);
-		File ffolder = new File("src/main/tmp/");
-		String out = random +".txt";
-		File path = new File(ffolder.getAbsolutePath()+"/" +out);
-
-//		System.out.println("[Communication] Enter to R program");
 		
 		
-		File Rfile = new File("Scripts/clusteranalisis.R");
-		String line = "Rscript "+Rfile+ " --file " + new File(file).getAbsolutePath() + " -m "+method+" --outFolder " +new File("src/main/tmp/").getAbsolutePath()+" -o "+out;
-		//com.log.debug("Rscript "+Rfile+ " --file " + new File(file).getAbsolutePath() + " -m "+method+" --outFolder " +new File("src/main/tmp/").getAbsolutePath()+" -o "+out);
-		Process p;
+		
 		try {
-			p = Runtime.getRuntime().exec("Rscript "+Rfile+ " --file " + new File(file).getAbsolutePath() + " -m "+method+" --outFolder " +new File("src/main/tmp/").getAbsolutePath()+" -o "+out);
 			
-
-		   //BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		
-			p.waitFor();
-		
+			caller.runAndReturnResult("result");
+		      
+		      
 //		System.out.println("[Communication] Exit of R program");
 		
-		com = readFileClustering(path);
+		com = readFileClustering(caller);
 		
-			if(Files.exists(path.toPath()))
-				Files.delete(path.toPath());
-			if(Files.exists(fR.toPath()))
-				Files.delete(fR.toPath());
+		
+		
 		}
-			catch (InterruptedException | IOException e) {
-				// TODO Auto-generated catch block
-				try {
-					if(Files.exists(path.toPath()))
-						Files.delete(path.toPath());
-					if(Files.exists(fR.toPath()))
-						Files.delete(fR.toPath());
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+			catch (Exception e) {
+				
 				com.error = 4;
 				com.log.error(e.getLocalizedMessage());
-				com.log.error("[R comand] "+line);
+				com.log.error("[R comand] Communication failed");
 			}
 		return com;
 
 	}
 	
 	@SuppressWarnings("resource")
-	public static Communication readFileClustering(File path) throws NumberFormatException, IOException {
+	public static Communication readFileClustering(RCaller caller) throws NumberFormatException{
 		Communication com = new Communication();
 		Hashtable<Integer,List<String>> clusters = new Hashtable<Integer,List<String>>();
 		Hashtable<Integer,Double> quality = new Hashtable<Integer,Double>();
 		Hashtable<String,Double> statTable = new Hashtable<String,Double>();
-		String info = new String();
-		InputStream f = new FileInputStream(path);
-		
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(f));
-		String s = null;
-		
-			while ((s = stdInput.readLine()) != null) {
-//				System.out.println(s);
-				if(!s.contains("#")){
+		String[] cl = caller.getParser().getAsStringArray("clusters");
+	     
+		for(String s : cl) {
 					String[] A = s.split("\t");
 					int n = Integer.parseInt(A[0]);
 					
@@ -115,21 +145,21 @@ public class Communication {
 					clusters.put(n, B);
 					quality.put(n, Double.parseDouble(A[1]));
 					//System.out.println(s);
-				}
-				else{
-					info = info + s + "\n";
-					
-				}
+				
 
 			}
 		
-		info = info.replace("#" ,"");
-		for(String i : info.split("\n")){
-//			System.out.println(i);
-			String[] sp = i.split(":");
-			Double v = format.round(Double.parseDouble(sp[1]));
-			statTable.put(sp[0],v);
-		}
+		
+		Double Tcl = format.round(Double.parseDouble(caller.getParser().getAsStringArray("Tcl")[0]));
+		statTable.put("Cluster Number",Tcl); 
+		
+		Double Tmax = format.round(Double.parseDouble(caller.getParser().getAsStringArray("Tmax")[0]));
+		statTable.put("Terms Number max in a cluster",Tmax); 
+		Double Tmin = format.round(Double.parseDouble(caller.getParser().getAsStringArray("Tmin")[0]));
+		statTable.put("Terms Number min in a cluster",Tmin); 
+		Double Tmean = format.round(Double.parseDouble(caller.getParser().getAsStringArray("Tmean")[0]));
+		statTable.put("Terms Number mean in a cluster",Tmean); 
+		
 		
 		com.putClusters(clusters);
 		com.putStat(statTable);

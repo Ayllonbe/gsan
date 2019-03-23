@@ -2,9 +2,9 @@
 <html>
 <body>
 
+	<div th:insert="index"></div>
 
 	<div class="content">
-		<div th:insert="index"></div>
 
 		<!-- Scrollable div with main content -->
 		<div class="row" id="rowStart" style="width: 100%">
@@ -21,21 +21,27 @@
 						<H2>Charts</H2 >
 							<div class="row">
 								<div class="col-xs-6">
-									<H4 style="text-align: center;">Gene set similarity
-										(GS&sup2;)</H4>
-								</div>
-								<div class="col-xs-4 col-lg-6">
-									<div id="gs2"></div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-6">
-									<H4 style="text-align: center">Recovered genes</H4>
+									<H4 style="text-align: center">Percentage of genes with annotations</H4>
 								</div>
 								<div class="col-xs-4 col-lg-6">
 									<div id="recoverGenes"></div>
 								</div>
+								<div class="col-xs-12 rg">
+
+								</div>
 							</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<H4 style="text-align: center">Percentage of genes annotated with GSAn</H4>
+								</div>
+								<div class="col-xs-4 col-lg-6" style="vertical-align:middle;">
+									<div id="recoverAnnotGenes"></div>
+								</div>
+								<div class="col-xs-12 rag">
+
+								</div>
+							</div>
+
 							<!--	<div class="row">
 			<div class="col-sm-6">
 				<H4 style="text-align:center;height:100px ;display: table-cell; vertical-align: middle;">Percentage term reduced</H4>
@@ -44,14 +50,20 @@
 					<div id="reduce" style="width:100%;height:100px; display: table-cell;vertical-align: middle; "></div>
 		</div>
 	</div>-->
+
 							<div class="row">
 								<div class="col-xs-6">
-									<H4 style="text-align: center">Recovered annotated genes</H4>
+									<H4 style="text-align: center;">Gene set similarity
+										(GS&sup2;)</H4>
 								</div>
-								<div class="col-xs-4 col-lg-6" style="vertical-align:middle;">
-									<div id="recoverAnnotGenes"></div>
+								<div class="col-xs-4 col-lg-6">
+									<div id="gs2"></div>
+								</div>
+								<div class="col-xs-12 gs2">
+
 								</div>
 							</div>
+
 						</div>
 						<div id="barplot" class="col-xs-12 col-sm-12 col-md-12 col-lg-9" style="vertical-align:middle;">
 							<H2>Synthetic annotation</H2>
@@ -75,8 +87,7 @@
 							id="defaultOpen">Table</button></div>
 						<div class="col-xs-6" style="background-color: #555;margin:0px;padding-right: 0px;padding-left: 0px;">
 						<button class="tablink"
-							onclick="openCity('motvis', this, '#999999')">Bubble
-							chart (BETA)</button>
+							onclick="openCity('motvis', this, '#999999')">Combined tree visualization</button>
 							</div>
 					</div>
 <div class="row">
@@ -113,7 +124,7 @@
 
 			</div>
 			</div>
-
+<br><br><br><br><br>
 </div>
 
 		<script th:inline="javascript">
@@ -168,8 +179,7 @@
 				var scp = data.scp;
 				var dic = data.terms;
 
-				var h = [ "Id", "Name", "Onto", "IC", "QueryNumber",
-						"CoverNumber", "Synthetic", "Genes" ], r = [];
+				var h = ["GOID","Name","Ontology","IC","Covered_genes","Synthetic", "Genes" ], r = [];
 				representative.forEach(function(x) {
 					//console.log(dic[x]);
 					var cells = {};
@@ -177,15 +187,14 @@
 					cells[h[1]] = '"' + dic[x].name + '"';
 					cells[h[2]] = dic[x].onto;
 					cells[h[3]] = Math.floor(dic[x].IC * 100) / 100;
-					cells[h[4]] = genes.length;
-					cells[h[5]] = dic[x].geneSet.length;
+					cells[h[4]] = dic[x].geneSet.length;
 					if (scp.includes(x)) {
-						cells[h[6]] = true;
+						cells[h[5]] = true;
 					} else {
-						cells[h[6]] = false;
+						cells[h[5]] = false;
 					}
 
-					cells[h[7]] = dic[x].geneSet.join(";");
+					cells[h[6]] = dic[x].geneSet.join(";");
 					r.push(cells);
 				});
 

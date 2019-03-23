@@ -2,32 +2,40 @@ html, body {
     height:100%;
     margin:0;
     padding:0;
-    background-color: #F5F5F5;
     overflow:hidden;
-}
-header{
-    width: 100%;
     background-color: #4169E1;
-    position: fixed;
-    top: 0;
-    height: 60px !important;
-    z-index: 1;
-    -moz-box-sizing:border-box;
-    -webkit-box-sizing:border-box;
-    -o-box-sizing:border-box;
-    -ms-box-sizing:border-box;
-    box-sizing:border-box;
 }
-header h2{
-  margin-left: 1.5%;
-  margin-top: 0.5%;
+
+header{
+      width: 100%;
+      position: fixed;
+      top: 0;
+      height: 60px !important;
+      z-index: 100;
+
+}
+
+
+#proH{
+    position: fixed;
+    width: 0px;
+    height: 100%;
+}
+ header #header{
+
+
+    height: 100%;
+}
+#header p{
   color:white;
   font-size:35px;
+  left:70px;
 }
 .popover{
     width:250px;
 }
 .content {
+    background-color: #F5F5F5;
     position:fixed;
     height: 100%;
     width:100%; /* Sizing - any length */
@@ -67,6 +75,10 @@ header h2{
     -o-box-sizing:border-box;
     -ms-box-sizing:border-box;
     box-sizing:border-box;
+}
+.current {
+  font-weight: bold;
+   text-decoration: underline;
 }
 .sidebar1 i, .sidebar1 span{
 
@@ -159,7 +171,7 @@ footer {
 
 }
 #pro{
-  position: fixed;
+    position: fixed;
     width: 200px;
     height: 100%;
 background-color: #202020;

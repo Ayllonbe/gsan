@@ -8,6 +8,7 @@ var Annotgenes = data.AnnotatedGeneSet;
 var representative = data.representatives;
 var scp = data.scp;
 var dic = data.terms;
+var org = data.organism;
 
 scp.sort(function(a,b){
 	return dic[a].IC - dic[b].IC
@@ -27,18 +28,29 @@ scpDic.push(dic[x]);
 });
 
 
-console.log("GeneSet SCP " + recoverGenes.size);
 gauge(gs2,"#gs2");
-gauge(recoverGenes.size/genes.length,"#recoverGenes");
+var rg = Annotgenes.length/genes.length;
+gauge(rg,"#recoverGenes");
+if(org===""){
+$(".rg").append('<p>'+(Math.round(rg*100))+ '% of genes are annotated within GOA.</p>');
+}else if(org===undefined){
+  $(".rg").append('<p>'+(Math.round(rg*100))+ '% of genes are annotated within GOA.</p>');
+}else{
+  org = org.replace("_", " ");
+  $(".rg").append('<p>'+(Math.round(rg*100))+ '% of genes are annotated within ' +org+' GOA.</p>');
+}
 //gauge(reduceterm,"#reduce");
-gauge(recoverGenes.size/Annotgenes.length,"#recoverAnnotGenes");
+var rag = recoverGenes.size/Annotgenes.length;
+$(".rag").append('<p>'+(Math.round(rag*100))+ '% of genes are covered by GSAn.</p>');
+gauge(rag,"#recoverAnnotGenes");
+$(".gs2").append('<p>The groupwise similarity between genes of the set is '+(Math.round(gs2*100))+ '%</p>');
 
 
 
 
 barplot(scpDic,recoverGenes);
 
-var h = ["Id","Name","Onto","IC","CoverNumber","Synthetic"]
+var h = ["GOID","Name","Ontology","IC","Covered genes","Synthetic"]
 var r = [];
 representative.forEach(function(x){
   //console.log(dic[x]);
@@ -58,7 +70,7 @@ representative.forEach(function(x){
 r.push(cells);
 })
 
-$("#tableResult").append('<H3>There are '+representative.length+' representative terms and '+scp.length +' synthetic terms annotating ' +recoverGenes.size +' out of '+genes.length+' genes</H3>');
+$("#tableResult").append('<H3>GSAn retained '+representative.length+' terms, '+scp.length +' of them being synthetic<br>  ' +recoverGenes.size +' out of '+genes.length+' genes are covered</H3>');
 var table = new Table()
 
 //sets table data and builds it
@@ -71,12 +83,26 @@ table
 
 $("#tableResult").append('<button class="btnCsv" style="float:right;font-family: sans-serif;font-size:18px;"><i class="fa fa-download"></i>&nbsp;Export CSV</button>');
 
-motvis(dic,representative,genes,data.tree);
+//motvis(dic,representative,genes,data.tree);
+var circulardiv = document.getElementById("circular"),
+treediv = document.getElementById("treeHIDDEN"),
+width = circulardiv.clientWidth,
+height = circulardiv.clientHeight,
+pack = d3.pack().size([width*0.9 , height*0.9]).padding(0.4);
+motvis(dic,representative,genes,data.tree,width,height,pack,circulardiv,treediv);
 
-window.onresize = function(event) {
+  $(window).resize(function(){
+    circulardiv = document.getElementById("circular"),
+    treediv = document.getElementById("treeHIDDEN");
+    if(width!==circulardiv.clientWidth || height!==circulardiv.clientHeight){
+      console.log("hola");
+      width = circulardiv.clientWidth,
+      height = circulardiv.clientHeight;
+      motvis(dic,representative,genes,data.tree,width,height,pack,circulardiv,treediv);
+    }
 
-	motvis(dic,representative,genes,data.tree);
-};
+});
+
 
 function gauge(value,id) {
 var gauge = gaugeChart()

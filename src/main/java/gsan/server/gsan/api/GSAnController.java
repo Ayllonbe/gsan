@@ -46,6 +46,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+//import com.RestCom.db2db.db2db;
+
 import gsan.distribution.gsan_api.annotation.ChooseAnnotation;
 import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.server.gsan.api.service.GSAnService;
@@ -75,29 +77,39 @@ public class GSAnController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
-	// Create a new Note
-	@RequestMapping("/note")
-	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object>  createNote(String email) {
-		try {
-			//System.out.println(email);
-			task t= new task();
-			tRepository.save(t);
-			//System.out.println(t.getId());
-			//   TimeUnit.MINUTES.sleep(1);
-			t.setfinish(true);
-			tRepository.save(t);
-		}
-		catch (Exception ex) {
-			return new ResponseEntity<Object>("Error creating the user: " + ex.toString(),HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<Object>("GOOD",HttpStatus.OK);}
+//	// Create a new Note
+//	@RequestMapping("/note")
+//	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<Object>  createNote(String email) {
+//		try {
+//			//System.out.println(email);
+//			task t= new task();
+//			tRepository.save(t);
+//			//System.out.println(t.getId());
+//			//   TimeUnit.MINUTES.sleep(1);
+//			t.setfinish(true);
+//			tRepository.save(t);
+//		}
+//		catch (Exception ex) {
+//			return new ResponseEntity<Object>("Error creating the user: " + ex.toString(),HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//		return new ResponseEntity<Object>("GOOD",HttpStatus.OK);}
 
 	@RequestMapping("/start")
-	public String start(Model m) {
+	public String start(Model m,@RequestParam(value = "query", required = false) String query) {
+		System.out.println(query);
+		
+		m.addAttribute("query",query);
+		System.out.println("hola");
 		m.addAttribute("version", versionNumber);
+		System.out.println("hola");
 		return "start";
 	}
+//	@RequestMapping("/idconverter")
+//	public String idconverter(Model m) {
+//		m.addAttribute("version", versionNumber);
+//		return "convert";
+//	}
 
 	@RequestMapping("/")
 	public String wellcome(Model m) {
@@ -262,6 +274,12 @@ public class GSAnController {
 					return "error";
 				}
 			}else {
+				CustomException ce  = CustomException.values()[2];
+				model.addAttribute("status",ce.getstatus());
+				model.addAttribute("error",ce.getError());
+				model.addAttribute("path",ce.getpath());
+				model.addAttribute("timestamp",new TimeStamp(new Date()).toDateString());
+				model.addAttribute("message",ce.getMSG());
 				log.error("There are no task with this id.");
 				return "error";
 			}
@@ -365,6 +383,7 @@ public class GSAnController {
 		return "contact";
 	}
 
+		
 	@RequestMapping("/gsanGet")
 	public String gsanRun(
 			Model model,
@@ -373,14 +392,14 @@ public class GSAnController {
 			@RequestParam(value = "query", required = true) MultipartFile file,
 			@RequestParam(value = "organism", required = false,defaultValue = "homo_sapiens") String organism,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
-			@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
+			//@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
 			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
-			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
-			@RequestParam(value = "covering", required = false, defaultValue = "1") double covering,
+		//	@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
+		//	@RequestParam(value = "covering", required = false, defaultValue = "1") double covering,
 			@RequestParam(value = "minGeneSupport", required = false, defaultValue = "3") int geneSupport,
-			@RequestParam(value = "prokaryote", required = false, defaultValue = "false") boolean prok,
+		//	@RequestParam(value = "prokaryote", required = false, defaultValue = "false") boolean prok,
 			@RequestParam(value = "email", required = false) String email
 
 			)  {
@@ -390,7 +409,7 @@ public class GSAnController {
 			StringWriter writer = new StringWriter();
 			//	System.out.println(file.getContentType());
 			IOUtils.copy(file.getInputStream(), writer, StandardCharsets.UTF_8);
-			String theString = writer.toString().toLowerCase();
+			String theString = writer.toString();
 			String[] sa = theString.split(",");
 			//	System.out.println("End1");
 			for(String s :sa) {
@@ -408,8 +427,8 @@ public class GSAnController {
 
 			tRepository.save(t);
 
-			gsanService.runService(tRepository, t, query, organism, useiea, ic_inc, top,
-					ss, similarityRepValue, covering, geneSupport,percentile,prok, ids);
+			gsanService.runService(tRepository, t, query, organism, useiea, top,
+					ss, geneSupport,percentile, ids);
 			uidd2email.put(t.getId(), email);
 			return "redirect:/"+t.getId();
 		}
@@ -430,14 +449,14 @@ public class GSAnController {
 			@RequestParam(value = "query", required = true) MultipartFile file,
 			@RequestParam(value = "uploadFile", required = true) MultipartFile  gaf,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
-			@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
+			//@RequestParam(value = "ic_incomplete", required = false, defaultValue = "3" ) int ic_inc,
 			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
-			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
-			@RequestParam(value = "covering", required = false, defaultValue = "1") double covering,
+			//@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
+			//@RequestParam(value = "covering", required = false, defaultValue = "1") double covering,
 			@RequestParam(value = "minGeneSupport", required = false, defaultValue = "3") int geneSupport,
-			@RequestParam(value = "prokaryote", required = false, defaultValue = "false") boolean prok,
+			//@RequestParam(value = "prokaryote", required = false, defaultValue = "false") boolean prok,
 			@RequestParam(value = "email", required = false) String email
 			) {
 		List<String> query = new ArrayList<>();
@@ -446,7 +465,7 @@ public class GSAnController {
 			StringWriter writer = new StringWriter();
 			//System.out.println(file.getContentType());
 			IOUtils.copy(file.getInputStream(), writer, StandardCharsets.UTF_8);
-			String theString = writer.toString().toLowerCase();
+			String theString = writer.toString();
 			String[] sa = theString.split(",");
 			//System.out.println("End1");
 			for(String s :sa) {
@@ -480,8 +499,8 @@ public class GSAnController {
 
 			tRepository.save(t);
 
-			gsanService.runService(tRepository, t, query, useiea, ic_inc, top,
-					ss, similarityRepValue, covering, geneSupport,percentile,prok, gafString,ids);
+			gsanService.runService(tRepository, t, query, useiea, top,
+					ss, geneSupport,percentile, gafString,ids);
 			uidd2email.put(t.getId(), email);
 			return "redirect:/"+t.getId();
 		}
@@ -508,14 +527,14 @@ public class GSAnController {
 			@RequestParam(value = "query", required = true) MultipartFile file,
 			@RequestParam(value = "organism", required = false,defaultValue = "homo_sapiens") String organism,
 			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
-			@RequestParam(value = "icIncomplete", required = false, defaultValue = "3" ) int ic_inc,
+//			@RequestParam(value = "icIncomplete", required = false, defaultValue = "3" ) int ic_inc,
 			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
 			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
 			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
-			@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
-			@RequestParam(value = "covering", required = false, defaultValue = "1") double covering,
-			@RequestParam(value = "minGeneSupport", required = false, defaultValue = "3") int geneSupport,
-			@RequestParam(value = "prokaryote", required = false, defaultValue = "false") boolean prok
+			//@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
+			//@RequestParam(value = "covering", required = false, defaultValue = "1") double covering,
+			@RequestParam(value = "minGeneSupport", required = false, defaultValue = "3") int geneSupport
+			//@RequestParam(value = "prokaryote", required = false, defaultValue = "false") boolean prok
 			) {
 		try {
 
@@ -523,7 +542,7 @@ public class GSAnController {
 			try {
 				StringWriter writer = new StringWriter();
 				IOUtils.copy(file.getInputStream(), writer, StandardCharsets.UTF_8);
-				String theString = writer.toString().toLowerCase();
+				String theString = writer.toString();
 				String[] sa = theString.replaceAll("\"", "").replaceAll("\n", "").split(",");
 				for(String s :sa) {
 					query.add(s);
@@ -535,8 +554,8 @@ public class GSAnController {
 			}
 			if(query.size()>2) {
 
-				Map<String,Object> map = gsanService.runService(query, organism, useiea, ic_inc, top,
-						ss, similarityRepValue, covering, geneSupport,percentile,prok,ids);
+				Map<String,Object> map = gsanService.runService(query, organism, useiea, top,
+						ss, geneSupport,percentile,ids);
 
 				List<String> rep = new ArrayList<>((Collection<String>)map.get("representatives"));
 				List<String> scp = new ArrayList<>((Collection<String>)map.get("scp"));
@@ -545,10 +564,11 @@ public class GSAnController {
 				Map<String,Object> terms = (HashMap<String,Object>) map.get("terms");
 
 				StringBuffer sb = new StringBuffer();
-				sb.append("Id,Name,Onto,IC,QueryNumber,AnnotationQueryNumber,CoverNumber,Synthetic,Genes\n");
+				sb.append("SetQuality,Id,Name,Onto,IC,QueryNumber,AnnotationQueryNumber,CoverNumber,Synthetic,Genes\n");
 
 				for(String r : rep) {
 					//System.out.println(terms.get(r));
+					sb.append((Double)map.get("GS2")+",");
 					sb.append(r+",");
 					sb.append("\""+(String)((Map<String,Object>) terms.get(r)).get("name")+"\",");
 					sb.append((String)((Map<String,Object>) terms.get(r)).get("onto")+",");

@@ -8,9 +8,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.net.PrintCommandListener;
@@ -107,6 +113,9 @@ public class FTPDownloader {
 				//				"gene_association.sgd.gz",
 				//				"gene_association.tair.gz",
 				//				"goa_pig.gaf.gz",
+
+				"ecocyc.gaf.gz",
+				"cgd.gaf.gz",
 				"HUMAN",
 				"ARABIDOPSIS",
 				"CHICKEN",
@@ -118,51 +127,54 @@ public class FTPDownloader {
 				"RAT",
 				"WORM",
 				"YEAST",
-				"ZEBRAFISH",
-				"gene_association.ecocyc.gz",
-				"gene_association.cgd.gz"
+				"ZEBRAFISH"
 
 		};
 
-
-
-		String pathGO = "go/gene-associations/";
 		String pathEBI = "pub/databases/GO/goa/";
 
 		try {
-			GlobalOntology go = graphSingleton.getGraph(false);
+			GlobalOntology go = graphSingleton.getGraph();
 			for(String file : listFiles) {
-				//System.out.println(file);
-				if(file.contains("gene")) {
-					String annotationFile = "src/main/resources/static/AssociationTAB/"+file.replace(".gz", "");
+				if(file.contains("ecocyc")|| file.contains("cgd.gaf")) {
+					 String annotationFile = "src/main/resources/static/AssociationTAB/"+file.replace(".gz", "");
+					  File created_file = new File(annotationFile);
+						long localLong = created_file.exists()? created_file.lastModified():0 ;
 
-					FTPDownloader ftpDownloader =
-							new FTPDownloader("ftp.geneontology.org", "anonymous", "");
-					long ftpLong = ftpDownloader.viewFile(pathGO+file,file);
-					if(thereIsModif(annotationFile, ftpLong)) {
-						List<List<String>> gt = new ArrayList<>();
-						gt.addAll(fromFTP(file,pathGO,go,ftpDownloader,true,"\t","!"));
+					  URL url = new URL("http://current.geneontology.org/annotations/" + file);
 
-						StringBuffer sb = new StringBuffer();
-						for(List<String> line : gt) {
-
-							for(String c : line) {
-								sb.append(c+"\t");
-							}
-							sb.deleteCharAt(sb.length()-1);
-							sb.append("\n");
-						}
-						PrintWriter pw = new PrintWriter(annotationFile);
-						pw.print(sb);
-						pw.close();
+					  URLConnection urlConnection = url.openConnection();
+					  
+					  Map<String, List<String>> headers = urlConnection.getHeaderFields();
+					  SimpleDateFormat formatter=new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss");
+					  Date date = formatter.parse(headers.get("Last-Modified").get(0).replaceAll(" GMT", ""));
+					  long ftpLong = date.getTime();
+					  System.out.println(localLong+" "+ftpLong);
+					  Timestamp ts_ftp = new Timestamp(ftpLong);
+						Timestamp ts_local = new Timestamp(localLong);
+						if(ts_ftp.after(ts_local)) {
+							System.out.println("Downloading the new Gene Ontology Annotation version for " +file+".");
+							
+							 StringBuilder stringBuilder = new StringBuilder();
+								String line = null;
+								GZIPInputStream in = new GZIPInputStream(urlConnection.getInputStream());
+								try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in))) {	
+									while ((line = bufferedReader.readLine()) != null) {
+										if(!line.contains("!"))
+											stringBuilder.append(line+"\n");
+									}
+								}
+							 
+								String s = stringBuilder.toString();
+								PrintWriter pw = new PrintWriter( annotationFile);
+								pw.print(s);
+								pw.close();
 						File f = new File(annotationFile);
 						f.setLastModified(ftpLong);
 					}
 					else {
 						System.out.println("Are there some modification in the file?\n- " + false);
 					}
-					ftpDownloader.disconnect();
-
 				}else {
 					String gaf = "goa_"+file.toLowerCase()+".gaf.gz";
 					String isogaf = "goa_"+file.toLowerCase()+"_isoform.gaf.gz";
@@ -174,6 +186,7 @@ public class FTPDownloader {
 
 					long ftpLong = ftpDownloader.viewFile(pathEBI+file+"/"+gaf,gaf);
 					if(thereIsModif(annotationFile, ftpLong)) {
+						System.out.println("Downloading the new Gene Ontology Annotation version for " +gaf+".");
 						String path = pathEBI+file+"/";
 						List<List<String>> gt = new ArrayList<>();
 						gt.addAll(fromFTP(gaf,path,go,ftpDownloader,true,"\t","!"));
@@ -200,7 +213,6 @@ public class FTPDownloader {
 					}else {
 						System.out.println("Are there some modification in the file?\n- " + false);
 					}
-
 				}
 			}
 		} catch (Exception e) {
@@ -224,7 +236,7 @@ public class FTPDownloader {
 
 
 		//	System.out.println(pathGO+file);
-		System.out.println("Are there some modification in the file?\n- " + true);
+		//System.out.println("Are there some modification in the file?\n- " + true);
 		InputStream is = ftpDownloader.downloadFile(pathGO+file);
 
 		System.out.println("FTP File downloaded successfully");
@@ -247,9 +259,6 @@ public class FTPDownloader {
 					for(String a : array) col.add(a);
 
 					goaTable.add(col);
-				}else {
-
-					System.out.println(line);
 				}
 
 			}
@@ -283,82 +292,48 @@ public class FTPDownloader {
 
 
 
-	public static boolean DownloadGOOWL(String file) {
-		File srcPath = new File("src/main/resources/static/ontology/");
-		if(!srcPath.exists()) {
-			srcPath.mkdirs();
-		}
-
-		String path = "go/ontology/";
-
-		try {
-
-			//System.out.println(file);
-
-			String annotationFile = "src/main/resources/static/ontology/"+file;
-			File created_file = new File(annotationFile);
-			long localLong = created_file.exists()? created_file.lastModified():0 ;
-			FTPDownloader ftpDownloader =
-					new FTPDownloader("ftp.geneontology.org", "anonymous", "");
-			long ftpLong = ftpDownloader.viewFile(path+file,file);
-			Timestamp ts_ftp = new Timestamp(ftpLong);
-			Timestamp ts_local = new Timestamp(localLong);
-			if(ts_ftp.after(ts_local)) {
-
-				System.out.println("Are there some modification in the file?\n- " + true);
-				InputStream is = ftpDownloader.downloadFile(path+file);
-
-				System.out.println("FTP File downloaded successfully");
-
-
-
-
-				System.out.println("Reading GO file");
-
-				try {
-
-					Reader decoder = new InputStreamReader(is);
-					BufferedReader br = new BufferedReader(decoder);
-					String line;
-					int count=0;
-					StringBuffer sb = new StringBuffer();
-					while ((line = br.readLine()) != null) {
-						sb.append(line+"\n");
-						//System.out.println(line);
-						if(count%100000==0) {
-							System.out.println(count+"\t"+line);
-							
-						}
-						count++;
-					}
-					PrintWriter pw = new PrintWriter(annotationFile);
-
-					pw.print(sb);
-					pw.close();
-
-
-					created_file.setLastModified(ftpLong);
-
-					// read from your scanner
-				}
-				catch(IOException ex) {
-					// there was some connection problem, or the file did not exist on the server,
-					// or your URL was not in the right format.
-					// think about what to do now, and put it here.
-					ex.printStackTrace(); // for now, simply output it.
-				}
-				ftpDownloader.disconnect();
-				return true;
-			}else {
-				System.out.println("Are there some modification in the file?\n- " + false);
-				return false;
+	public static boolean DownloadGOOWL(String go, String urlS, String dossier) throws IOException, ParseException {
+		  File srcPath = new File(dossier);
+			if(!srcPath.exists()) {
+				srcPath.mkdirs();
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+				String annotationFile = dossier+go;
+				File created_file = new File(annotationFile);
+				long localLong = created_file.exists()? created_file.lastModified():0 ;
+		  
+		  
+		  URL url = new URL(urlS + go);
+
+		  URLConnection urlConnection = url.openConnection();
+		  
+		  Map<String, List<String>> headers = urlConnection.getHeaderFields();
+		  SimpleDateFormat formatter=new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss");
+		  Date date = formatter.parse(headers.get("Last-Modified").get(0).replaceAll(" GMT", ""));
+		  Timestamp ts_ftp = new Timestamp(date.getTime());
+			Timestamp ts_local = new Timestamp(localLong);
+			if(ts_ftp.after(ts_local)) {
+				System.out.println("Downloading the new Gene Ontology version.");
+				 StringBuilder stringBuilder = new StringBuilder();
+					String line = null;
+					InputStream inputStream = urlConnection.getInputStream();
+					try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {	
+						while ((line = bufferedReader.readLine()) != null) {
+							stringBuilder.append(line+"\n");
+						}
+					}
+				 
+					String s = stringBuilder.toString();
+					PrintWriter pw = new PrintWriter( annotationFile);
+					pw.print(s);
+					pw.close();
+					return true;
+			}
+			else {
+					System.out.println(headers.get("Last-Modified").get(0));
+								return false;
+			}
+	  }
 
 }
 

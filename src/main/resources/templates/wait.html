@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <body>
+	<div th:insert="index"></div>
 
 	<div class="content">
-		<div th:insert="index"></div>
 
 		<!-- Scrollable div with main content -->
 		<div class="row" id="rowStart" style="width: 100%">
@@ -14,9 +14,7 @@
 						<div id="textLoading">
 							<h1>Loading ...</h1>
 							<br>
-							<p>The process can take several minutes. thank you for your
-								patience. If you provided your email, we will notify you when
-								the process will have finished.</p>
+							<p>The process can take several minutes. Thank you for your patience. If you provided your email, you will be notified when the process is finished.</p>
 						</div>
 						<br> <br> <br> <img id="load"
 							th:src="@{dist/imgs/loading.gif}" src="dist/imgs/loading.gif" />

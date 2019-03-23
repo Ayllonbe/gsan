@@ -2,9 +2,9 @@
 <html>
 <body>
 
+	<div th:insert="index"></div>
 
 	<div class="content">
-		<div th:insert="index"></div>
 
 		<!-- Scrollable div with main content -->
 		<div class="row" id="rowStart" style="width: 100%">
@@ -18,25 +18,24 @@
 							$(document).ready(
 									function() {
 										var table = $('#ont').DataTable();
-										table.order([ 5, 'desc' ],
-												[ 3, 'desc' ]).draw();
+										table.order([ 0, 'desc']).draw();
 									});
 						</script>
 </div>
-	
+
 	<div class="table-container" id="annotation">
 
 						<script>
 							$(document).ready(
 									function() {
 										var table = $('#ann').DataTable();
-										table.order([ 5, 'desc' ],
-												[ 3, 'desc' ]).draw();
+										table.order([ 0, 'desc' ]).draw();
 									});
 						</script>
+
 </div>
-	
-		
+
+
 </div>
 
 		<script th:inline="javascript">
@@ -45,12 +44,11 @@
 
 			var message = /*[[${json}]]*/'default';
 			jobj = JSON.parse(message);
-			console.log(jobj);
 			/*]]>*/
 
-			
-			
-	
+
+
+
 		var h = ["Ontology","File_name","Release"];
 			var r = [];
 			jobj.ontology.forEach(function(x){
@@ -59,7 +57,7 @@
 			  cells.push(x.name);
 			  cells.push(x.file);
 			  cells.push(x.date);
-			  
+
 			r.push(cells);
 			})
 
@@ -73,7 +71,7 @@
 			    .setTableClass('table table-striped table-bordered')
 			    .setTableID('ont')
 			    .build('#ontology')
-			    
+
 			var annh = ["Organism","File_name","Release"];
 			var annr = [];
 			jobj.annotation.forEach(function(x){
@@ -82,12 +80,12 @@
 			  cells.push(x.name);
 			  cells.push(x.file);
 			  cells.push(x.date);
-			  
+
 			annr.push(cells);
 			})
-			
+
 			$('#ont').dataTable({searching: false, paging: false, info: false});
-			
+
 			var annoTable = new Table()
 			$("#annotation").append('<H2>Annotations</H2>');
 
@@ -98,9 +96,9 @@
 			    .setTableClass('table table-striped table-bordered')
 			    .setTableID('ann')
 			    .build('#annotation')
-			    
+
 			  $('#ann').dataTable({searching: false, paging: false, info: false});
-			 
+				$("#annotation").append('<br><br><br>');
 		</script>
 
 	</div>

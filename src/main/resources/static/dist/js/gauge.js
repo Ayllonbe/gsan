@@ -54,7 +54,7 @@ function gaugeChart() {
       // Update the outer dimensions.
       var svg = selection.select("svg");
       svg.attr("viewBox", "0 0 170 100");
-      
+
       //.attr("width", width).attr("height", height);
       // Update the inner dimensions.
       var g = svg.select("g")

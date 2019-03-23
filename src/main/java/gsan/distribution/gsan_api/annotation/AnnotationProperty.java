@@ -16,6 +16,7 @@ public class AnnotationProperty implements Serializable{
 	 */
 	//private static final long serialVersionUID = 1L;
 	String id;
+	String id_normalCase;
 	public String symbol;
 	String name; // Creo que hay mas de un nombre pues esta relacionada a la proteina y no al gen
 	public double idf; // Lo calculo en Annotation.java y ya normalizado. 

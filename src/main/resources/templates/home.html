@@ -12,31 +12,27 @@
 	padding: 20px;
 }
 </style>
+<div th:insert="index"></div>
 
 	<div class="content">
-		<div th:insert="index"></div>
 
 		<!-- Scrollable div with main content -->
 		<div class="row" id="rowStart" style="width: 100%">
 			<div class="col-xs-12 col-md-12">
 				<div class="pageClass">
 
-					<div class="container">
+					<div class="container" style="width: 90%">
 						<h2>Welcome to GSAn <span th:text="${version}"></span> </h2>
 
 						<p>
-							<b>G</b>ene <b>S</b>et <b>An</b>nnotation is a public web server for characterising gene lists of high-throughput genomics. GSAn has a simple user-friendly web interface with powerful visualisation in result. Actually, GSAn only uses the Gene Ontology and the Gene Ontology Annotation, the information stored is updated every week. The aim of GSAn is to provide a synthetic annotation for a given gene set.
-
+							<b>G</b>ene <b>S</b>et <b>An</b>nnotation is a public web server for characterising gene lists of high-throughput genomics. GSAn has a simple user-friendly web interface providing results according to interactive visualization. Currently, GSAn only uses the Gene Ontology and the Gene Ontology Annotation, the stored information being updated every week. The aim of GSAn is to provide a synthetic annotation for a given gene set.
 						</p>
 						<br>
 						<h4>About GSAn</h4>
-						GSAn is developed and maintained in France, at the University of Bordeaux, in collaboration with the Laboratoire Bordelais en
-						 Recherche Informatique (LaBRI) and the Institut de Santé Publique d'Epidémiologie et de Développement (ISPED). The main development
-						 has been done during the PhD of <a
-							href="http://www.labri.fr/perso/aayllon-/">Aaron Ayllon-Benitez</a> over the supervision of <a
+						GSAn is developed and maintained in France, at Bordeaux University, in collaboration with the Laboratoire Bordelais de Recherche en Informatique (LaBRI, CNRS UMR5800) and the Bordeaux Population Health research center (BPH, Inserm U1219). The main development has been done during the PhD of <a
+							href="http://www.labri.fr/perso/aayllon-/">Aaron Ayllon-Benitez</a> under the supervision of <a
 							href="http://dept-info.labri.fr/~thebault/">Patricia Thébault</a> and <a
-								href="https://www.bordeaux-population-health.center/profile/fleur-mougin/">Fleur Mougin</a>. The first version
-						 of GSAn became available in early 2018. GSAn tool is freely available through this web application and various programatic access points.
+								href="https://www.bordeaux-population-health.center/profile/fleur-mougin/">Fleur Mougin</a>. The first version of GSAn became available in November 2018. The GSAn tool is freely available through this web application and various programmatic access points.
 						<h4>Acknowledge</h4>
 						<table>
 
@@ -53,9 +49,17 @@
 							</tr>
 
 						</table>
-
+						<br><br>
 
 					</div>
+					<center>
+					<form action="start"  css="text-align:center">
+							<button type="submit" class="btn btn-primary">Start your analysis here</button>
+					</form>
+				</center>
+				<br><br>
+				<br><br>
+				<br><br>
 				</div>
 			</div>
 		</div>

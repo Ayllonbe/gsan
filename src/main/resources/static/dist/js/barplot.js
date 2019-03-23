@@ -33,7 +33,12 @@ data.forEach(function(d){
 var posText = maxSizeText;
 var posPlot = 2*tierceWidth
 width = maxSizeText + 2*tierceWidth;
-maxIC = Math.floor(maxIC+1);
+maxIC1 = Math.floor(maxIC);
+if(maxIC>maxIC1){
+  maxIC = maxIC1 +1;
+}else{
+  maxIC = maxIC1
+}
 // set the ranges
 var y = d3.scaleBand()
           .range([height, 0])
@@ -91,7 +96,7 @@ var g=    svg.append("g")
     .enter().append("rect")
       .attr("class", "bar1")
       .attr("x", function(d) { return posText + posPlot/2+10; })
-      .attr("width", function(d) {return Math.log(d.IC)/Math.log(maxIC) * posPlot/2; } )
+      .attr("width", function(d) {return -Math.log(d.IC)/-Math.log(maxIC) * posPlot/2; } )
       .attr("y", function(d) { return y(d.name); })
       .attr("fill", "#68a9ff" )
       .attr("height", y.bandwidth())
@@ -113,6 +118,9 @@ var g=    svg.append("g")
 .on('mouseout', function(d) {
   tooltip.transition()
     .style('opacity', 0)
+}).on('click', function(d){
+  console.log("hola");
+  console.log(d);
 });
       g.selectAll(".bar")
           .data(data)
@@ -141,6 +149,9 @@ var g=    svg.append("g")
     .on('mouseout', function(d) {
       tooltip.transition()
         .style('opacity', 0)
+    }).on('click', function(d){
+      console.log("hola");
+      console.log(d);
     });
 
      g.append("g").selectAll("text").data(data).enter().append("text")
@@ -189,7 +200,7 @@ g.append("text")
 g.append("text")
 .attr("x", posText + posPlot/2+10+(posPlot/4))
 .attr("y", height +30)
-.text("log(Information Content)")
+.text("-log(Information Content)")
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
 .attr("font-size","12px");
@@ -212,7 +223,7 @@ g.append("text")
 g.append("text")
 .attr("x", posText + posPlot+10)
 .attr("y", height +20)
-.text(maxIC)
+.text("-log("+maxIC+")")
 .attr("text-anchor","middle")
 .attr("font-family", "Sans")
 .attr("font-size","12px");
