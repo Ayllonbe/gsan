@@ -67,6 +67,12 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		File annotations = new File("src/main/resources/static/AssociationTAB");
 		if(!annotations.exists()) {
 		FTPDownloader.DownloadGOA();
+		}else {
+			for(File f : annotations.listFiles()) {
+				if(!f.exists()) {
+					FTPDownloader.DownloadGOA();
+				}
+			}
 		}
 		System.out.println("Ready to use!");
 
