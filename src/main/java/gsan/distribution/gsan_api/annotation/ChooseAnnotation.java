@@ -4,6 +4,7 @@ package gsan.distribution.gsan_api.annotation;
 
 public class ChooseAnnotation {
 
+	
 	public static String annotation(String organism){
 
 		String goa_file;
