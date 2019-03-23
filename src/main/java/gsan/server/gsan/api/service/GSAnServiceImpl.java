@@ -1,11 +1,10 @@
 package gsan.server.gsan.api.service;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -53,6 +52,12 @@ public class GSAnServiceImpl implements GSAnService {
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
+					if(organism.equals("homo_sapiens")) {
+						File reacf = new File ("src/main/resources/static/integration/reactome.gaf");
+						goaTable.addAll(ReadFile.ReadAnnotation(reacf.getAbsolutePath()));
+						File doid = new File ("src/main/resources/static/integration/DO_ANNOT/human_doid.gaf");
+						goaTable.addAll(ReadFile.ReadAnnotation(doid.getAbsolutePath()));
+					}
 				GOA = new Annotation(goaTable, go, IEA,ids);
 					
 				} catch (IOException e1) {
@@ -66,7 +71,7 @@ public class GSAnServiceImpl implements GSAnService {
 	
 			
 			process.putAll(gsanService(query,GOA,go, ontology, ssMethod,
-					geneSupport,  percentile));
+					geneSupport,  percentile)); 
 			process.put("organism", organism);
 			finishing(tR,t, process);		
 		
@@ -77,11 +82,18 @@ public class GSAnServiceImpl implements GSAnService {
 			String ssMethod,int geneSupport, int percentile,int ids) {
 		try {
 			String goa_file = ChooseAnnotation.annotation(organism);
+			
 			GlobalOntology go = graphSingleton.getGraph();
 			Annotation GOA ;
 		
 				try {
 					List<List<String>> 	goaTable = getFile(goa_file);
+				if(organism.equals("homo_sapiens")) {
+					File reacf = new File ("src/main/resources/static/integration/reactome.gaf");
+					goaTable.addAll(ReadFile.ReadAnnotation(reacf.getAbsolutePath()));
+					File doid = new File ("src/main/resources/static/integration/DO_ANNOT/human_doid.gaf");
+					goaTable.addAll(ReadFile.ReadAnnotation(doid.getAbsolutePath()));
+				}
 				GOA = new Annotation(goaTable, go,IEA,ids);
 					
 				} catch (IOException e1) {
@@ -207,6 +219,24 @@ public class GSAnServiceImpl implements GSAnService {
 			int geneSupport, int percentile) {
 		int msg_code = 0;
 		try {
+			
+			/*
+			 * MAPPING
+			 */
+			String mappingFile = "src/main/resources/static/integration/DO_ANNOT/DO2GObyGSAnSynthetic.tsv";
+			List<List<String>> mapping= ReadFile.ReadAnnotation(mappingFile);
+			Map<String,List<String>> doid2go = new HashMap<>();
+			for(List<String> line : mapping) {
+				String d = line.get(0).replaceAll("\"", "");
+				String g = line.get(2).replaceAll("\"", "");
+				if(!doid2go.containsKey(d))
+					doid2go.put(d, new ArrayList<String>());
+
+				doid2go.get(d).add(g);
+			}
+
+			
+			
 		int ic_inc = 3;
 		
 		List<String> genesList = new ArrayList<>(new HashSet<String>(query));
@@ -243,18 +273,43 @@ public class GSAnServiceImpl implements GSAnService {
 			Annotation GOAincom = Annotation.icIncompleteReduction(GOAred,go,ic_inc, Mappercentile);
 			System.out.println(GOAincom.annotation.keySet().size());
 		Set<String> termsInc = new HashSet<String>();
+		Set<String> diseases = new HashSet<String>();
 		//System.out.println(ontology);
 		log.debug("Recovering terms to analyse the gene set");
-		for(String ont : ontology) {;
+		for(String ont : ontology) {
+			if(!ont.contains("DO")) {
 			List<String> termsonto = GOAincom.getTerms(genesList,ont,go);
 			if(termsonto!=null)
 				termsInc.addAll(termsonto);
+			}else {
+				diseases.addAll(GOAincom.getTerms(genesList,ont,go));
+			}
 		}
+		
+		for(String d : diseases) {
+			termsInc.add(d);
+//			if(doid2go.containsKey(d)) {
+//				List<String> goT = new ArrayList<>(doid2go.get(d));
+//
+//				goT.retainAll(termsInc);
+//				double pp = (double)goT.size()/(double)doid2go.get(d).size()*100.;
+//				
+//				if(pp>=70) {
+//					System.out.println(go.allStringtoInfoTerm.get(d).name+ " "+pp);
+//					termsInc.add(d);
+//				}
+//			}else {
+//				System.out.println(go.allStringtoInfoTerm.get(d).name+ " "+0);
+//				termsInc.add(d);
+//			}
+			
+		}
+//		System.exit(0);
 		if(termsInc.isEmpty()){
 			msg_code = msg_code>0?msg_code: 3;
 			throw new java.lang.NullPointerException("line 255 - termsInc is empty");
 			}
-
+		System.out.println("size "+termsInc.size());
 
 		Map<String,Object> map = new HashMap<>();
 		
@@ -322,11 +377,35 @@ public class GSAnServiceImpl implements GSAnService {
 		return a;
 	}
 	public Map<String,Object> GSAnMethod(List<String> genesList,List<String> ontology,GlobalOntology go, Annotation GOAincom ,String ssMethod,
-			int geneSupport,Map<String,Double> percentile, Set<String> termsInc) {
+			int geneSupport,Map<String,Double> percentile, Set<String> termsInc) throws IOException {
 		
+		/*
+		 * Mapping
+		 */
+		File r2go = new File("src/main/resources/static/integration/MappingREACTOME2GO.tsv");
+		List<List<String>> mappingfile = ReadFile.ReadAnnotation(r2go.getAbsolutePath());
+		for(List<String> line : mappingfile ) {
+			String r = line.get(0);
+			if(go.allStringtoInfoTerm.containsKey(r)) { // car le mapping contians de Reactions.
+			
+			String g = line.get(1);
+			InfoTerm reactome = go.allStringtoInfoTerm.get(r);
+			InfoTerm geneOnt = go.allStringtoInfoTerm.get(g);
+			if(!reactome.mappings.containsKey(geneOnt.top))
+				reactome.mappings.put(geneOnt.top, new HashSet<>());
+			reactome.mappings.get(geneOnt.top).add(g);
+			if(!geneOnt.mappings.containsKey(reactome.top))
+				geneOnt.mappings.put(reactome.top, new HashSet<>());
+			geneOnt.mappings.get(reactome.top).add(r);
+			}
+		}
 		
+		List<String> termBase = new ArrayList<String>();
+		/*
+		 * 
+		 */
 
-		Integer icSimilarity = 4;
+		//Integer icSimilarity = 4;
 		double tailmin = 0.;
 		double covering = 1.;
 		double simRepFilter = 0.5;
@@ -347,8 +426,12 @@ public class GSAnServiceImpl implements GSAnService {
 			}
 
 	Map<String,Set<String>> gene2term = new HashMap<>();
+	  				
 			System.out.println("TermsINC " + termsInc.size());
+			termBase.addAll(termsInc);
+			
 			for(String t : termsInc) {
+				
 				InfoTerm it= go.allStringtoInfoTerm.get(t);
 				//System.out.println(it.toName());
 				for(String g : it.geneSet) {
@@ -359,7 +442,6 @@ public class GSAnServiceImpl implements GSAnService {
 						gene2term.get(g).add(t);
 					}
 				}
-				
 			}
 
 			
@@ -397,7 +479,7 @@ public class GSAnServiceImpl implements GSAnService {
 			listTerm.retainAll(go.allStringtoInfoTerm.get(ont).is_a.descendants);
 			log.debug("Writing Similarity Matrix...");
 			writeSimilarityMatrix wSS = new writeSimilarityMatrix(ssMethod);
-			Map<String,Object> mSS = wSS.similarityMethod(go, listTerm, icSimilarity.intValue());
+			Map<String,Object> mSS = wSS.similarityMethod(go, listTerm);
 			
             AlgorithmRepresentative ar = new AlgorithmRepresentative(ic_inc, ont, mSS, "average",
 					tailmin,simRepFilter,covering, geneSupport);
@@ -411,7 +493,6 @@ public class GSAnServiceImpl implements GSAnService {
 			
 				
 			}
-			System.out.println(rep.size());
 			List<String> allRepresentatives = new ArrayList<>();
 	
 			Set<String> repRes = new HashSet<>(); 
@@ -431,7 +512,7 @@ public class GSAnServiceImpl implements GSAnService {
 						term2genebs.put(it.id, bs);
 
 					}else {
-						System.out.println("Helo");
+						//System.out.println("Helo");
 						repRes.addAll(it.termcombi);
 						for(String t : it.termcombi) {
 							allRepresentatives.add(t);
@@ -450,10 +531,6 @@ public class GSAnServiceImpl implements GSAnService {
 			Set<String> remove = new HashSet<>();
 			
 			List<String> repResList = new ArrayList<>(repRes);// Avant eliminer terms
-			System.out.println("MIRAR AQUI "+(new HashSet<>(allRepresentatives)).size());
-//			for(String s : allRepresentatives) {
-//				System.out.println("\t"+go.allStringtoInfoTerm.get(s).name+" "+go.allStringtoInfoTerm.get(s).geneSet.size()+" "+go.allStringtoInfoTerm.get(s).ICs.get(3));
-//			}
 			TransformDagToTree tdt = new TransformDagToTree(go);
 		
 			
@@ -519,9 +596,7 @@ public class GSAnServiceImpl implements GSAnService {
 			}
 			List<String> repResListReduced = new ArrayList<>(repRes);// Apres eliminer terms
 			Map<String, List<String>> hierarchy = tdt.GetHierarchy(repResListReduced, repResList, ic_inc);
-//			for(String t : hierarchy.keySet()) {
-//				System.out.println(go.allStringtoInfoTerm.get(t)  + " " + hierarchy.get(t));
-//			}
+
 			Map<String, Set<String>> mapTerm2genes = new HashMap<>();
 			
 			Set<String> allterms = new HashSet<>(hierarchy.keySet());
@@ -536,10 +611,10 @@ public class GSAnServiceImpl implements GSAnService {
 			List<String> line2 = new ArrayList<String>();
 			
 			boolean bol = false;
-			//System.out.println(hierarchy);
+			
 			while(bol==false) {
 				for(String t : line1) {
-					
+					if(hierarchy.containsKey(t)) {
 					for(String t_ch : hierarchy.get(t)) {
 //						if(!hierarchy.containsKey(t_ch)) {
 //							System.out.println(t_ch);
@@ -547,6 +622,7 @@ public class GSAnServiceImpl implements GSAnService {
 						mapTerm2genes.get(t).removeAll(mapTerm2genes.get(t_ch));
 						line2.add(t_ch);
 					}
+				}
 				}
 				if(!line2.isEmpty()) {
 					line1.clear();
@@ -561,6 +637,52 @@ public class GSAnServiceImpl implements GSAnService {
 			finalResult.put("tree", tdt.transform(hierarchy, ic_inc, mapTerm2genes));
 			}
 			
+//			/*
+//			 * MAPPING
+//			 */
+//			System.out.println("AVANT");
+//			int Mapcount = 0;
+//			for(int i=0;i<termBase.size();i++) {
+//				InfoTerm t1 = go.allStringtoInfoTerm.get(termBase.get(i));
+//				if(t1.top.equals("reac")) {
+//				int map = 0;
+//				for(String top : t1.mappings.keySet()) {
+//					for(String t2 : t1.mappings.get(top)) {
+//						if(termBase.contains(t2)) {
+//							Mapcount++;
+//							//t1.integrationScore = 10;
+//							System.out.println(t1 + " mapping with " + t2);
+//						}
+//					}
+//				}
+//				}	
+//			}
+//			System.out.println("TEST");
+//			int MapcountAfter = 0;
+//			List<String> test = new ArrayList<String>(term2genebs.keySet());
+//			for(int i=0;i<test.size();i++) {
+//				InfoTerm t1 = go.allStringtoInfoTerm.get(test.get(i));
+//				if(t1.top.equals("reac")) {
+//				int map = 0;
+//				for(String top : t1.mappings.keySet()) {
+//					for(String t2 : t1.mappings.get(top)) {
+//						if(test.contains(t2)) {
+//							MapcountAfter++;
+//							t1.integrationScore = 10;
+//							System.out.println(t1 + " mapping with " + t2);
+//						}
+//					}
+//				}
+//				}
+//			}
+//			System.out.println(Mapcount + "  " + MapcountAfter);
+////			for(int i=0;i<test.size();i++) {
+////				InfoTerm t1 = go.allStringtoInfoTerm.get(test.get(i));
+////			System.out.println(t1.id+" "+t1.name+" "+t1.integrationScore);
+////			}
+//			/*
+//			 * END MAPPING
+//			 */
 			List<String> scp =  SetCoverAaron.scp(term2genebs,go,ontology);
 			Set<String> genesTest = new HashSet<>();
 			for(String t: scp) {
@@ -616,7 +738,7 @@ public class GSAnServiceImpl implements GSAnService {
 				mapInfo.put(t, mapTerm);
 
 
-			}
+			} 
 			
 			
 				Map<String, Object> mapTerm = new HashMap<>();
@@ -630,7 +752,6 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			
 		
-			
 			finalResult.put("representatives", repResListReduced);
 			
 			
@@ -750,7 +871,10 @@ public class GSAnServiceImpl implements GSAnService {
 			t= "CC";
 			break;
 		case "reactome":
-			t= "reac";
+			t= "R";
+			break;
+		case "disease":
+			t= "DO";
 			break;
 		default:
 			t="other";

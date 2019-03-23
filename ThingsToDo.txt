@@ -1,0 +1,4 @@
+
+Add the information of table in MoTVis.
+
+Present a box with the parameters used.

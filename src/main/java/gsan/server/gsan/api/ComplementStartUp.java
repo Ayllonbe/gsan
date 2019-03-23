@@ -40,7 +40,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		File goFile = new File(path+GOOWL);
 		if(!goFile.exists()) {
 			try {
-				FTPDownloader.DownloadGOOWL(GOOWL,"http://purl.obolibrary.org/obo/",path);
+				FTPDownloader.DownloadGOOWL(GOOWL,"http://current.geneontology.org/ontology/",path);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

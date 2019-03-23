@@ -125,10 +125,10 @@ public class AlgorithmRepresentative {
 				for(Representative rep : cl2rep.get(i)){
 					Cluster cl = new Cluster();
 					InfoTerm it = rep.repesentative;
-					Set<String> gen = new HashSet<>();
+					//Set<String> gen = new HashSet<>();
 					for(InfoTerm s : rep.terms) {
 						cl.terms.add(s);
-						gen.addAll(s.geneSet);	
+						//gen.addAll(s.geneSet);	
 					}
 
 
@@ -140,7 +140,7 @@ public class AlgorithmRepresentative {
 							InfoTerm cIT = go.allStringtoInfoTerm.get(ti);
 
 							Set<String> retGen = new HashSet<>(cIT.geneSet);
-							retGen.retainAll(gen);
+							//retGen.retainAll(gen);
 
 							if(cIT.ICs.get(ic_inc)>percentile.get(cIT.ontology)&&retGen.size()>geneSupport) {
 								cl.representatives.add(cIT);
@@ -149,7 +149,7 @@ public class AlgorithmRepresentative {
 							}
 						}
 					}else {
-						if(it.ICs.get(ic_inc)>percentile.get(it.ontology)&&gen.size()>geneSupport) {
+						if(it.ICs.get(ic_inc)>percentile.get(it.ontology)&&it.geneSet.size()>geneSupport) {
 //							System.out.println("Cluster "+it.toName()+" "+it.ICs.get(ic_inc) +" "+it.geneSet);
 							cl.representatives.add(it);
 							genesObserve.addAll(it.geneSet);
@@ -257,7 +257,7 @@ public class AlgorithmRepresentative {
 				
 				
 			}else {
-			int ncombi = termCluster.size()>1?((int) Math.floor(Math.sqrt(Math.abs(termCluster.size()/10)-1))+2):1 ; // numero que indica el numero de combinaciones deseadas
+			int ncombi = termCluster.size()>10?((int) Math.floor(Math.sqrt(Math.abs(termCluster.size()/10)-1))+2):1 ; // numero que indica el numero de combinaciones deseadas
 				ncombi = ncombi >6? 6:ncombi;
 			Set<InfoTerm> representatives = new HashSet<>(getManyRep(termCluster,sub,go,ncombi,tailmin,RepCombinedSimilarity,covering,ic));
 			for(InfoTerm res:representatives) {

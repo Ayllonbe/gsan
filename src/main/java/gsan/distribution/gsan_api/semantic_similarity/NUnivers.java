@@ -11,6 +11,8 @@ public class NUnivers extends SemanticSimilarity {
 
 		String ancestors = mica(t1, t2, go, 3);
 		InfoTerm mica = go.allStringtoInfoTerm.get(ancestors);
+		
+	
 		return mica.ICs.get(3)/Math.max(go.allStringtoInfoTerm.get(t1).ICs.get(3), go.allStringtoInfoTerm.get(t2).ICs.get(3));
 		}
 }

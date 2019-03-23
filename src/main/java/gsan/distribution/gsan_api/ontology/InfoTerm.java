@@ -39,6 +39,8 @@ public class InfoTerm implements Comparable<InfoTerm>, Serializable {
 	public double g_scores;
     public double h_scores;
     public double f_scores = 0;
+    public double integrationScore =1.;
+    public Map<String,Set<String>> mappings = new HashMap<>();
     public Edges[] adjacencies;
     public InfoTerm next;
     public String top;

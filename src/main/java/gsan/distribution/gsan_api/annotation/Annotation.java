@@ -70,7 +70,9 @@ public class Annotation implements Serializable {
 //				System.out.println(line);
 				//			log.debug(line);
 				String gene = line.get(ids).toLowerCase();
-				List<String> synonyms = Arrays.asList(line.get(10).toLowerCase().split("[|]"));
+				List<String> synonyms = new ArrayList<String>();
+				if(line.size()>9)
+					synonyms = Arrays.asList(line.get(10).toLowerCase().split("[|]"));
 				if(!gene.equals("") &&!(avoidedEC.contains(line.get(3))||avoidedEC.contains(line.get(6)))){  // 
 					//if(!(line.get(3).equals("NOT")|| line.get(6).equals("ND")  || line.get(6).equals("IEA") )){
 					String term = line.get(4);
@@ -124,7 +126,8 @@ public class Annotation implements Serializable {
 				this.annotation.get(gen).idf = Math.log10((double)genes.size()/(double)this.annotation.get(gen).getTerms().size())/ Math.log10((double)genes.size());
 			}
 		}catch(Exception e) {
-//			log.error(e.getLocalizedMessage());
+			e.printStackTrace();
+					//			log.error(e.getLocalizedMessage());
 		}
 
 	}
@@ -203,7 +206,9 @@ public class Annotation implements Serializable {
 					for(int i = 0; i<termOnt.size();i ++) {
 						InfoTerm t1 = go.allStringtoInfoTerm.get(termOnt.get(i));
 						//log.debug(t1.top +" " +t1.ICs.get(ic) + " " +ic);
-						if(t1.ICs.get(ic)<percentile.get(t1.ontology)) {
+						double icT = percentile.get(t1.ontology);
+						//System.out.println("Percentile "+icT);
+						if(t1.ICs.get(ic)<icT) {
 							//					if((t1.ICs.get(ic)/go.top2MaxIC.get(t1.top).get(ic))<goa.percentileOnt.get(t1.top)) {
 							termOnt.remove(i);
 							i--;

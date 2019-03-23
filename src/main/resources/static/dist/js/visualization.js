@@ -89,20 +89,45 @@ treediv = document.getElementById("treeHIDDEN"),
 width = circulardiv.clientWidth,
 height = circulardiv.clientHeight,
 pack = d3.pack().size([width*0.9 , height*0.9]).padding(0.4);
-motvis(dic,representative,genes,data.tree,width,height,pack,circulardiv,treediv);
+
+console.log(width +" " + height);
+motvis(dic,scp,genes,data.tree,width,height,pack,circulardiv,treediv,1);
 
   $(window).resize(function(){
     circulardiv = document.getElementById("circular"),
     treediv = document.getElementById("treeHIDDEN");
     if(width!==circulardiv.clientWidth || height!==circulardiv.clientHeight){
-      console.log("hola");
       width = circulardiv.clientWidth,
       height = circulardiv.clientHeight;
-      motvis(dic,representative,genes,data.tree,width,height,pack,circulardiv,treediv);
+      motvis(dic,scp,genes,data.tree,width,height,pack,circulardiv,treediv,1);
     }
 
 });
 
+
+$(".selection").on('click', function() {
+  // in the handler, 'this' refers to the box clicked on
+  var $box = $(this);
+  if ($box.is(":checked")) {
+    // the name of the box is retrieved using the .attr() method
+    // as it is assumed and expected to be immutable
+    var group = "input:checkbox[name='" + $box.attr("name") + "']";
+    // the checked state of the group/box on the other hand will change
+    // and the current value is retrieved using .prop() method
+    $(group).prop("checked", false);
+    $box.prop("checked", true);
+  } else {
+    $box.prop("checked", false);
+  }
+   console.log($box[0].value);
+    motvis(dic,scp,genes,data.tree,width,height,pack,circulardiv,treediv,$box[0].value);
+
+
+
+
+
+
+});
 
 function gauge(value,id) {
 var gauge = gaugeChart()

@@ -46,8 +46,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-//import com.RestCom.db2db.db2db;
-
 import gsan.distribution.gsan_api.annotation.ChooseAnnotation;
 import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.server.gsan.api.service.GSAnService;
@@ -105,11 +103,11 @@ public class GSAnController {
 		System.out.println("hola");
 		return "start";
 	}
-//	@RequestMapping("/idconverter")
-//	public String idconverter(Model m) {
-//		m.addAttribute("version", versionNumber);
-//		return "convert";
-//	}
+	@RequestMapping("/idconverter")
+	public String idconverter(Model m) {
+		m.addAttribute("version", versionNumber);
+		return "convert";
+	}
 
 	@RequestMapping("/")
 	public String wellcome(Model m) {

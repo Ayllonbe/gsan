@@ -46,14 +46,14 @@ public class TransformDagToTree {
 		return map;
 	}
 	
-	public  Map<String,List<String>>  GetHierarchy(Annotation GOA, List<String> terminos, int ic) {
+	public  Map<String,List<String>>  GetHierarchy(List<String> terminos,List<String> terminosNoreducidos, int ic) {
 		
 
 		
 		try {
 			
 			Map<String,List<String>> hierarchy = new HashMap<>();
-			hierarchy.putAll(getHierarchy(terminos, ic));
+			hierarchy.putAll(getHierarchy(terminos, terminosNoreducidos, ic));
 			
 //			for(String key : hierarchy.keySet()) {
 //				System.out.println(key + " " +hierarchy.get(key));
@@ -108,7 +108,7 @@ public class TransformDagToTree {
 			if(listJO.size()>1) {
 				JSONObject jo = new JSONObject();
 				jo.put("id", "GO");
-				jo.put("name","Gene Ontology");
+			//	jo.put("name","Gene Ontology");
 				jo.put("children", listJO);
 				return jo;
 			}else {
@@ -164,7 +164,7 @@ public class TransformDagToTree {
 	}
 
 
-	private  Map<String,List<String>> getHierarchy(List<String> term, int ic) {
+	private  Map<String,List<String>> getHierarchy(List<String> term, List<String> termComplet, int ic) {
 
 		Stack<String> pile = new Stack<String>();
 		Set<String> stockage = new HashSet<String>();
@@ -200,7 +200,7 @@ public class TransformDagToTree {
 			if(!go.subontology.containsKey(x)) {
 				InfoTerm tx = go.allStringtoInfoTerm.get(x);
 				if(!tx.id.equals(tx.top)) {
-				String a = mica(tx,term,ic); // get the parent whit the best IC. 
+				String a = mica(tx,termComplet,ic); // get the parent whit the best IC. 
 				map.put(x, a);
 				InfoTerm ta = go.allStringtoInfoTerm.get(a);
 				ta.bits.or(tx.bits);

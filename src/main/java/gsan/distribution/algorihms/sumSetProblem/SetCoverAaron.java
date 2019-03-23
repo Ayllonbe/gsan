@@ -32,7 +32,7 @@ public class SetCoverAaron {
 			}
 		}
 		
-		/*
+		/* 
 		 * TEST
 		 */
 		List<String> essentials = new ArrayList<String>();
@@ -63,7 +63,7 @@ public class SetCoverAaron {
 		
 			
 			for(String e : essentials) {
-			//System.out.println("E " + go.allStringtoInfoTerm.get(e).toName());
+			System.out.println("E " + go.allStringtoInfoTerm.get(e).toName());
 				res.add(e);
 				allTerms.remove(allTerms.indexOf(e));
 				finalBS.or(term2genebs.get(e));
@@ -86,7 +86,9 @@ public class SetCoverAaron {
 				}else {
 					//li.add((double)pivot.cardinality()/t2IC.get(t));	
 					//System.out.println(t + " " +(double)pivot.cardinality()/t2Iv.get(t));
-					li.add((double)intersection.cardinality()*(go.allStringtoInfoTerm.get(t).ICs.get(4)/go.allStringtoInfoTerm.get(t).sIC));
+					double d = ((double)intersection.cardinality()*(go.allStringtoInfoTerm.get(t).ICs.get(4)/go.allStringtoInfoTerm.get(t).sIC))*go.allStringtoInfoTerm.get(t).integrationScore;
+					li.add(d);
+					//System.out.println(go.allStringtoInfoTerm.get(t).name+" "+go.allStringtoInfoTerm.get(t).ICs.get(4)+" "+go.allStringtoInfoTerm.get(t).sIC+" "+" "+intersection.cardinality()+" "+d);
 					//li.add((go.allStringtoInfoTerm.get(t).ICs.get(4))/go.allStringtoInfoTerm.get(t).sIC);
 					
 
@@ -96,10 +98,11 @@ public class SetCoverAaron {
 			}
 			//System.out.println("\t" + Collections.max(li));
 			String choosen = allTerms.get(li.indexOf(Collections.max(li)));
+			System.out.println(go.allStringtoInfoTerm.get(choosen).name);
 			res.add(choosen);
 			allTerms.remove(li.indexOf(Collections.max(li)));
 			finalBS.or(term2genebs.get(choosen));
-			
+			//break;
 			}
 		//System.out.println("Cover : "+finalBS.cardinality() + ", TermsNumber : " + allTerms.size() + ", reducedNumer : " + res.size());
 //		System.out.println("The results is: ");

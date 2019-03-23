@@ -43,7 +43,7 @@ public class GlobalOntology {
 
 	public Hashtable<String,InfoTerm> allStringtoInfoTerm = new Hashtable<String,InfoTerm>();
 	public Hashtable<String, List<String>> obsolete2consORrepl = new Hashtable<String,List<String>>();
-	public Map<String,OntoInfo> subontology = new HashMap<>();
+	public Map<String,OntoInfo> subontology = new HashMap<>(); 
 	public Set<String> sourceSet = new HashSet<>();
 	public final String owlprefix = "http://purl.obolibrary.org/obo/";
 	private static  OWLReasonerFactory reasonerFactory;
@@ -82,10 +82,10 @@ public class GlobalOntology {
 				
 	}
 	public static void main(String[] args) {
-		//String GOOWL = "doid.owl";
-		//String path = "src/main/resources/static/integration/";
-		String GOOWL = "go.owl";
-		String path = "src/main/resources/static/ontology/";
+		String GOOWL = "doid.owl";
+		String path = "src/main/resources/static/integration/";
+//		String GOOWL = "go.owl";
+//		String path = "src/main/resources/static/ontology/";
 		File owlf = new File(path+GOOWL);
 		
 	 	if(owlf.exists()) {
@@ -1372,7 +1372,7 @@ public class GlobalOntology {
 			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[1] = 0.;
 			Set<Double> setMax = new HashSet<>();
 		//	Set<Double> probMax = new HashSet<>();
-			System.out.println(oi.getLeavesISA().size());
+		//	System.out.println(oi.getLeavesISA().size());
 			for(String lt : oi.getLeavesISA()) {
 				
 				double[] dd = this.goUniverseIC(this.allStringtoInfoTerm.get(lt));
@@ -1390,7 +1390,7 @@ public class GlobalOntology {
 
 			oi.addMaxIC(max);
 
-			System.out.println("GO Universel " + sub.getKey() + " value = " + max );
+			//System.out.println("GO Universel " + sub.getKey() + " value = " + max );
 		}
 
 

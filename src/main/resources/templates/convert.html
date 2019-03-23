@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<div th:insert="index"></div>
+
+	<div class="content" >
+	<!-- Scrollable div with main content -->
+
+			<div class="row" id="rowStart" style="width:100%">
+				<div class="col-xs-12 col-md-5">
+				<div class="pageClass">
+					<h1>
+						ID Converter <span style="font-size:10px;"><i>powered by <a href="https://biodbnet-abcc.ncifcrf.gov/db/db2db.php">bioDBnet</a></i> </span>
+					</h1>
+					<h3>Gene id list input</h3>
+					<div id="query">
+						<textarea class="comments" id="queryText"
+								style="width: 90%; height: 90px;">Put here the genes/proteins ids...
+							</textarea>
+							<i class="fa fa-info-circle" rel="tooltip" data-html="true"
+					 		title="Gene id list input" data-content="The gene list to convert in official gene symbols. The genes (or proteins) can be delimited by:<br>
+
+					 		&nbsp;	1. Space<br>
+					 		&nbsp;	2. Tabulation<br>
+					 		&nbsp;	3. Line breaks<br>
+					 		&nbsp;	4. Comma<br>
+					 		&nbsp;	5. Semicolon<br>"
+					 ></i>
+
+							<button id="clear">Clear</button>
+							<script>
+
+							$("#clear").click(function(){
+								$("#queryText").val("Put here the genes/proteins ids...")
+							});
+
+
+								$("#queryText")
+										.click(
+												function() {
+													if ($.trim($(this).val()) === "Put here the genes/proteins ids...") {
+														$(this).val("");
+													};
+													return false;
+												})
+							</script>
+
+
+
+
+					</div>
+					<br>
+
+
+						<br>
+						<div class="row">
+							<div class="col-sm-4">
+								<label style="font-weight: normal;">Select an
+							organism:</label>
+						</div>
+						<div class="col-sm-4">
+							 <SELECT id="organism" name="organism" size="1">
+								<OPTION value=9606 selected>homo_sapiens
+								<OPTION value=3702 >arabidopsis_thaliana
+								<OPTION value=9913>bos_taurus
+								<OPTION value=6239>caenorhabditis_elegans
+								<OPTION value=5476>candida_albicans
+								<OPTION value=9612>canis_lupus
+								<OPTION value=7955>danio_rerio
+								<OPTION value=7227>drosophila_melanogaster
+							  <OPTION value=511145>escherichia_coli
+								<OPTION value=9031>gallus_gallus
+								<OPTION value=10090>mus_musculus
+								<OPTION value=4932>saccharomyces_cerevisiae
+								<OPTION value=9823>sus_scrofa
+								<OPTION value=10116>rattus_norvegicus
+						</SELECT>
+					</div>
+				</div>
+				<br>
+				<br>
+					<div class="row">
+						<div class="col-sm-4">
+							<label style="font-weight: normal;">Select your input id type:</label>
+					</div>
+
+						<div class="col-sm-4">
+							 <SELECT id="id" name="id" size="1">
+								 <OPTION value="none" > I don't know
+								<OPTION value="affyid" >  Affy ID
+					      <OPTION value="agilentid" >  Agilent ID
+					      <OPTION value="codelink" >  CodeLink ID
+					      <OPTION value="dbsnp" >  dbSNP ID
+					      <OPTION value="ecnumber" >  EC Number
+					      <OPTION value="ensemblgeneid" >  Ensembl Gene ID
+					      <OPTION value="ensemblproteinid" >  Ensembl Protein ID
+					      <OPTION value="ensembltranscriptid" >  Ensembl Transcript ID
+					      <OPTION value="estaccession" > EST Accession
+					      <OPTION value="flybasegeneid" >  FlyBase Gene ID
+					      <OPTION value="genbanknucleotideaccession" >  GenBank Nucleotide Accession
+					      <OPTION value="genebankproteinaccession" >  GenBank Protein Accession
+					       <OPTION value="geneid" selected> Gene ID
+					       <OPTION value="genesymbolorf" >   Gene Symbol ORF
+					       <OPTION value="h-invproteinid" > H-Inv Locus ID
+					       <OPTION value="h-invproteinid" > H-Inv Protein ID
+					       <OPTION value="h-invtranscriptid" > H-Inv Transcript ID
+					       <OPTION value="hgncid" > HGNC ID
+					       <OPTION value="homologeneid" > HomoloGene ID
+					       <OPTION value="illuminaid" > Illumina ID
+					       <OPTION value="interproid" > InterPro ID
+					       <OPTION value="ipiid" > IPI ID
+					       <OPTION value="maizegdbid" > MaizeGDB ID
+					        <OPTION value="mgiid" >MGI ID
+					        <OPTION value="mimid" >MIM ID
+					        <OPTION value="mirbaseid" >miRBase ID
+					        <OPTION value="mirbasematuremirnaacc" >miRBase Mature miRNA Acc
+					        <OPTION value="pdbid" >PDB ID
+					        <OPTION value="pfamid" >Pfam ID
+					        <OPTION value="pharmgkbid" >PharmGKB ID
+					        <OPTION value="pubchemid" >PubChem ID
+					        <OPTION value="refseqgenomicaccession" >RefSeq Genomic Accession
+					        <OPTION value="refseqmrnaaccession" >RefSeq mRNA Accession
+					        <OPTION value="refseqproteinaccession" >RefSeq Protein Accession
+					        <OPTION value="sgdid" >SGD ID
+					        <OPTION value="tairid" >TAIR ID
+					        <OPTION value="taxonid" >Taxon ID
+					        <OPTION value="unigeneid" >UniGene ID
+					        <OPTION value="uniprotaccession" >UniProt Accession
+					        <OPTION value="unistsid" >UniSTS ID
+						</SELECT>
+
+</div>
+<br><br>
+<div class="row">
+	<div class="col-xs-12">
+<button type="button" id="run" onclick="openRun()" class="btn-circle btn-xl">
+<i class="glyphicon glyphicon-play"></i>
+</button>
+<img id="load"
+	th:src="@{dist/imgs/loading.gif}" src="dist/imgs/loading.gif" style="width:70;display:none;"/>
+
+
+
+
+</div>
+</div>
+<br><br>
+<br><br>
+
+<br><br>
+<br><br>
+<br><br>
+</div>
+</div>
+</div>
+	<div class="col-xs-12 col-md-5">
+		<br
+		<center>
+			<form  onsubmit="get_action()" method="POST" id="myform" css="text-align:center">
+			   	<input type="hidden" id="query" name="query" value="hola,Tron">
+
+					<button class="btn btn-primary" id="BUTTON" style="width:100%;display:none;">Start the analysis with the official gene symbol here</button>
+					<script>
+					function get_action() {
+
+	if(Object.keys($('#tableRep').DataTable().rows(0).data()[0]).length>2){
+	var genes = [];
+		jQuery.each(	$('#tableRep').DataTable().column(2).data(), function(i, val) {
+			 genes.push(val);
+
+			$('input[name=query]').val(	genes.join(","));
+	})
+	}else{
+		var genes = [];
+			jQuery.each(	$('#tableRep').DataTable().column(1).data(), function(i, val) {
+				 genes.push(val);
+
+				$('input[name=query]').val(	genes.join(","));
+	})
+
+}
+					document.getElementById("myform").action = "start"; //Setting form action to "success.php" page
+	        document.getElementById("myform").submit(); // Submitting form
+
+					}
+					</script>
+		</form>
+	</center>
+		<br><br>
+	<table id="tableRep" class="table table-striped table-bordered" width="100%" ></table>
+	<br><br>
+	<br><br>
+
+	<br><br>
+	<br><br>
+	<br><br>
+	</div>
+</div>
+</div>
+
+</div>
+</div>
+
+
+
+<script>
+$('#results').hide();
+
+function openRun() {
+	try {
+	$("#BUTTON").hide();
+	if ( $.fn.DataTable.isDataTable( '#tableRep' ) ) {
+		$("#tableRep_wrapper").hide();
+	}
+
+	$('#run').hide();
+	$('#load').css("display","inline");
+
+  var genes =document.getElementById("queryText").value.split(/[\n|\t|;|,]/g);
+
+	if (genes.includes("Put here the genes/proteins ids...") ||  genes.length ===1){
+		alert("Please, the gene input is required!");
+	return false;
+}else{
+
+	var formData = new FormData();
+	formData.append("query", genes.join(","));
+	formData.append("organism",document.getElementById("organism").value);
+	formData.append("input",document.getElementById("id").value);
+
+	var xhr = new XMLHttpRequest();
+xhr.open("POST",
+					window.location.protocol+"//"+window.location.host+"/gsanConverter",false);
+
+	xhr.send(formData);
+
+	if (xhr.status === 200) {
+		var msj = xhr.responseText;
+		var data = JSON.parse(msj);
+		var col =[];
+		if(Object.keys(data[0]).length>2){
+			col = [
+					{ data: "InputValue", title:"Input" },
+						{ data: "Input Type", title:"Input Type" },
+					{ data: "Gene Symbol", title:"Gene Symbol" },
+			]
+			var newData = [];
+			var os = [],
+			ids = []
+			jQuery.each(data, function(i,val){
+					if(val["Gene Symbol"]!=="-"){
+						if(($.inArray(val["InputValue"], ids) == -1  && $.inArray(val["Gene Symbol"], os) == -1)){
+						newData.push(val);
+						ids.push(val["InputValue"]);
+						os.push(val["Gene Symbol"]);
+					}
+					}
+			}
+
+		);
+		data = newData;
+
+		}else{
+			col= [{ data: "InputValue", title:"Input" },
+			{ data: "Gene Symbol", title:"Gene Symbol" },]
+		}
+
+$(document).ready(function() {
+		//	$('#tableRep').DataTable().clear();
+
+
+if ( ! $.fn.DataTable.isDataTable( '#tableRep' ) ) {
+	    $('#tableRep').DataTable( {
+	        data: data,
+	        columns: col,
+					searching: false
+	    } );
+		}else{
+			$('#tableRep').DataTable()
+    .clear()
+    .draw();
+		$('#tableRep').DataTable().destroy();
+	         $('#tableRep').empty();
+		$('#tableRep').DataTable({
+				data: data,
+				columns: col,
+				searching: false
+		})
+	.draw();
+
+
+		}
+		$("#tableRep_wrapper").show();
+		if(data.length===0){
+				$("#BUTTON").hide();
+		}else{
+				$("#BUTTON").show();
+		}
+
+			} );
+
+
+
+
+	//$('#run').prop('disabled', false);
+}
+ }
+
+
+
+$('#load').hide();
+	$('#run').show();
+
+
+
+
+/*
+	var h = ["input_id","Symbol"];
+	var r = [];
+	representative.forEach(function(x){
+	  //console.log(dic[x]);
+	  var cells = [];
+	  cells.push(x);
+	  cells.push(dic[x].name);
+	  cells.push(dic[x].onto);
+	  cells.push(Math.floor(dic[x].IC*100)/100);
+	  cells.push(dic[x].geneSet.length);
+
+	  if(scp.includes(x)){
+		  cells.push(true);
+	  }else{
+		  cells.push(false);
+	  }
+
+	r.push(cells);
+	})
+
+	$("#tableResult").append('<H3>ID input: '+representative.length+' terms, '+scp.length +' of them being synthetic<br>  ' +recoverGenes.size +' out of '+genes.length+' genes are covered</H3>');
+	var table = new Table()
+
+	//sets table data and builds it
+	table
+	    .setHeader(h)
+	    .setData(r)
+	    .setTableClass('table table-striped table-bordered')
+	    .setTableID('tableRep')
+	    .build()
+
+	$("#tableResult").append('<button class="btnCsv" style="float:right;font-family: sans-serif;font-size:18px;"><i class="fa fa-download"></i>&nbsp;Export CSV</button>');
+
+*/
+
+
+
+
+}catch(error) {
+  alert("Error to connect with bd2bd. The service is probably unavailable");
+
+	$('#load').hide();
+		$('#run').show();
+
+
+  // expected output: ReferenceError: nonExistentFunction is not defined
+  // Note - error messages will vary depending on browser
+}
+}
+</script>
+
+</body>
+</html>

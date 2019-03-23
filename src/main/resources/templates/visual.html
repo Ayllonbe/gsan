@@ -87,7 +87,7 @@
 							id="defaultOpen">Table</button></div>
 						<div class="col-xs-6" style="background-color: #555;margin:0px;padding-right: 0px;padding-left: 0px;">
 						<button class="tablink"
-							onclick="openCity('motvis', this, '#999999')">Combined tree visualization</button>
+							onclick="openCity('tableVisu', this, '#999999')">Combined tree visualization</button>
 							</div>
 					</div>
 <div class="row">
@@ -107,8 +107,19 @@
 		<div class="col-xs-12" style="padding-right: 0px;padding-top: 15px;" >
 
 
-					<div class="table-container" id="motvis" style="display: inline-block;">
+					<div class="table-container" id="tableVisu" style="display: inline-block;height:800px;">
+						<div id="boxes">
+							<label>
+								<input type="checkbox" class="selection" value=1  name="ids" checked="checked"/> All</label>
+							<label>
+								<input type="checkbox" class="selection" value=0 name="ids" /> Synthetic</label>
 
+
+
+
+
+						</div>
+						<div id="motvis"  style="display: inline-block;">
 
 						<div id="treeHIDDEN">
 							<div id="tree"></div>
@@ -116,15 +127,16 @@
 						<div id="circular">
 						<div id="tooltip"></div>
 						</div>
+
 					</div>
-
+				</div>
 
 
 
 
 			</div>
 			</div>
-<br><br><br><br><br>
+<br><br><br><br><br><br><br>
 </div>
 
 		<script th:inline="javascript">
