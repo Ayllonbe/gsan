@@ -68,7 +68,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		if(!annotations.exists()) {
 		FTPDownloader.DownloadGOA();
 		}
-		String[] listFiles = new String[] {"ecocyc.gaf.gz","cgd.gaf.gz","goa_human.gaf","goa_arabidopsis.gaf","goa_chicken.gaf","goa_cow.gaf","goa_dog.gaf",
+		String[] listFiles = new String[] {"ecocyc.gaf","cgd.gaf","goa_human.gaf","goa_arabidopsis.gaf","goa_chicken.gaf","goa_cow.gaf","goa_dog.gaf",
 				"goa_fly.gaf","goa_mouse.gaf","goa_pig.gaf","goa_rat.gaf","goa_worm.gaf","goa_yeast.gaf","goa_zebrafish.gaf"
 		};
 		for(String sf : listFiles) {

@@ -2,6 +2,7 @@ package gsan.server.gsan.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -595,7 +596,63 @@ public class GSAnController {
 		}
 
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/gsanJSON")
+	public void gsanRunJSON(
+			HttpServletResponse response,
+			@RequestParam(value = "ontology", required = true) List<String> top,
+			@RequestParam(value = "query", required = true) MultipartFile file,
+			@RequestParam(value = "organism", required = false,defaultValue = "homo_sapiens") String organism,
+			@RequestParam(value = "useIEA", required = false,defaultValue = "true") boolean useiea,
+//			@RequestParam(value = "icIncomplete", required = false, defaultValue = "3" ) int ic_inc,
+			@RequestParam(value = "ids", required = false, defaultValue = "2" ) int ids,
+			@RequestParam(value = "percentile", required = false, defaultValue = "25" ) int percentile,
+			@RequestParam(value = "semanticSimilarity", required = false, defaultValue = "lin") String ss,
+			@RequestParam(value = "moduleID", required = true) String m,
+			@RequestParam(value = "moduleName", required = true) String mName,
+			//@RequestParam(value = "simRepValue", required = false, defaultValue = "0") double similarityRepValue,
+			//@RequestParam(value = "covering", required = false, defaultValue = "1") double covering,
+			@RequestParam(value = "minGeneSupport", required = false, defaultValue = "3") int geneSupport
+			//@RequestParam(value = "prokaryote", required = false, defaultValue = "false") boolean prok
+			) {
+		try {
 
+			List<String> query = new ArrayList<>();
+			try {
+				StringWriter writer = new StringWriter();
+				IOUtils.copy(file.getInputStream(), writer, StandardCharsets.UTF_8);
+				String theString = writer.toString();
+				String[] sa = theString.replaceAll("\"", "").replaceAll("\n", "").split(",");
+				for(String s :sa) {
+					query.add(s);
+				}
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(query.size()>2) {
+
+				Map<String,Object> map = gsanService.runService(query, organism, useiea, top,
+						ss, geneSupport,percentile,ids);
+				map.put("ModuleID", m);
+				map.put("ModuleName", mName);
+				
+				JSONObject jo = new JSONObject();
+				jo.putAll(map);
+				response.getWriter().print(jo.toJSONString());
+			}
+			else {
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+	}
+	
 
 
 }

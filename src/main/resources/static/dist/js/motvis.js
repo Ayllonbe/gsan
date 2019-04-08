@@ -706,8 +706,8 @@ function drawTextAlongArc(context,str, centerX, centerY, radius,alpha){
                     context.save();
                     context.translate(0, -1 * radius);
                     var char = str[n];
-                    context.strokeStyle= "rgba(128,128,128, " + alpha + ")";
-                    context.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
+                    context.strokeStyle= "rgba(0,0,0, " + alpha + ")";//"rgba(128,128,128, " + alpha + ")";
+                    context.fillStyle = "rgba(0,0,0, " + alpha + ")";//"rgba(255, 255, 255, " + alpha + ")";
                     context.fillText(char, 0, 0);
                     context.strokeText(char, 0, 0);
                     context.restore();
