@@ -61,7 +61,6 @@ public class GSAnController {
 	@Autowired
 	private JavaMailSender sender;
 
-	private Map<UUID,String> uidd2email = new HashMap<>();
 
 
 	//public static String local = "http://localhost:8282/";
@@ -222,7 +221,7 @@ public class GSAnController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public String overviewTask(Model model, @PathVariable("id") @NotNull UUID id) {
 		model.addAttribute("version", versionNumber);
-		String email = uidd2email.get(id);
+	//	String email = uidd2email.get(id);
 		try {
 			if(tRepository.existsById(id)) {
 				task t = tRepository.getOne(id);
@@ -235,20 +234,11 @@ public class GSAnController {
 							String jsonData = ReadFile.readFileJSON(fileJSON.getAbsolutePath());
 
 							model.addAttribute("json", jsonData);
-							if(email!=null && email!="") {
-								try {
-									sendEmailWithoutTemplating(email, t.getId());
-								}
-								catch(Exception e) {
-									log.debug("The email is not valide.");
-									e.printStackTrace();
-								}
-							}
-							uidd2email.remove(id);
+							
 							return "visual";
 						}else {
 							log.debug("The files of the id "+t.getId()+", is very old");
-							uidd2email.remove(id);
+							
 							return "noExist";
 						}
 
@@ -264,7 +254,7 @@ public class GSAnController {
 					model.addAttribute("timestamp",new TimeStamp(new Date()).toDateString());
 					model.addAttribute("message",ce.getMSG());
 					log.error("There was an error in the process (Good query? good Annotation or equivalents ids between the query and the annotation?)");
-					uidd2email.remove(id);
+				
 					return "error";
 				}
 			}else {
@@ -284,49 +274,48 @@ public class GSAnController {
 	}
 	//
 
-	DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
 
-
-	public void sendEmailWithoutTemplating(String email, UUID id) throws UnsupportedEncodingException{
-
-		MimeMessage message = sender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message);
-		// Set From: header field of the header.
-		try {
-			helper.setFrom(new InternetAddress("no-reply-gsan@labri.fr", "NO-REPLY"));
-			// Set To: header field of the header.
-			helper.setTo(new InternetAddress(email));
-			// Set Subject: header field
-			message.setSubject("[GSAn] Analysis finished");
-
-			task task = tRepository.getOne(id);
-			LocalDateTime ts = task.getDate().toLocalDateTime();
-
-			// Fill the message
-			helper.setText("** This is an automatic email, Please don't reply to it **"+
-					"\n\n"+
-							"Your analysis sent on "+ts.format(format)+" is finished and you can access to the results using the following link:"+
-							"\n https://gsan.labri.fr/"+id+
-							"\n\n"+
-									"Regards,"+
-									"\n\n"+
-									"GSAn team\n\n"+
-									"**  If you have any questions about GSAn, please contact us in  https://gsan.labri.fr/contact **\r\n"
-									);
-	    sender.send(message);
-	    log.debug("Sent message successfully....");
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			log.error("The email is incorrect");
-			//e.printStackTrace();
-		}catch(MailSendException e) {
-			log.error("The email is null or incorrect");
-		}
-
-
-
-		// Get the default Session object.
-	}
+//	public void sendEmailWithoutTemplating(String email, UUID id) throws UnsupportedEncodingException{
+//
+//		MimeMessage message = sender.createMimeMessage();
+//		MimeMessageHelper helper = new MimeMessageHelper(message);
+//		// Set From: header field of the header.
+//		try {
+//			helper.setFrom(new InternetAddress("no-reply-gsan@labri.fr", "NO-REPLY"));
+//			// Set To: header field of the header.
+//			helper.setTo(new InternetAddress(email));
+//			// Set Subject: header field
+//			message.setSubject("[GSAn] Analysis finished");
+//
+//			task task = tRepository.getOne(id);
+//			LocalDateTime ts = task.getDate().toLocalDateTime();
+//
+//			// Fill the message
+//			helper.setText("** This is an automatic email, Please don't reply to it **"+
+//					"\n\n"+
+//							"Your analysis sent on "+ts.format(format)+" is finished and you can access to the results using the following link:"+
+//							"\n https://gsan.labri.fr/"+id+
+//							"\n\n"+
+//									"Regards,"+
+//									"\n\n"+
+//									"GSAn team\n\n"+
+//									"**  If you have any questions about GSAn, please contact us in  https://gsan.labri.fr/contact **\r\n"
+//									);
+//	    sender.send(message);
+//	    log.debug("Sent message successfully....");
+//		} catch (MessagingException e) {
+//			// TODO Auto-generated catch block
+//			log.error("The email is incorrect");
+//			//e.printStackTrace();
+//		}catch(MailSendException e) {
+//			log.error("The email is null or incorrect");
+//		}
+//
+//
+//
+//		// Get the default Session object.
+//	}
 
 
 	@RequestMapping("/question")
@@ -422,8 +411,7 @@ public class GSAnController {
 			tRepository.save(t);
 
 			gsanService.runService(tRepository, t, query, organism, useiea, top,
-					ss, geneSupport,percentile, ids);
-			uidd2email.put(t.getId(), email);
+					ss, geneSupport,percentile, ids,email);
 			return "redirect:/"+t.getId();
 		}
 		else {
@@ -494,8 +482,7 @@ public class GSAnController {
 			tRepository.save(t);
 
 			gsanService.runService(tRepository, t, query, useiea, top,
-					ss, geneSupport,percentile, gafString,ids);
-			uidd2email.put(t.getId(), email);
+					ss, geneSupport,percentile, gafString,ids,email);
 			return "redirect:/"+t.getId();
 		}
 		else {

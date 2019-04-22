@@ -14,6 +14,8 @@ import java.util.Set;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,8 @@ import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.distribution.gsan_api.read_write.writeSimilarityMatrix;
 import gsan.distribution.gsan_api.run.representative.AlgorithmRepresentative;
 import gsan.distribution.gsan_api.run.representative.Cluster;
+import gsan.server.gsan.api.GSAnController;
+import gsan.server.gsan.api.SenderMail;
 import gsan.server.gsan.api.service.jpa.taskRepository;
 import gsan.server.gsan.api.service.model.task;
 import gsan.server.singleton.graphSingleton;
@@ -34,13 +38,15 @@ import gsan.server.singleton.graphSingleton;
 @Service
 public class GSAnServiceImpl implements GSAnService {
 
+	@Autowired
+	private JavaMailSender sender;
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
 	@Async("workExecutor")
 	public void runService(taskRepository tR, task t,List<String> query, String organism, boolean IEA,List<String> ontology,
-			String ssMethod,int geneSupport,  int percentile,int ids) {
+			String ssMethod,int geneSupport,  int percentile,int ids, String email) {
 		Map<String,Object> process = new HashMap<>();
 		
 			log.debug("Beging process n° " + t.getId());
@@ -66,7 +72,7 @@ public class GSAnServiceImpl implements GSAnService {
 			process.putAll(gsanService(query,GOA,go, ontology, ssMethod,
 					geneSupport,  percentile));
 			process.put("organism", organism);
-			finishing(tR,t, process);		
+			finishing(tR,t, process,email);		
 		
 	}
 
@@ -103,7 +109,7 @@ public class GSAnServiceImpl implements GSAnService {
 	@Override
 	@Async("workExecutor")
 	public void runService(taskRepository tR, task t,List<String> query, boolean IEA,List<String> ontology,
-			String ssMethod, int geneSupport,  int percentile, String goa_file,int ids) {
+			String ssMethod, int geneSupport,  int percentile, String goa_file,int ids, String email) {
 			Map<String,Object> process = new HashMap<>();
 			
 			log.debug("Beging process n° " + t.getId());
@@ -129,14 +135,14 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			process.putAll(gsanService(query,GOA,go , ontology, ssMethod, geneSupport,  percentile));
 		    process.put("organism", "");
-			finishing(tR,t, process);	
+			finishing(tR,t, process,email);	
 	}
 	
 	
 	
 	
 	@SuppressWarnings("unchecked")
-	private void finishing(taskRepository tR,task t, Map<String,Object> process) {
+	private void finishing(taskRepository tR,task t, Map<String,Object> process, String email) {
 		try {
 			JSONObject jo = new JSONObject();
 			jo.putAll(process);
@@ -161,6 +167,18 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			
 			log.debug("Ending process n° " + t.getId());
+			
+			if(email!=null && email!="") {
+				try {
+					SenderMail sm = new SenderMail();
+					
+					sm.sendEmailWithoutTemplating(email,sender, t);
+				}
+				catch(Exception e) {
+					log.debug("The email is not valide.");
+					e.printStackTrace();
+				}
+			}
 
 	}
 	

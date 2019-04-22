@@ -93,6 +93,7 @@ public class ScheduledTasks {
 	DateTimeFormatter day = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	DateTimeFormatter heure = DateTimeFormatter.ofPattern("HH");
 	@Scheduled(cron="0 0 * * 5 *")
+	//@Scheduled(cron="0 0/5 * * * *")
 	public void reports() {
 		
 		Map<Integer,Set<UUID>> mapError2Users = new HashMap<>();
