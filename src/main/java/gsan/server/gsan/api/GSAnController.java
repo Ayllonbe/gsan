@@ -2,7 +2,6 @@ package gsan.server.gsan.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -31,15 +30,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -97,15 +92,13 @@ public class GSAnController {
 //		return new ResponseEntity<Object>("GOOD",HttpStatus.OK);}
 
 	@RequestMapping("/start")
-	public String start(Model m,@RequestParam(value = "query", required = false) String query) {
-		System.out.println(query);
-		
+	public String start(Model m,@RequestParam(value = "query", required = false) String query) {		
 		m.addAttribute("query",query);
-		System.out.println("hola");
 		m.addAttribute("version", versionNumber);
-		System.out.println("hola");
 		return "start";
 	}
+	
+	
 //	@RequestMapping("/idconverter")
 //	public String idconverter(Model m) {
 //		m.addAttribute("version", versionNumber);

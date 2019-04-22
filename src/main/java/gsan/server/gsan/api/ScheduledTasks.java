@@ -43,7 +43,8 @@ public class ScheduledTasks {
 	 */
 
 	//@Scheduled(cron="0 0 12 * * ?")
-	@Scheduled(cron="0 0 * * 1 ?")
+	@Scheduled(cron="0 0 * * 1 *")
+	//@Scheduled(cron="0 5/10 * * * *")
 	public void performTask() throws IOException {
 		
 		FTPDownloader.DownloadGOA();
@@ -65,7 +66,7 @@ public class ScheduledTasks {
 	/*
 	 * Remove The JSON file with more than 12h. Scheduled of 24h.
 	 */
-	@Scheduled(cron="0 */12 * * * ?")
+	@Scheduled(cron="0 */12 * * * *")
 	public void RemoveOLDJSON() throws IOException {
 		String repertoire = "src/main/tmp/results";
 		File dir  = new File(repertoire);
@@ -91,7 +92,7 @@ public class ScheduledTasks {
 	DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	DateTimeFormatter day = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	DateTimeFormatter heure = DateTimeFormatter.ofPattern("HH");
-	@Scheduled(cron="0 0 * * 5 ?")
+	@Scheduled(cron="0 0 * * 5 *")
 	public void reports() {
 		
 		Map<Integer,Set<UUID>> mapError2Users = new HashMap<>();
