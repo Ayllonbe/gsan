@@ -68,21 +68,23 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 				FTPDownloader.DownloadGOA();
 			}
 		}
-		System.out.println("Ready to use!");
 
-//		try {
-//			FTPDownloader.DownloadGOOWL(GOOWL,"http://current.geneontology.org/ontology/",path);
-//			FTPDownloader.DownloadGOA();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		System.out.println("Ready to use!");
+		try {
+			FTPDownloader.DownloadGOOWL(GOOWL,"http://current.geneontology.org/ontology/",path);
+			FTPDownloader.DownloadGOA();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		System.out.println("Ready to use!");
 	}
 	
-
 	
 
 }
