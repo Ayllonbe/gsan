@@ -43,8 +43,9 @@ public class ScheduledTasks {
 	 */
 
 	//@Scheduled(cron="0 0 12 * * ?")
-	@Scheduled(cron="0 0 * * 1 *")
-	//@Scheduled(cron="0 5/10 * * * *")
+	//@Scheduled(cron="0 0 * * 1 *")
+	
+	@Scheduled(cron="0 0 12 * * MON")
 	public void performTask() throws IOException {
 		
 		FTPDownloader.DownloadGOA();
@@ -92,10 +93,12 @@ public class ScheduledTasks {
 	DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	DateTimeFormatter day = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	DateTimeFormatter heure = DateTimeFormatter.ofPattern("HH");
-	@Scheduled(cron="0 0 * * 5 *")
+//	@Scheduled(cron="0 0 * * 5 *")
+	@Scheduled(cron="0 0 12 * * WED")
+	
 	//@Scheduled(cron="0 0/5 * * * *")
 	public void reports() {
-		
+		System.out.println("hola");
 		Map<Integer,Set<UUID>> mapError2Users = new HashMap<>();
 		Map<String,Set<UUID>> mapDay2Users = new HashMap<>();
 		
