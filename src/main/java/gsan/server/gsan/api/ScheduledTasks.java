@@ -58,7 +58,7 @@ public class ScheduledTasks {
 			e.printStackTrace();
 		}
 		if(cond)
-			graphSingleton.initializeOrGet("go.owl");
+			graphSingleton.initializeOrGet("src/main/resources/static/ontology/go.owl");
 		
 		log.debug("Checking and Donwloading GO and GOA.");
 
