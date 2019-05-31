@@ -182,6 +182,11 @@
 								 $("#uni").text("Candida genome database")
 								 $("#genOf").text("Official gene symbol")
 							 }
+							 else if( str === "pseudomonas_aeruginosa"){
+								 $("#gafHide").hide();
+								 $("#uni").text("Pseudomonas locus tag")
+								 $("#genOf").text("Official gene symbol")
+							 }
 							 else{
 								 $("#uni").text("UniprotKB")
 								$("#genOf").text("Official gene symbol")
@@ -260,9 +265,9 @@
 							<!--	<OPTION value="pekarStaab">Pekar & Staab-->
 								<OPTION value="distanceFunction">Distance function
 							<!--	<OPTION value="ganesan">Ganesan-->
-								<OPTION value="nUnivers">NUnivers
+								<OPTION value="nUnivers" selected>NUnivers
 									<!--  <OPTION value="NUM">NUnivers_Mod  -->
-								<OPTION value="aic" selected>AIC
+								<OPTION value="aic" >AIC
 
 									<!--  <OPTION value="wang">Wang-->
 						</SELECT>
