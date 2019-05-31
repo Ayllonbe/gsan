@@ -411,6 +411,7 @@ public class GSAnServiceImpl implements GSAnService {
 				//System.out.println("###  ont: "+ ont);
 			List<String> listTerm = new LinkedList<String>(termsInc);
 			listTerm.retainAll(go.allStringtoInfoTerm.get(ont).is_a.descendants);
+			if(!listTerm.isEmpty()) {
 			log.debug("Writing Similarity Matrix...");
 			writeSimilarityMatrix wSS = new writeSimilarityMatrix(ssMethod);
 			Map<String,Object> mSS = wSS.similarityMethod(go, listTerm, icSimilarity.intValue());
@@ -420,6 +421,7 @@ public class GSAnServiceImpl implements GSAnService {
 			rep.addAll(ar.run( go, listTerm,GOAincom,percentile));
 			error = ar.errorMsg;
 			//System.out.println("ATENTIION " + error);
+			}
 			}
 			
 			if(rep.isEmpty()) {
