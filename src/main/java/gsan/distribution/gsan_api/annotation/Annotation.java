@@ -290,10 +290,10 @@ public class Annotation implements Serializable {
 		return newlistterm;
 	}
 	public  List<String> getTerms(List<String> genes, String top, GlobalOntology go){
-
+	
 		Set<String> newlistterm = new HashSet<String>();
 		Set<String> genesNoNoted = new HashSet<>();
-
+try {
 		for(String p:new HashSet<String>(genes)){
 			if(!this.annotation.containsKey(p.toLowerCase())) {
 				genesNoNoted.add(p);
@@ -333,7 +333,10 @@ public class Annotation implements Serializable {
 		//System.out.println(genesNoNoted.size() + " " +top);
 //		log.debug("There are "+genesNoNoted.size()+" genes no registred in GOA for " + go.allStringtoInfoTerm.get(top).toName());
 //		log.debug("There are "+(genes.size()-genesNoNoted.size())+" genes registred in GOA for " + go.allStringtoInfoTerm.get(top).toName());
-
+}catch (Exception e) {
+	System.out.println("Maybe there are a problem because there are not term associated to genes");
+	e.printStackTrace();
+}
 
 		return new ArrayList<String>(newlistterm);
 	}
