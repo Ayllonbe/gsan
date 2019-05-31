@@ -304,7 +304,7 @@ try {
 
 				if(termes.isEmpty()) {
 					genesNoNoted.add(p);
-				}
+				}else {
 				//log.debug(p + " " + ontology.top);
 				newlistterm.addAll(termes);
 				//			for(String nelt : termes) {
@@ -317,6 +317,7 @@ try {
 					//				if(it.getRegulatesClass()!=null) {
 					//					go.allStringtoInfoTerm.get(it.getRegulatesClass()).addGen(p, go);
 					//				}
+				}
 				}
 			}
 		}
