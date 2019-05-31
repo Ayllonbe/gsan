@@ -116,6 +116,7 @@ public class FTPDownloader {
 
 				"ecocyc.gaf.gz",
 				"cgd.gaf.gz",
+				"pseudocap.gaf.gz",
 				"HUMAN",
 				"ARABIDOPSIS",
 				"CHICKEN",
@@ -136,7 +137,7 @@ public class FTPDownloader {
 		try {
 			GlobalOntology go = graphSingleton.getGraph();
 			for(String file : listFiles) {
-				if(file.contains("ecocyc")|| file.contains("cgd.gaf")) {
+				if(file.contains("ecocyc")|| file.contains("cgd.gaf")||file.contains("pseudocap.gaf.gz")) {
 					 String annotationFile = "src/main/resources/static/AssociationTAB/"+file.replace(".gz", "");
 					  File created_file = new File(annotationFile);
 						long localLong = created_file.exists()? created_file.lastModified():0 ;
