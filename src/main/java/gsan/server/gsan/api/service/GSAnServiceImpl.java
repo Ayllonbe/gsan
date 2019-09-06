@@ -260,9 +260,8 @@ public class GSAnServiceImpl implements GSAnService {
 
 			
 			InfoTerm it = go.allStringtoInfoTerm.get("GO:0050852");
-			System.out.println(it.ICs.get(3)+" "+it.genome.size());
-			System.exit(0);
-			
+			//System.out.println(it.ICs.get(3)+" "+it.genome.size());
+		
 		Set<String> termsInc = new HashSet<String>();
 		//System.out.println(ontology);
 		log.debug("Recovering terms to analyse the gene set");
@@ -742,7 +741,8 @@ public class GSAnServiceImpl implements GSAnService {
 
 			}
 			if(Double.isNaN(dd)) {
-				System.exit(0);
+				//System.exit(0);
+				System.out.println("BIGPROBLEM");
 			}
 			dd = dd + (1./(double)ng) * sum;
 		}
