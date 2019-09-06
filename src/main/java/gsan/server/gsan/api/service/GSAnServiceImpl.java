@@ -258,6 +258,11 @@ public class GSAnServiceImpl implements GSAnService {
 			Annotation  GOAred = Annotation.redondancyReduction(GOA,go);
 			Annotation GOAincom = Annotation.icIncompleteReduction(GOAred,go,ic_inc, Mappercentile);
 
+			
+			InfoTerm it = go.allStringtoInfoTerm.get("GO:0050852");
+			System.out.println(it.ICs.get(3)+" "+it.genome.size());
+			System.exit(0);
+			
 		Set<String> termsInc = new HashSet<String>();
 		//System.out.println(ontology);
 		log.debug("Recovering terms to analyse the gene set");
@@ -271,7 +276,6 @@ public class GSAnServiceImpl implements GSAnService {
 			msg_code = msg_code>0?msg_code: 3;
 			throw new java.lang.NullPointerException("line 255 - termsInc is empty");
 			}
-
 
 		Map<String,Object> map = new HashMap<>();
 		
