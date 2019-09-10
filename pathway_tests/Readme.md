@@ -1,8 +1,8 @@
 # Test of annotation for genes involved in pathways
 
-In order to present the usefulness of GSAn, we used some pathways terms (three from Reactome and four from KEGG) to provide a synthetic annotation with Gene Ontology terms. 
+To present the usefulness of GSAn, we used some pathways terms (three from Reactome and four from KEGG) to provide a synthetic annotation with Gene Ontology terms.
 
-The terms of reactome are:
+The terms used from reactome are:
 
 > Interleukin-7 signaling
 
@@ -10,7 +10,7 @@ The terms of reactome are:
 
 > Neutrophil degranulation
 
-and the terms of Kegg are:
+and the terms used from Kegg are:
 
 > Cell_cycle
 
