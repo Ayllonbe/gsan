@@ -1,3 +1,5 @@
+# URL= http://www.gsea-msigdb.org/gsea/msigdb/cards/KEGG_PYRIMIDINE_METABOLISM
+# ID: GeneSymbol
 NT5C2
 POLR2G
 POLR2H

@@ -1,3 +1,5 @@
+# URL = http://www.gsea-msigdb.org/gsea/msigdb/cards/KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY
+# ID: GeneSymbol
 JUN
 ZAP70
 MALT1

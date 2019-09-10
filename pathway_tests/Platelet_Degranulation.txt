@@ -1,3 +1,5 @@
+# URL = https://reactome.org/PathwayBrowser/#/R-HSA-114608
+# ID: UniProt
 O00194
 O00292
 O00391
