@@ -81,8 +81,9 @@ table
     .setTableID('tableRep')
     .build()
 
-$("#tableResult").append('<button class="btnCsv" style="float:right;font-family: sans-serif;font-size:18px;"><i class="fa fa-download"></i>&nbsp;Export CSV</button>');
-
+$("#tableResult").append('<span style="font-size: 14px;"> <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover title="download CSV file" data-content="Clicking this button, you will download the table in a CSV format."></i></span><br><button class="btnCsv" style="font-family: sans-serif;font-size:18px;"><i class="fa fa-download"></i>&nbsp;Export CSV</button> ');
+$("[data-toggle=popover]")
+.popover({html:true})
 //motvis(dic,representative,genes,data.tree);
 var circulardiv = document.getElementById("circular"),
 treediv = document.getElementById("treeHIDDEN"),
