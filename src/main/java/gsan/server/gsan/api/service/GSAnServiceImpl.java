@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.math3.analysis.function.Add;
+import org.assertj.core.util.Arrays;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -275,7 +277,41 @@ public class GSAnServiceImpl implements GSAnService {
 			msg_code = msg_code>0?msg_code: 3;
 			throw new java.lang.NullPointerException("line 255 - termsInc is empty");
 			}
-
+		
+		List<String> golist =new ArrayList<String>();
+				golist.add("GO:0007020"); 
+		        golist.add("GO:0000278"); 
+		        golist.add("GO:0006511");
+		        golist.add("GO:0019941");
+		        golist.add("GO:0000398");
+		        golist.add("GO:0009060");
+		        golist.add("GO:0006096");
+		        golist.add("GO:0008152");
+		        golist.add("GO:0044262");
+		        golist.add("GO:0045333");
+		        golist.add("GO:0019538");
+		        golist.add("GO:0006119");
+		        golist.add("GO:0015986");
+		        golist.add("GO:0006333");
+		        golist.add("GO:0006260");
+		        golist.add("GO:0006270");
+		        golist.add("GO:0007049");
+		        golist.add("GO:0006270");
+		        golist.add("GO:0006261");
+		        golist.add("GO:0006099");
+		
+		
+		
+		for(String t : golist) {
+			InfoTerm iT = go.allStringtoInfoTerm.get(t);
+			//System.out.println("> " + iT.name + " " + iT.geneSet.size());
+			//if(iT.geneSet.size()>0)
+							System.out.println("> > > "+iT.id+" "+iT.name + " " + iT.depth() +" "+iT.geneSet.size());
+			
+			
+		}
+		
+		
 		Map<String,Object> map = new HashMap<>();
 		
 		map.putAll(GSAnMethod(genesList, ontology,go,GOAincom, ssMethod, geneSupport,Mappercentile,termsInc));
@@ -592,6 +628,7 @@ public class GSAnServiceImpl implements GSAnService {
 				Map<String, Object> mapTerm = new HashMap<>();
 				mapTerm.put("name", it.toName());
 				mapTerm.put("IC", it.ICs.get(ic_inc));
+				mapTerm.put("depth", it.depth());
 				mapTerm.put("onto", onto2simpleName(go.allStringtoInfoTerm.get(it.top).toName()));
 				mapTerm.put("geneSet", new ArrayList<String>(mapTerm2genes.get(t)));
 				
@@ -634,6 +671,7 @@ public class GSAnServiceImpl implements GSAnService {
 				Map<String, Object> mapTerm = new HashMap<>();
 				mapTerm.put("name", "Gene Ontology");
 				mapTerm.put("IC", 0);
+				mapTerm.put("depth", 0);
 				mapTerm.put("geneSet", new ArrayList<String>());
 				mapTerm.put("children", ontology);
 				mapTerm.put("opacity", 1.);

@@ -50,7 +50,7 @@ $(".gs2").append('<p>The groupwise similarity between genes of the set is '+(Mat
 
 barplot(scpDic,recoverGenes);
 
-var h = ["GOID","Name","Ontology","IC","Covered genes","Synthetic"]
+var h = ["GOID","Name","Ontology","IC","Term depth","Covered genes","Synthetic"]
 var r = [];
 representative.forEach(function(x){
   //console.log(dic[x]);
@@ -59,6 +59,7 @@ representative.forEach(function(x){
   cells.push(dic[x].name);
   cells.push(dic[x].onto);
   cells.push(Math.floor(dic[x].IC*100)/100);
+	cells.push(dic[x].depth);
   cells.push(dic[x].geneSet.length);
 
   if(scp.includes(x)){

@@ -105,7 +105,7 @@
 							$(document).ready(
 									function() {
 										var table = $('#tableRep').DataTable();
-										table.order([ 5, 'desc' ],
+										table.order([ 6, 'desc' ],
 												[ 3, 'desc' ]).draw();
 									});
 						</script>
@@ -186,7 +186,7 @@
 				var scp = data.scp;
 				var dic = data.terms;
 
-				var h = ["GOID","Name","Ontology","IC","Covered_genes","Synthetic", "Genes" ], r = [];
+				var h = ["GOID","Name","Ontology","IC","Term_depth","Covered_genes","Synthetic", "Genes" ], r = [];
 				representative.forEach(function(x) {
 					//console.log(dic[x]);
 					var cells = {};
@@ -194,14 +194,15 @@
 					cells[h[1]] = '"' + dic[x].name + '"';
 					cells[h[2]] = dic[x].onto;
 					cells[h[3]] = Math.floor(dic[x].IC * 100) / 100;
-					cells[h[4]] = dic[x].geneSet.length;
+					cells[h[4]] = dic[x].depth;
+					cells[h[5]] = dic[x].geneSet.length;
 					if (scp.includes(x)) {
-						cells[h[5]] = true;
+						cells[h[6]] = true;
 					} else {
-						cells[h[5]] = false;
+						cells[h[6]] = false;
 					}
 
-					cells[h[6]] = dic[x].geneSet.join(";");
+					cells[h[7]] = dic[x].geneSet.join(";");
 					r.push(cells);
 				});
 

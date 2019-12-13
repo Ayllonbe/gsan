@@ -72,7 +72,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		System.out.println("Ready to use!");
 		try {
 			FTPDownloader.DownloadGOOWL(GOOWL,"http://current.geneontology.org/ontology/",path);
-			FTPDownloader.DownloadGOA();
+//			FTPDownloader.DownloadGOA();//NO OLVIDAR!!!!!
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
