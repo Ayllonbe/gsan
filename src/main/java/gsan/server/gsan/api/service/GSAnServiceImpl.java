@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.math3.analysis.function.Add;
-import org.assertj.core.util.Arrays;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +29,7 @@ import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.distribution.gsan_api.read_write.writeSimilarityMatrix;
 import gsan.distribution.gsan_api.run.representative.AlgorithmRepresentative;
 import gsan.distribution.gsan_api.run.representative.Cluster;
-import gsan.server.gsan.api.GSAnController;
+
 import gsan.server.gsan.api.SenderMail;
 import gsan.server.gsan.api.service.jpa.taskRepository;
 import gsan.server.gsan.api.service.model.task;
@@ -266,7 +264,6 @@ public class GSAnServiceImpl implements GSAnService {
 			Annotation GOAincom = Annotation.icIncompleteReduction(GOAred,go,ic_inc, Mappercentile);
 
 			
-			InfoTerm it = go.allStringtoInfoTerm.get("GO:0050852");
 			//System.out.println(it.ICs.get(3)+" "+it.genome.size());
 		
 		Set<String> termsInc = new HashSet<String>();
