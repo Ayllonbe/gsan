@@ -48,9 +48,7 @@ public class GSAnServiceImpl implements GSAnService {
 	public void runService(taskRepository tR, task t,List<String> query, String organism, boolean IEA,List<String> ontology,
 			String ssMethod,int geneSupport,  int percentile,int ids, String email) {
 			Map<String,Object> process = new HashMap<>();
-			
-			Set<String> querySet = new HashSet<String>(query);
-			query = new ArrayList<String>(querySet);
+
 			log.debug("Beging process n° " + t.getId());
 			String goa_file = ChooseAnnotation.annotation(organism);
 			GlobalOntology go = graphSingleton.getGraph();
@@ -82,8 +80,7 @@ public class GSAnServiceImpl implements GSAnService {
 	public Map<String,Object> runService(List<String> query, String organism, boolean IEA,List<String> ontology,
 			String ssMethod,int geneSupport, int percentile,int ids) {
 		try {
-			Set<String> querySet = new HashSet<String>(query);
-			query = new ArrayList<String>(querySet);
+
 			String goa_file = ChooseAnnotation.annotation(organism);
 			GlobalOntology go = graphSingleton.getGraph();
 			Annotation GOA ;
@@ -115,8 +112,6 @@ public class GSAnServiceImpl implements GSAnService {
 	public void runService(taskRepository tR, task t,List<String> query, boolean IEA,List<String> ontology,
 			String ssMethod, int geneSupport,  int percentile, String goa_file,int ids, String email) {
 			Map<String,Object> process = new HashMap<>();
-			Set<String> querySet = new HashSet<String>(query);
-			query = new ArrayList<String>(querySet);
 			log.debug("Beging process n° " + t.getId());
 			GlobalOntology go = graphSingleton.getGraph();
 			log.debug("Charging Annotation file");
