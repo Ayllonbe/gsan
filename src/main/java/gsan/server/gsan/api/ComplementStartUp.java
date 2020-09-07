@@ -51,23 +51,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		}
 
 		
-<<<<<<< HEAD
-		
-		
-		try {
-			FTPDownloader.DownloadGOOWL(GOOWL,"http://current.geneontology.org/ontology/",path);
-			graphSingleton.initializeOrGet(path+GOOWL);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//FTPDownloader.DownloadGOA();
-=======
 		graphSingleton.initializeOrGet(path+GOOWL);
->>>>>>> Release_1.0.1
 		
 		
 		

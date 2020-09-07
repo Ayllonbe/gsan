@@ -91,27 +91,11 @@ public class GSAnController {
 //		return new ResponseEntity<Object>("GOOD",HttpStatus.OK);}
 
 	@RequestMapping("/start")
-<<<<<<< HEAD
-	public String start(Model m,@RequestParam(value = "query", required = false) String query) {
-		System.out.println(query);
-		
-		m.addAttribute("query",query);
-		System.out.println("hola");
-=======
 	public String start(Model m,@RequestParam(value = "query", required = false) String query) {		
 		m.addAttribute("query",query);
->>>>>>> Release_1.0.1
 		m.addAttribute("version", versionNumber);
-		System.out.println("hola");
 		return "start";
 	}
-<<<<<<< HEAD
-	@RequestMapping("/idconverter")
-	public String idconverter(Model m) {
-		m.addAttribute("version", versionNumber);
-		return "convert";
-	}
-=======
 	
 	
 //	@RequestMapping("/idconverter")
@@ -119,7 +103,6 @@ public class GSAnController {
 //		m.addAttribute("version", versionNumber);
 //		return "convert";
 //	}
->>>>>>> Release_1.0.1
 
 	@RequestMapping("/")
 	public String wellcome(Model m) {
@@ -428,12 +411,7 @@ public class GSAnController {
 			tRepository.save(t);
 
 			gsanService.runService(tRepository, t, query, organism, useiea, top,
-<<<<<<< HEAD
-					ss, geneSupport,percentile, ids);
-			uidd2email.put(t.getId(), email);
-=======
 					ss, geneSupport,percentile, ids,email);
->>>>>>> Release_1.0.1
 			return "redirect:/"+t.getId();
 		}
 		else {
@@ -504,12 +482,7 @@ public class GSAnController {
 			tRepository.save(t);
 
 			gsanService.runService(tRepository, t, query, useiea, top,
-<<<<<<< HEAD
-					ss, geneSupport,percentile, gafString,ids);
-			uidd2email.put(t.getId(), email);
-=======
 					ss, geneSupport,percentile, gafString,ids,email);
->>>>>>> Release_1.0.1
 			return "redirect:/"+t.getId();
 		}
 		else {

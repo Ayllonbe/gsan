@@ -107,10 +107,6 @@
 			<artifactId>RCaller</artifactId>
 			<version>3.0</version>
 		</dependency>
-<<<<<<< HEAD
-		
-=======
->>>>>>> Release_1.0.1
 	</dependencies>
 
 	<build>
