@@ -13,13 +13,14 @@
 					<h1>
 						Visualization
 					</h1>
-					<h3>JSON input</h3>
-
+					<h3>JSON input </h3>
 					<br>
 					<div id="query">
 						<form id="form1" method="POST" action="/results"
 							enctype="multipart/form-data" accept=".json">
-							<input id="queryFile" type="file" name="file" /><br />
+							<i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
+								 title="Browse JSON file" data-content="Use only the JSON file downloaded from the analysis result."></i>
+							<input id="queryFile" type="file" name="file"/><br />
 							<button type="submit" id="run" class="btn-circle btn-xl">
 								<i class="glyphicon glyphicon-play"></i>
 							</button>
@@ -35,6 +36,12 @@
 
 
 	<script>
+<<<<<<< HEAD
+=======
+	// popover demo
+  $("[data-toggle=popover]")
+  .popover({html:true})
+>>>>>>> Release_1.0.1
 
 $("#queryFile").change(function(e) {
 var ext = $("#queryFile").val().split(".").pop().toLowerCase();

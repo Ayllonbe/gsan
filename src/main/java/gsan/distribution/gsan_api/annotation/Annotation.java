@@ -70,9 +70,13 @@ public class Annotation implements Serializable {
 //				System.out.println(line);
 				//			log.debug(line);
 				String gene = line.get(ids).toLowerCase();
+<<<<<<< HEAD
 				List<String> synonyms = new ArrayList<String>();
 				if(line.size()>9)
 					synonyms = Arrays.asList(line.get(10).toLowerCase().split("[|]"));
+=======
+				List<String> synonyms = Arrays.asList(line.get(10).toLowerCase().split("[|]"));
+>>>>>>> Release_1.0.1
 				if(!gene.equals("") &&!(avoidedEC.contains(line.get(3))||avoidedEC.contains(line.get(6)))){  // 
 					//if(!(line.get(3).equals("NOT")|| line.get(6).equals("ND")  || line.get(6).equals("IEA") )){
 					String term = line.get(4);
@@ -295,10 +299,10 @@ public class Annotation implements Serializable {
 		return newlistterm;
 	}
 	public  List<String> getTerms(List<String> genes, String top, GlobalOntology go){
-
+	
 		Set<String> newlistterm = new HashSet<String>();
 		Set<String> genesNoNoted = new HashSet<>();
-
+try {
 		for(String p:new HashSet<String>(genes)){
 			if(!this.annotation.containsKey(p.toLowerCase())) {
 				genesNoNoted.add(p);
@@ -309,7 +313,7 @@ public class Annotation implements Serializable {
 
 				if(termes.isEmpty()) {
 					genesNoNoted.add(p);
-				}
+				}else {
 				//log.debug(p + " " + ontology.top);
 				newlistterm.addAll(termes);
 				//			for(String nelt : termes) {
@@ -322,6 +326,7 @@ public class Annotation implements Serializable {
 					//				if(it.getRegulatesClass()!=null) {
 					//					go.allStringtoInfoTerm.get(it.getRegulatesClass()).addGen(p, go);
 					//				}
+				}
 				}
 			}
 		}
@@ -338,7 +343,10 @@ public class Annotation implements Serializable {
 		//System.out.println(genesNoNoted.size() + " " +top);
 //		log.debug("There are "+genesNoNoted.size()+" genes no registred in GOA for " + go.allStringtoInfoTerm.get(top).toName());
 //		log.debug("There are "+(genes.size()-genesNoNoted.size())+" genes registred in GOA for " + go.allStringtoInfoTerm.get(top).toName());
-
+}catch (Exception e) {
+	System.out.println("Maybe there are a problem because there are not term associated to genes");
+	e.printStackTrace();
+}
 
 		return new ArrayList<String>(newlistterm);
 	}

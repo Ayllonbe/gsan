@@ -15,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 public class test {
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public static void main(String[] args) throws UnsupportedEncodingException {
 	OWLOntologyManager ontomanager = OWLManager.createOWLOntologyManager();
 	OWLDataFactory  factory = ontomanager.getOWLDataFactory();

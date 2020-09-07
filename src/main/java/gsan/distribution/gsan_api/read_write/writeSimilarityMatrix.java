@@ -31,7 +31,11 @@ public class writeSimilarityMatrix {
 		this.similarity = s;
 	}
 	
+<<<<<<< HEAD
 	public Map<String, Object> similarityMethod(GlobalOntology go,List<String> terminos) {
+=======
+	public Map<String, Object> similarityMethod(GlobalOntology go,List<String> terminos, int ic) {
+>>>>>>> Release_1.0.1
 		Double[][] matrixSS = new Double[terminos.size()][terminos.size()];
 		String[] names = new String[terminos.size()];
 		for(int i = 0; i<terminos.size();i++){

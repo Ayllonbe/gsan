@@ -13,7 +13,8 @@ public enum CustomException {
 	 ,
 	  code3("404", "Bad Request","/start","The gene id of the query doesn't match with the gene id of GOA. Please, check if:\n"
 	  		+ "1) You use the official symbol id.\n"
-	  		+ "2) You use the good organism.")
+	  		+ "2) You use the good organism."
+	  		+ "Another possible issue: There is no GO terms associate to input gene set.")
 	  ,
 		code4("500", "Internal Server Error","GSAn","there was an error in the clustering step. Maybe the number of "
 				+ "annotation is insufficient. If that is not the case, please contact us to solve this issue.")

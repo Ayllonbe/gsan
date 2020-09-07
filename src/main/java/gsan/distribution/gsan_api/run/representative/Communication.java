@@ -85,6 +85,7 @@ public class Communication {
 		      		"\n" + 
 		      		"for(x in 1:cl){\n" + 
 		      		"  namesCluster <- names(cutree.obj[cutree.obj==x])\n" + 
+<<<<<<< HEAD
 		      		"  termCl<-c(termCl,length(namesCluster))\n"+
 		      		"collapseCluster <- \"\"\n"+
 		      		" if(any(i <- grep(\"HSA\",namesCluster))){\n"+
@@ -92,6 +93,10 @@ public class Communication {
 		      		"}else{"+
 		      		 "collapseCluster <- gsub(\"[.]\", \":\",paste(namesCluster,collapse=\";\"))\n"+
 		      		"}\n"+
+=======
+		      		"  termCl<-c(termCl,length(namesCluster))\n"
+		      		+ "collapseCluster <- gsub(\"[.]\", \":\",paste(namesCluster,collapse=\";\"))\n" + 
+>>>>>>> Release_1.0.1
 		      		"  clusters <- c(clusters,paste(x,sil.obj[x],collapseCluster,sep=\"\\t\"))\n" + 
 		      		"}");
 	      code.addRCode("Tcl <- length(termCl)\n" + 

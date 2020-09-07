@@ -68,6 +68,7 @@ public static void initializeOrGet(String GOOWL) {
 		 */
 		goBase = go;
 
+<<<<<<< HEAD
 
 		
 		System.out.println("GO BP " +go.getPercentile(25, "mazandu", "GO"));
@@ -80,6 +81,18 @@ public static void initializeOrGet(String GOOWL) {
 		System.out.println("DO " +go.getPercentile(50, "mazandu", "DO"));
 		System.out.println("DO " +go.getPercentile(75, "mazandu", "DO"));
 		
+=======
+	for(String t : go.allStringtoInfoTerm.keySet()) {
+		if(go.allStringtoInfoTerm.get(t).ICs.get(3)>9352.84) {
+			System.out.println(go.allStringtoInfoTerm.get(t).toName()+" "+go.allStringtoInfoTerm.get(t).ICs.get(3));
+		}
+	}
+		
+//		System.out.println(go.getPercentile(25, "mazandu", "GO"));
+//		System.out.println(go.getPercentile(50, "mazandu", "GO"));
+//		System.out.println(go.getPercentile(75, "mazandu", "GO"));
+		
+>>>>>>> Release_1.0.1
 	}
 	public static GlobalOntology getGraph() {
 		

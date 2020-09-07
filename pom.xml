@@ -6,7 +6,7 @@
 
 	<groupId>gsan.server</groupId>
 	<artifactId>gsan.api</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.5</version>
 	<packaging>jar</packaging>
 
 	<name>gsan.api</name>
@@ -107,7 +107,10 @@
 			<artifactId>RCaller</artifactId>
 			<version>3.0</version>
 		</dependency>
+<<<<<<< HEAD
 		
+=======
+>>>>>>> Release_1.0.1
 	</dependencies>
 
 	<build>

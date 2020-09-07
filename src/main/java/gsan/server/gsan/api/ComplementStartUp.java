@@ -51,6 +51,7 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 		}
 
 		
+<<<<<<< HEAD
 		
 		
 		try {
@@ -64,12 +65,42 @@ public class ComplementStartUp  implements ApplicationListener<ApplicationReadyE
 			e.printStackTrace();
 		}
 		//FTPDownloader.DownloadGOA();
+=======
+		graphSingleton.initializeOrGet(path+GOOWL);
+>>>>>>> Release_1.0.1
 		
-		System.out.println("Ready to use!");
+		
+		
+		File annotations = new File("src/main/resources/static/AssociationTAB");
+		if(!annotations.exists()) {
+		FTPDownloader.DownloadGOA();
+		}
+		String[] listFiles = new String[] {"ecocyc.gaf","cgd.gaf","goa_human.gaf","goa_arabidopsis.gaf","goa_chicken.gaf","goa_cow.gaf","goa_dog.gaf",
+				"goa_fly.gaf","goa_mouse.gaf","goa_pig.gaf","goa_rat.gaf","goa_worm.gaf","goa_yeast.gaf","goa_zebrafish.gaf"
+		};
+		for(String sf : listFiles) {
+			File f = new File("src/main/resources/static/AssociationTAB/"+sf);
+			if(!f.exists()) {
+				FTPDownloader.DownloadGOA();
+			}
+		}
 
+		System.out.println("Ready to use!");
+		try {
+			FTPDownloader.DownloadGOOWL(GOOWL,"http://current.geneontology.org/ontology/",path);
+//			FTPDownloader.DownloadGOA();//NO OLVIDAR!!!!!
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		System.out.println("Ready to use!");
 	}
 	
-
 	
 
 }

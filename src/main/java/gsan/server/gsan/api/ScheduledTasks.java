@@ -43,7 +43,9 @@ public class ScheduledTasks {
 	 */
 
 	//@Scheduled(cron="0 0 12 * * ?")
-	@Scheduled(cron="0 0 * * 1 ?")
+	//@Scheduled(cron="0 0 * * 1 *")
+	
+	@Scheduled(cron="0 0 12 * * MON")
 	public void performTask() throws IOException {
 		
 		FTPDownloader.DownloadGOA();
@@ -56,7 +58,11 @@ public class ScheduledTasks {
 			e.printStackTrace();
 		}
 		if(cond)
+<<<<<<< HEAD
 			graphSingleton.initializeOrGet("go.owl");
+=======
+			graphSingleton.initializeOrGet("src/main/resources/static/ontology/go.owl");
+>>>>>>> Release_1.0.1
 		
 		log.debug("Checking and Donwloading GO and GOA.");
 
@@ -65,7 +71,7 @@ public class ScheduledTasks {
 	/*
 	 * Remove The JSON file with more than 12h. Scheduled of 24h.
 	 */
-	@Scheduled(cron="0 */12 * * * ?")
+	@Scheduled(cron="0 */12 * * * *")
 	public void RemoveOLDJSON() throws IOException {
 		String repertoire = "src/main/tmp/results";
 		File dir  = new File(repertoire);
@@ -91,9 +97,12 @@ public class ScheduledTasks {
 	DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	DateTimeFormatter day = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	DateTimeFormatter heure = DateTimeFormatter.ofPattern("HH");
-	@Scheduled(cron="0 0 * * 5 ?")
+//	@Scheduled(cron="0 0 * * 5 *")
+	@Scheduled(cron="0 0 12 * * WED")
+	
+	//@Scheduled(cron="0 0/5 * * * *")
 	public void reports() {
-		
+		System.out.println("hola");
 		Map<Integer,Set<UUID>> mapError2Users = new HashMap<>();
 		Map<String,Set<UUID>> mapDay2Users = new HashMap<>();
 		

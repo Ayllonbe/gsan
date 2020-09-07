@@ -41,13 +41,13 @@ figure {
 						<br>
 						<h4>Advanced parameters</h4>
 						<figure>
-							<img src="dist/imgs/fig2.png" alt="" style="width: 100%" />
+							<img src="dist/imgs/fig2.png" alt="" style="width: 80%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
 						<h2 id="visualization">2. Visualization</h2>
 						<figure>
-							<img src="dist/imgs/VisPag.png" alt="" style="width: 100%" />
+							<img src="dist/imgs/VisPag.png" alt="" style="width: 80%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -61,7 +61,13 @@ figure {
 						<br>
 						<h4>Understanding the gauge figures</h4>
 						<figure>
-							<img src="dist/imgs/gauge.png" alt="" style="width: 100%" />
+							<img src="dist/imgs/gauge.png" alt="" style="width: 90%" />
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<br>
+						<h4>Understanding the synthetic annotation</h4>
+						<figure>
+							<img src="dist/imgs/barplot.png" alt="" style="width: 90%" />
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
@@ -157,7 +163,7 @@ figure {
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
-						<h3>Semantic Similarity</h3>
+						<h3 id="SSformulas">Semantic Similarity</h3>
 						<h4>Resnik</h4>
 						That semantic similarity measure was proposed by <a href="https://arxiv.org/pdf/cmp-lg/9511007.pdf">Resnik</a> at the same time than the IC,
 						where the similarity between two terms corresponds to the IC of their most informative common ancestors
@@ -211,10 +217,26 @@ figure {
 
 						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
 							<img src="dist/imgs/df.png" alt="" style="width: 100%" />
+<<<<<<< HEAD
+=======
+							<!-- <figcaption>Légende associée</figcaption> -->
+						</figure>
+						<h3 id=gs2Formula> Gene set similarity</h3>
+						<h4>GS&sup2;</h4>
+						This gene set similarity computes a similarity by taking into account the annotation terms
+						and their ancestors of all genes involved in a particular gene set.
+						The formula that we applied is as follows (<a href="https://academic.oup.com/bioinformatics/article/25/9/1178/204335">Ruths <i>et al</i>.</a>):
+						<br><br>
+						<figure style="background-color:white;width:40%;margin-left: auto;margin-right: auto;">
+							<img src="dist/imgs/gs2.png" alt="" style="width: 100%" />
+>>>>>>> Release_1.0.1
 							<!-- <figcaption>Légende associée</figcaption> -->
 						</figure>
 						<br>
-
+						<br>
+            where <em>G</em> is the gene set, <em>T<sub>GO</sub>(x)</em> is the list of GO terms associated with a given gene <em>x</em>, <em>ancestors(y)</em> is the list of ancestor terms of the GO term <em>y</em> in addition to y itself, <em>rank<sub>G−x</sub>(z)</em> is the number of genes in the set except for the gene <em>x</em> that is associated with the GO term <em>z</em>.  When the value is 0, all genes have distinct annotation, and when the value is 1, all genes have the same annotation. A low similarity value (under 0.5) can result in a unprecise GSAn annotation.
+						<br>
+					  <br>
 						<br>
 						<br>
 						<br>

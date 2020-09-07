@@ -14,14 +14,20 @@
 						Annotation results
 						<button class="btnJSON" style="font-family: sans-serif;font-size:18px;">
 							<i class="fa fa-download"></i>&nbsp;Export JSON
-						</button>
+						</button> <span style="font-size: 14px;"> <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
+							 title="download JSON file" data-content="By clicking this button, you can download the JSON file that may be reused in the Visualization Web page."></i></span>
 					</h1>
 					<div class="row">
 						<div id="gauge" class="col-xs-12 col-lg-3">
 						<H2>Charts</H2 >
 							<div class="row">
 								<div class="col-xs-6">
+<<<<<<< HEAD
 									<H4 style="text-align: center">Percentage of genes with annotations</H4>
+=======
+									<H4 style="text-align: center">Percentage of genes with annotations <span style="font-size: 14px;"> <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
+										 title="Percentage of genes with annotations" data-content="Percentage of genes with annotation in the gene set provided as input before the analysis (information extracted from the organism specific GOA file)"></i></span></H4>
+>>>>>>> Release_1.0.1
 								</div>
 								<div class="col-xs-4 col-lg-6">
 									<div id="recoverGenes"></div>
@@ -32,7 +38,12 @@
 							</div>
 							<div class="row">
 								<div class="col-xs-6">
+<<<<<<< HEAD
 									<H4 style="text-align: center">Percentage of genes annotated with GSAn</H4>
+=======
+									<H4 style="text-align: center">Percentage of genes annotated with GSAn <span style="font-size: 14px;"> <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
+										 title="Percentage of annotated genes" data-content="Percentage of recovered genes in the gene set provided as input associated with at least one GO term in the result."></i></span></H4>
+>>>>>>> Release_1.0.1
 								</div>
 								<div class="col-xs-4 col-lg-6" style="vertical-align:middle;">
 									<div id="recoverAnnotGenes"></div>
@@ -54,7 +65,12 @@
 							<div class="row">
 								<div class="col-xs-6">
 									<H4 style="text-align: center;">Gene set similarity
+<<<<<<< HEAD
 										(GS&sup2;)</H4>
+=======
+										(GS&sup2;)<span style="font-size: 14px;"> <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
+											 title="Gene set similarity" data-content="Similarity measure computed before GSAn analysis. This measure indicates how much the genes in the set provided as input are similar. For that, this measure uses the annotation of each gene. <a href='documentation#gs2Formula'>Click here</a> for details about the formula"></i></span></H4>
+>>>>>>> Release_1.0.1
 								</div>
 								<div class="col-xs-4 col-lg-6">
 									<div id="gs2"></div>
@@ -66,7 +82,8 @@
 
 						</div>
 						<div id="barplot" class="col-xs-12 col-sm-12 col-md-12 col-lg-9" style="vertical-align:middle;">
-							<H2>Synthetic annotation</H2>
+							<H2>Synthetic annotation<span style="font-size: 14px;"> <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
+								 title="Synthetic annotation" data-content="This visualization represents the gene coverage and the Information Content (IC) of GO terms selected as synthetic in the analysis. <b>Note</b>: The <em>-log(information content)</em> was used since there are GO terms with very high values that hide the potential differences between smaller values."></i></span></H2>
 							<br>
 							<br>
 						</div>
@@ -87,7 +104,11 @@
 							id="defaultOpen">Table</button></div>
 						<div class="col-xs-6" style="background-color: #555;margin:0px;padding-right: 0px;padding-left: 0px;">
 						<button class="tablink"
+<<<<<<< HEAD
 							onclick="openCity('tableVisu', this, '#999999')">Combined tree visualization</button>
+=======
+							onclick="openCity('motvis', this, '#999999')">Combined tree visualization</button>
+>>>>>>> Release_1.0.1
 							</div>
 					</div>
 <div class="row">
@@ -95,10 +116,12 @@
 					<div class="table-container" id="tableResult">
 
 						<script>
+						$("[data-toggle=popover]")
+						.popover({html:true})
 							$(document).ready(
 									function() {
 										var table = $('#tableRep').DataTable();
-										table.order([ 5, 'desc' ],
+										table.order([ 6, 'desc' ],
 												[ 3, 'desc' ]).draw();
 									});
 						</script>
@@ -136,7 +159,11 @@
 
 			</div>
 			</div>
+<<<<<<< HEAD
 <br><br><br><br><br><br><br>
+=======
+<br><br><br><br><br>
+>>>>>>> Release_1.0.1
 </div>
 
 		<script th:inline="javascript">
@@ -191,7 +218,11 @@
 				var scp = data.scp;
 				var dic = data.terms;
 
+<<<<<<< HEAD
 				var h = ["GOID","Name","Ontology","IC","Covered_genes","Synthetic", "Genes" ], r = [];
+=======
+				var h = ["GOID","Name","Ontology","IC","Term_depth","Covered_genes","Synthetic", "Genes" ], r = [];
+>>>>>>> Release_1.0.1
 				representative.forEach(function(x) {
 					//console.log(dic[x]);
 					var cells = {};
@@ -199,7 +230,12 @@
 					cells[h[1]] = '"' + dic[x].name + '"';
 					cells[h[2]] = dic[x].onto;
 					cells[h[3]] = Math.floor(dic[x].IC * 100) / 100;
+<<<<<<< HEAD
 					cells[h[4]] = dic[x].geneSet.length;
+=======
+					cells[h[4]] = dic[x].depth;
+					cells[h[5]] = dic[x].geneSet.length;
+>>>>>>> Release_1.0.1
 					if (scp.includes(x)) {
 						cells[h[5]] = true;
 					} else {

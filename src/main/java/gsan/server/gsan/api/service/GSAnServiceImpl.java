@@ -15,6 +15,8 @@ import java.util.Set;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import gsan.distribution.gsan_api.read_write.ReadFile;
 import gsan.distribution.gsan_api.read_write.writeSimilarityMatrix;
 import gsan.distribution.gsan_api.run.representative.AlgorithmRepresentative;
 import gsan.distribution.gsan_api.run.representative.Cluster;
+
+import gsan.server.gsan.api.SenderMail;
 import gsan.server.gsan.api.service.jpa.taskRepository;
 import gsan.server.gsan.api.service.model.task;
 import gsan.server.singleton.graphSingleton;
@@ -35,15 +39,23 @@ import gsan.server.singleton.graphSingleton;
 @Service
 public class GSAnServiceImpl implements GSAnService {
 
+	@Autowired
+	private JavaMailSender sender;
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
 	@Async("workExecutor")
 	public void runService(taskRepository tR, task t,List<String> query, String organism, boolean IEA,List<String> ontology,
+<<<<<<< HEAD
 			String ssMethod,int geneSupport,  int percentile,int ids) {
 		Map<String,Object> process = new HashMap<>();
 		
+=======
+			String ssMethod,int geneSupport,  int percentile,int ids, String email) {
+			Map<String,Object> process = new HashMap<>();
+
+>>>>>>> Release_1.0.1
 			log.debug("Beging process n° " + t.getId());
 			String goa_file = ChooseAnnotation.annotation(organism);
 			GlobalOntology go = graphSingleton.getGraph();
@@ -71,9 +83,15 @@ public class GSAnServiceImpl implements GSAnService {
 	
 			
 			process.putAll(gsanService(query,GOA,go, ontology, ssMethod,
+<<<<<<< HEAD
 					geneSupport,  percentile)); 
 			process.put("organism", organism);
 			finishing(tR,t, process);		
+=======
+					geneSupport,  percentile));
+			process.put("organism", organism);
+			finishing(tR,t, process,email);		
+>>>>>>> Release_1.0.1
 		
 	}
 
@@ -81,8 +99,12 @@ public class GSAnServiceImpl implements GSAnService {
 	public Map<String,Object> runService(List<String> query, String organism, boolean IEA,List<String> ontology,
 			String ssMethod,int geneSupport, int percentile,int ids) {
 		try {
+
 			String goa_file = ChooseAnnotation.annotation(organism);
+<<<<<<< HEAD
 			
+=======
+>>>>>>> Release_1.0.1
 			GlobalOntology go = graphSingleton.getGraph();
 			Annotation GOA ;
 		
@@ -117,9 +139,12 @@ public class GSAnServiceImpl implements GSAnService {
 	@Override
 	@Async("workExecutor")
 	public void runService(taskRepository tR, task t,List<String> query, boolean IEA,List<String> ontology,
+<<<<<<< HEAD
 			String ssMethod, int geneSupport,  int percentile, String goa_file,int ids) {
+=======
+			String ssMethod, int geneSupport,  int percentile, String goa_file,int ids, String email) {
+>>>>>>> Release_1.0.1
 			Map<String,Object> process = new HashMap<>();
-			
 			log.debug("Beging process n° " + t.getId());
 			GlobalOntology go = graphSingleton.getGraph();
 			log.debug("Charging Annotation file");
@@ -143,14 +168,18 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			process.putAll(gsanService(query,GOA,go , ontology, ssMethod, geneSupport,  percentile));
 		    process.put("organism", "");
+<<<<<<< HEAD
 			finishing(tR,t, process);	
+=======
+			finishing(tR,t, process,email);	
+>>>>>>> Release_1.0.1
 	}
 	
 	
 	
 	
 	@SuppressWarnings("unchecked")
-	private void finishing(taskRepository tR,task t, Map<String,Object> process) {
+	private void finishing(taskRepository tR,task t, Map<String,Object> process, String email) {
 		try {
 			JSONObject jo = new JSONObject();
 			jo.putAll(process);
@@ -175,6 +204,18 @@ public class GSAnServiceImpl implements GSAnService {
 			
 			
 			log.debug("Ending process n° " + t.getId());
+			
+			if(email!=null && email!="") {
+				try {
+					SenderMail sm = new SenderMail();
+					
+					sm.sendEmailWithoutTemplating(email,sender, t);
+				}
+				catch(Exception e) {
+					log.debug("The email is not valide.");
+					e.printStackTrace();
+				}
+			}
 
 	}
 	
@@ -219,6 +260,7 @@ public class GSAnServiceImpl implements GSAnService {
 			int geneSupport, int percentile) {
 		int msg_code = 0;
 		try {
+<<<<<<< HEAD
 			
 			/*
 			 * MAPPING
@@ -237,6 +279,8 @@ public class GSAnServiceImpl implements GSAnService {
 
 			
 			
+=======
+>>>>>>> Release_1.0.1
 		int ic_inc = 3;
 		
 		List<String> genesList = new ArrayList<>(new HashSet<String>(query));
@@ -271,13 +315,24 @@ public class GSAnServiceImpl implements GSAnService {
 			log.debug("Reducing annotation...");
 			Annotation  GOAred = Annotation.redondancyReduction(GOA,go);
 			Annotation GOAincom = Annotation.icIncompleteReduction(GOAred,go,ic_inc, Mappercentile);
+<<<<<<< HEAD
 			System.out.println(GOAincom.annotation.keySet().size());
+=======
+
+			
+			//System.out.println(it.ICs.get(3)+" "+it.genome.size());
+		
+>>>>>>> Release_1.0.1
 		Set<String> termsInc = new HashSet<String>();
 		Set<String> diseases = new HashSet<String>();
 		//System.out.println(ontology);
 		log.debug("Recovering terms to analyse the gene set");
 		for(String ont : ontology) {
+<<<<<<< HEAD
 			if(!ont.contains("DO")) {
+=======
+			
+>>>>>>> Release_1.0.1
 			List<String> termsonto = GOAincom.getTerms(genesList,ont,go);
 			if(termsonto!=null)
 				termsInc.addAll(termsonto);
@@ -309,11 +364,51 @@ public class GSAnServiceImpl implements GSAnService {
 			msg_code = msg_code>0?msg_code: 3;
 			throw new java.lang.NullPointerException("line 255 - termsInc is empty");
 			}
+<<<<<<< HEAD
 		System.out.println("size "+termsInc.size());
 
 		Map<String,Object> map = new HashMap<>();
 		
 		System.out.println(termsInc.size());
+=======
+		
+		List<String> golist =new ArrayList<String>();
+				golist.add("GO:0007020"); 
+		        golist.add("GO:0000278"); 
+		        golist.add("GO:0006511");
+		        golist.add("GO:0019941");
+		        golist.add("GO:0000398");
+		        golist.add("GO:0009060");
+		        golist.add("GO:0006096");
+		        golist.add("GO:0008152");
+		        golist.add("GO:0044262");
+		        golist.add("GO:0045333");
+		        golist.add("GO:0019538");
+		        golist.add("GO:0006119");
+		        golist.add("GO:0015986");
+		        golist.add("GO:0006333");
+		        golist.add("GO:0006260");
+		        golist.add("GO:0006270");
+		        golist.add("GO:0007049");
+		        golist.add("GO:0006270");
+		        golist.add("GO:0006261");
+		        golist.add("GO:0006099");
+		
+		
+		
+		for(String t : golist) {
+			InfoTerm iT = go.allStringtoInfoTerm.get(t);
+			//System.out.println("> " + iT.name + " " + iT.geneSet.size());
+			//if(iT.geneSet.size()>0)
+							System.out.println("> > > "+iT.id+" "+iT.name + " " + iT.depth() +" "+iT.geneSet.size());
+			
+			
+		}
+		
+		
+		Map<String,Object> map = new HashMap<>();
+		
+>>>>>>> Release_1.0.1
 		map.putAll(GSAnMethod(genesList, ontology,go,GOAincom, ssMethod, geneSupport,Mappercentile,termsInc));
 		
 		if(msg_code>0) map.put("msg",msg_code);
@@ -377,7 +472,11 @@ public class GSAnServiceImpl implements GSAnService {
 		return a;
 	}
 	public Map<String,Object> GSAnMethod(List<String> genesList,List<String> ontology,GlobalOntology go, Annotation GOAincom ,String ssMethod,
+<<<<<<< HEAD
 			int geneSupport,Map<String,Double> percentile, Set<String> termsInc) throws IOException {
+=======
+			int geneSupport,Map<String,Double> percentile, Set<String> termsInc) {
+>>>>>>> Release_1.0.1
 		
 		/*
 		 * Mapping
@@ -477,15 +576,21 @@ public class GSAnServiceImpl implements GSAnService {
 				//System.out.println("###  ont: "+ ont);
 			List<String> listTerm = new LinkedList<String>(termsInc);
 			listTerm.retainAll(go.allStringtoInfoTerm.get(ont).is_a.descendants);
+			if(!listTerm.isEmpty()) {
 			log.debug("Writing Similarity Matrix...");
 			writeSimilarityMatrix wSS = new writeSimilarityMatrix(ssMethod);
+<<<<<<< HEAD
 			Map<String,Object> mSS = wSS.similarityMethod(go, listTerm);
+=======
+			Map<String,Object> mSS = wSS.similarityMethod(go, listTerm, icSimilarity.intValue());
+>>>>>>> Release_1.0.1
 			
             AlgorithmRepresentative ar = new AlgorithmRepresentative(ic_inc, ont, mSS, "average",
 					tailmin,simRepFilter,covering, geneSupport);
 			rep.addAll(ar.run( go, listTerm,GOAincom,percentile));
 			error = ar.errorMsg;
 			//System.out.println("ATENTIION " + error);
+			}
 			}
 			
 			if(rep.isEmpty()) {
@@ -702,6 +807,7 @@ public class GSAnServiceImpl implements GSAnService {
 				Map<String, Object> mapTerm = new HashMap<>();
 				mapTerm.put("name", it.toName());
 				mapTerm.put("IC", it.ICs.get(ic_inc));
+				mapTerm.put("depth", it.depth());
 				mapTerm.put("onto", onto2simpleName(go.allStringtoInfoTerm.get(it.top).toName()));
 				mapTerm.put("geneSet", new ArrayList<String>(mapTerm2genes.get(t)));
 				
@@ -744,6 +850,7 @@ public class GSAnServiceImpl implements GSAnService {
 				Map<String, Object> mapTerm = new HashMap<>();
 				mapTerm.put("name", "Gene Ontology");
 				mapTerm.put("IC", 0);
+				mapTerm.put("depth", 0);
 				mapTerm.put("geneSet", new ArrayList<String>());
 				//mapTerm.put("children", ontology);
 				mapTerm.put("opacity", 1.);
@@ -850,7 +957,8 @@ public class GSAnServiceImpl implements GSAnService {
 
 			}
 			if(Double.isNaN(dd)) {
-				System.exit(0);
+				//System.exit(0);
+				System.out.println("BIGPROBLEM");
 			}
 			dd = dd + (1./(double)ng) * sum;
 		}
