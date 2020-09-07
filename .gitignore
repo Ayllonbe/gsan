@@ -5,7 +5,6 @@ mvnw
 mvnw.*
 PostgreSQL_*
 target
-src/main/resources/application.properties
 src/main/resources/static/ontology/*
 src/main/resources/static/AssociationTAB/*
 src/main/resources/static/integration/*
