@@ -136,10 +136,7 @@
 							  <OPTION value="escherichia_coli">escherichia_coli
 								<OPTION value="gallus_gallus">gallus_gallus
 								<OPTION value="mus_musculus">mus_musculus
-<<<<<<< HEAD
-=======
 								<OPTION value="pseudomonas_aeruginosa"> pseudomonas_aeruginosa
->>>>>>> Release_1.0.1
 								<OPTION value="saccharomyces_cerevisiae">saccharomyces_cerevisiae
 								<OPTION value="sus_scrofa">sus_scrofa
 								<OPTION value="rattus_norvegicus">rattus_norvegicus
@@ -185,14 +182,11 @@
 								 $("#uni").text("Candida genome database")
 								 $("#genOf").text("Official gene symbol")
 							 }
-<<<<<<< HEAD
-=======
 							 else if( str === "pseudomonas_aeruginosa"){
 								 $("#gafHide").hide();
 								 $("#uni").text("Pseudomonas locus tag")
 								 $("#genOf").text("Official gene symbol")
 							 }
->>>>>>> Release_1.0.1
 							 else{
 								 $("#uni").text("UniprotKB")
 								$("#genOf").text("Official gene symbol")
@@ -240,10 +234,10 @@
 							value="GO:0005575"> <label for="CC">cellular component</label>
 						</div>
 					</div>
-					<input class="ontologies" id="DO" type="checkbox"
+					<!--	<input class="ontologies" id="DO" type="checkbox"
 							value="DOID:4"> <label for="DO">disease</label>
 						<input class="ontologies" id="R" type="checkbox"
-							value="reac"> <label for="R">reactome</label>
+							value="reac"> <label for="R">reactome</label>-->
 						<!--
 						<input class="ontologies" id="all" type="checkbox" value="all">
 
@@ -258,13 +252,8 @@
 							<div class="col-sm-4">
 						 <label style="font-weight: normal;">Choose a
 							semantic similarity measure:
-<<<<<<< HEAD
-					 <i class="fa fa-info-circle" rel="tooltip"
-							title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms. See documentation for more details."></i>
-=======
 					 <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
 							title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms. <a href='documentation#SSformulas'>Click here</a> for details about formulas."></i>
->>>>>>> Release_1.0.1
 						</label>
 						</div>
 						<div class="col-sm-4">
@@ -276,11 +265,7 @@
 							<!--	<OPTION value="pekarStaab">Pekar & Staab-->
 								<OPTION value="distanceFunction">Distance function
 							<!--	<OPTION value="ganesan">Ganesan-->
-<<<<<<< HEAD
-								<OPTION value="nUnivers">NUnivers
-=======
 								<OPTION value="nUnivers" selected>NUnivers
->>>>>>> Release_1.0.1
 									<!--  <OPTION value="NUM">NUnivers_Mod  -->
 								<OPTION value="aic" >AIC
 
@@ -344,11 +329,7 @@
 							</div>-->
 							<br>
 							<div class="row">
-<<<<<<< HEAD
-								<div class="col-xs-8 col-sm-6">
-=======
 								<div class="col-xs-8 col-sm-7">
->>>>>>> Release_1.0.1
 							<!--		<h4 style="font-weight: bold;">Filters:</h4>-->
 
 					<!--				<div class="form-group row">
@@ -395,15 +376,9 @@ In the representative algorithm, after clustering method, one or more terms can 
 								-->
 									<div class="form-group row">
 										<label class="col-xs-12 col-lg-8 col-form-label"
-<<<<<<< HEAD
-											style="font-weight: normal;">Incomplet information filter: <i
-											class="fa fa-info-circle" rel="tooltip"
-											title="Incomplete information filter" data-content="Tolerance degree that discards terms with a low specificity. Four levels of tolerance (none, low, medium and hard) are applied corresponding to the IC distribution of the ontology (discarding the terms bellow the percentiles 1, 10, 25 and 50 respectively)"></i>
-=======
 											style="font-weight: normal;">Incomplete information filter: <i
 											class="fa fa-info-circle" rel="tooltip"
 											title="Incomplete information filter" data-content="Tolerance degree that discards terms with a low specificity. Four levels of tolerance (none, low, medium and hard) may be applied corresponding to the IC distribution of the ontology (discarding the terms below the 1, 10, 25 and 50 percentiles, respectively)"></i>
->>>>>>> Release_1.0.1
 										</label>
 										<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
 											<SELECT id="percentile" name="percentile" size="1">

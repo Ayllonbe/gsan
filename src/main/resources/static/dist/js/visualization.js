@@ -50,11 +50,7 @@ $(".gs2").append('<p>The groupwise similarity between genes of the set is '+(Mat
 
 barplot(scpDic,recoverGenes);
 
-<<<<<<< HEAD
-var h = ["GOID","Name","Ontology","IC","Covered genes","Synthetic"]
-=======
 var h = ["GOID","Name","Ontology","IC","Term depth","Covered genes","Synthetic"]
->>>>>>> Release_1.0.1
 var r = [];
 representative.forEach(function(x){
   //console.log(dic[x]);
@@ -86,73 +82,29 @@ table
     .setTableID('tableRep')
     .build()
 
-<<<<<<< HEAD
-$("#tableResult").append('<button class="btnCsv" style="float:right;font-family: sans-serif;font-size:18px;"><i class="fa fa-download"></i>&nbsp;Export CSV</button>');
-
-=======
 $("#tableResult").append('<span style="font-size: 14px;"> <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover title="download CSV file" data-content="By clicking this button, you will download the table in a CSV format."></i></span><br><button class="btnCsv" style="font-family: sans-serif;font-size:18px;"><i class="fa fa-download"></i>&nbsp;Export CSV</button> ');
 $("[data-toggle=popover]")
 .popover({html:true})
->>>>>>> Release_1.0.1
 //motvis(dic,representative,genes,data.tree);
 var circulardiv = document.getElementById("circular"),
 treediv = document.getElementById("treeHIDDEN"),
 width = circulardiv.clientWidth,
 height = circulardiv.clientHeight,
 pack = d3.pack().size([width*0.9 , height*0.9]).padding(0.4);
-<<<<<<< HEAD
-
-console.log(width +" " + height);
-motvis(dic,scp,genes,data.tree,width,height,pack,circulardiv,treediv,1);
-=======
 motvis(dic,representative,genes,data.tree,width,height,pack,circulardiv,treediv);
->>>>>>> Release_1.0.1
 
   $(window).resize(function(){
     circulardiv = document.getElementById("circular"),
     treediv = document.getElementById("treeHIDDEN");
     if(width!==circulardiv.clientWidth || height!==circulardiv.clientHeight){
-<<<<<<< HEAD
-      width = circulardiv.clientWidth,
-      height = circulardiv.clientHeight;
-      motvis(dic,scp,genes,data.tree,width,height,pack,circulardiv,treediv,1);
-=======
       console.log("hola");
       width = circulardiv.clientWidth,
       height = circulardiv.clientHeight;
       motvis(dic,representative,genes,data.tree,width,height,pack,circulardiv,treediv);
->>>>>>> Release_1.0.1
     }
 
 });
 
-<<<<<<< HEAD
-
-$(".selection").on('click', function() {
-  // in the handler, 'this' refers to the box clicked on
-  var $box = $(this);
-  if ($box.is(":checked")) {
-    // the name of the box is retrieved using the .attr() method
-    // as it is assumed and expected to be immutable
-    var group = "input:checkbox[name='" + $box.attr("name") + "']";
-    // the checked state of the group/box on the other hand will change
-    // and the current value is retrieved using .prop() method
-    $(group).prop("checked", false);
-    $box.prop("checked", true);
-  } else {
-    $box.prop("checked", false);
-  }
-   console.log($box[0].value);
-    motvis(dic,scp,genes,data.tree,width,height,pack,circulardiv,treediv,$box[0].value);
-
-
-
-
-
-
-});
-=======
->>>>>>> Release_1.0.1
 
 function gauge(value,id) {
 var gauge = gaugeChart()
