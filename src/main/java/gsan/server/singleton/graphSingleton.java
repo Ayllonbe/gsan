@@ -2,8 +2,6 @@ package gsan.server.singleton;
 
 import java.io.File;
 
-import com.integration.analysis.GlobalGraph;
-
 import gsan.distribution.gsan_api.ontology.GlobalOntology;
 public class graphSingleton {
 	
@@ -28,34 +26,34 @@ public static void initializeOrGet(String GOOWL) {
 		/*
 		 * INIT TEST HUMAN integration
 		 */
-		File pathways = new File("src/main/resources/static/integration/ReactomePathways.txt");
-		File rel = new File("src/main/resources/static/integration/ReactomePathwaysRelation.txt");
-		String reac = "R";
-		GlobalOntology reactome = GlobalGraph.getGraph(pathways, rel,reac);
-		go.allStringtoInfoTerm.putAll(reactome.allStringtoInfoTerm);
-		
-		for(String author : go.IC2DS.keySet()) {
-			go.IC2DS.get(author).putAll(reactome.IC2DS.get(author));
-			
-		}
-		
-		
-		go.subontology.putAll(reactome.subontology);
-		go.sourceSet.addAll(reactome.sourceSet);
+//		File pathways = new File("src/main/resources/static/integration/ReactomePathways.txt");
+//		File rel = new File("src/main/resources/static/integration/ReactomePathwaysRelation.txt");
+//		String reac = "R";
+//		GlobalOntology reactome = GlobalGraph.getGraph(pathways, rel,reac);
+//		go.allStringtoInfoTerm.putAll(reactome.allStringtoInfoTerm);
+//		
+//		for(String author : go.IC2DS.keySet()) {
+//			go.IC2DS.get(author).putAll(reactome.IC2DS.get(author));
+//			
+//		}
 //		
 //		
-		String doid = "src/main/resources/static/integration/doid.owl";
-		args[0] = doid;
-		args[1] = "DO";
-		GlobalOntology DO =GlobalOntology.informationOnt(args);
-		go.allStringtoInfoTerm.putAll(DO.allStringtoInfoTerm);
-		
-		for(String author : go.IC2DS.keySet()) {
-			go.IC2DS.get(author).putAll(DO.IC2DS.get(author));
-			
-		}
-		go.subontology.putAll(DO.subontology);
-		go.sourceSet.addAll(DO.sourceSet);
+//		go.subontology.putAll(reactome.subontology);
+//		go.sourceSet.addAll(reactome.sourceSet);
+//		
+//		
+//		String doid = "src/main/resources/static/integration/doid.owl";
+//		args[0] = doid;
+//		args[1] = "DO";
+//		GlobalOntology DO =GlobalOntology.informationOnt(args);
+//		go.allStringtoInfoTerm.putAll(DO.allStringtoInfoTerm);
+//		
+//		for(String author : go.IC2DS.keySet()) {
+//			go.IC2DS.get(author).putAll(DO.IC2DS.get(author));
+//			
+//		}
+//		go.subontology.putAll(DO.subontology);
+//		go.sourceSet.addAll(DO.sourceSet);
 		
 //		for(String sub : go.subontology.keySet()) {
 //			OntoInfo oi = go.subontology.get(sub);
@@ -68,20 +66,6 @@ public static void initializeOrGet(String GOOWL) {
 		 */
 		goBase = go;
 
-<<<<<<< HEAD
-
-		
-		System.out.println("GO BP " +go.getPercentile(25, "mazandu", "GO"));
-		System.out.println("GO BP " +go.getPercentile(50, "mazandu", "GO"));
-		System.out.println("GO BP " +go.getPercentile(75, "mazandu", "GO"));
-		System.out.println("R " +go.getPercentile(25, "mazandu", "R"));
-		System.out.println("R " +go.getPercentile(50, "mazandu", "R"));
-		System.out.println("R " +go.getPercentile(75, "mazandu", "R"));
-		System.out.println("DO " +go.getPercentile(25, "mazandu", "DO"));
-		System.out.println("DO " +go.getPercentile(50, "mazandu", "DO"));
-		System.out.println("DO " +go.getPercentile(75, "mazandu", "DO"));
-		
-=======
 	for(String t : go.allStringtoInfoTerm.keySet()) {
 		if(go.allStringtoInfoTerm.get(t).ICs.get(3)>9352.84) {
 			System.out.println(go.allStringtoInfoTerm.get(t).toName()+" "+go.allStringtoInfoTerm.get(t).ICs.get(3));
@@ -92,7 +76,6 @@ public static void initializeOrGet(String GOOWL) {
 //		System.out.println(go.getPercentile(50, "mazandu", "GO"));
 //		System.out.println(go.getPercentile(75, "mazandu", "GO"));
 		
->>>>>>> Release_1.0.1
 	}
 	public static GlobalOntology getGraph() {
 		
@@ -102,3 +85,4 @@ public static void initializeOrGet(String GOOWL) {
 	
 	
 }
+

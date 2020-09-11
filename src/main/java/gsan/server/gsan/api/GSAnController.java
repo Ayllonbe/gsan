@@ -17,9 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
@@ -30,9 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSendException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,10 +52,6 @@ public class GSAnController {
 	private GSAnService gsanService;
 	@Autowired
 	private taskRepository tRepository;
-	@Autowired
-	private JavaMailSender sender;
-
-
 
 	//public static String local = "http://localhost:8282/";
 
@@ -317,56 +307,7 @@ public class GSAnController {
 //		// Get the default Session object.
 //	}
 
-
-	@RequestMapping("/question")
-	public String sendQuestion(@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "email", required = true) String email,
-			@RequestParam(value = "msj", required = true) String msj) throws UnsupportedEncodingException {
-		MimeMessage message = sender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message);
-
-		try {
-			helper.setFrom(new InternetAddress("no-reply-gsan@labri.fr", "NO-REPLY"));
-			// Set To: header field of the header.
-			helper.setTo(new InternetAddress("ayllonbenitez.aaron@gmail.com"));
-			// Set Subject: header field
-			message.setSubject("[GSAn] Question");
-			// Fill the message
-			helper.setText(msj+" \nMail: "+email+" \nName: "+name);
-			 sender.send(message);
-			    log.debug("Sent message successfully....");
-				} catch (MessagingException e) {
-					// TODO Auto-generated catch block
-					log.error("The email is incorrect");
-					//e.printStackTrace();
-				}catch(MailSendException e) {
-					log.error("The email is null or incorrect");
-				}
-
-		 message = sender.createMimeMessage();
-		 helper = new MimeMessageHelper(message);
-
-			try {
-				helper.setFrom(new InternetAddress("no-reply-gsan@labri.fr", "NO-REPLY"));
-				// Set To: header field of the header.
-				helper.setTo(new InternetAddress(email));
-				// Set Subject: header field
-				message.setSubject("[GSAn] Question");
-				message.setText("** This is an automatic email, Please don't reply to it **"+
-						"\n\n"+"Dear "+name+",\n\nThank you for your interest in GSAn, we will contact you as soon as possible.\n\nRegards,\n\nGSAn team");
-				 sender.send(message);
-				    log.debug("Sent message successfully....");
-					} catch (MessagingException e) {
-						// TODO Auto-generated catch block
-						log.error("The email is incorrect");
-						//e.printStackTrace();
-					}catch(MailSendException e) {
-						log.error("The email is null or incorrect");
-					}
-		return "contact";
-	}
-
-		
+	
 	@RequestMapping("/gsanGet")
 	public String gsanRun(
 			Model model,
