@@ -583,8 +583,9 @@ In the representative algorithm, after clustering method, one or more terms can 
 									"BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,"  +
 									"CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4"*/
 								 //console.log(organism)
-
+								 
 								 if (organism !== "input") {
+									console.log(window.location.protocol);
 									 var gstr = genes.toString() ;
 									 var gf = [ ];
 									 gf.push(gstr);
@@ -600,27 +601,25 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 formData.append("minGeneSupport",sup);
 									 formData.append("email",email);
 									 formData.append("percentile", per);
-
+									console.log("hola");
 									 var xhr = new XMLHttpRequest();
-									 xhr.open("POST",
-													 window.location.protocol+"//"+window.location.host+"/gsanGet",false);
-
+									 xhr.open("POST", window.location.protocol+"//"+window.location.host+"/gsanGet",false);
 
 													  document.getElementById("waiting1").style.display = "inline";
 													 $("#completing").hide();
 													xhr.send(formData);
-
+													console.log(xhr.responseText);
 													if (xhr.status === 200) {
 													$("#waiting1").hide();
 													$("#completing").show();
-  								 window.open(xhr.responseURL,"_blank");
+  								 window.open(window.location.protocol+"//"+window.location.host+"/"+xhr.responseText,"_blank");
 									 $('#run').prop('disabled', false);
 								 }
 									 //console.log("2." + uri);
 									 //$("#run2").show();
 
 								 } else {
-
+									console.log(window.location.host);
 									 var gstr = genes.toString() ;
 									 var gf = [ ];
 									 gf.push(gstr);
@@ -637,20 +636,18 @@ In the representative algorithm, after clustering method, one or more terms can 
 									 formData.append("percentile", per);
 									 var gogo = false;
 									 var xhr = new XMLHttpRequest();
-						 xhr
-											 .open("POST",
-													 window.location.protocol+"//"+window.location.host+"/gsanPost",false);
-													 document.getElementById("waiting2").style.display = "inline";
-
+						 xhr.open("POST",window.location.protocol+"//"+window.location.host+"/gsanPost",false);
+													 
+													 document.getElementById("waiting1").style.display = "inline";
 													 $("#completing").hide();
-									 xhr.send(formData);
-
-									 if (xhr.status === 200) {
-										 $("#waiting2").hide();
-										 $("#completing").show();
-									 window.open(xhr.responseURL,"_blank");
+													xhr.send(formData);
+													console.log(xhr.responseText);
+													if (xhr.status === 200) {
+													$("#waiting1").hide();
+													$("#completing").show();
+  								 window.open(window.location.protocol+"//"+window.location.host+"/"+xhr.responseText,"_blank");
 									 $('#run').prop('disabled', false);
-									}
+								 }
 
 
 								 }
@@ -722,7 +719,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 
 	$(document).ready(function(){
     $("[rel=tooltip]").popover({ placement: 'right'});
-});
+});	
 	</script>
 
 </body>
