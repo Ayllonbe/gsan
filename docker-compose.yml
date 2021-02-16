@@ -5,7 +5,7 @@ services:
   environment:
     - POSTGRES_URL=http://postgres:5432
   ports:
-    - "443:8282"
+    - "80:8282"
   volumes:
     - /gsan/diskEXT/docker-compose/gsan:/usr/gsan/src/
   depends_on:

@@ -8,7 +8,7 @@ RUN apt-get update \
     vim-tiny \
     wget \
     ca-certificates \  
-    openjdk-8-jdk\
+    openjdk-11-jdk\
     maven
 
 ## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
