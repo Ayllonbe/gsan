@@ -1372,7 +1372,7 @@ public class GlobalOntology {
 			this.allStringtoInfoTerm.get(sub.getKey()).alphaBetaMazandu[1] = 0.;
 			Set<Double> setMax = new HashSet<>();
 		//	Set<Double> probMax = new HashSet<>();
-			System.out.println(oi.getLeavesISA().size());
+		//	System.out.println(oi.getLeavesISA().size());
 			for(String lt : oi.getLeavesISA()) {
 				
 				double[] dd = this.goUniverseIC(this.allStringtoInfoTerm.get(lt));
@@ -1390,7 +1390,7 @@ public class GlobalOntology {
 
 			oi.addMaxIC(max);
 
-			System.out.println("GO Universel " + sub.getKey() + " value = " + max );
+			//System.out.println("GO Universel " + sub.getKey() + " value = " + max );
 		}
 
 
