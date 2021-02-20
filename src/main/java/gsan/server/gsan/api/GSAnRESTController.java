@@ -130,7 +130,7 @@ public class GSAnRESTController {
 			return "error";
 		}
 	}
-	@RequestMapping("/gsanPost")
+	@PostMapping("/gsanPost")
 	public String gsanRun(
 			Model model,
 			@RequestParam(value = "ontology", required = false, defaultValue = "GO:0008150") List<String> top,
