@@ -1,49 +1,259 @@
+
+
 <!DOCTYPE html>
 <html>
-<body>
-	<div th:insert="index"></div>
-
-	<div class="content" >
-	<!-- Scrollable div with main content -->
-
+	<body>
+		<div th:insert="index"></div>
+		<div class="content" >
+			<!-- Scrollable div with main content -->
 			<div class="row" id="rowStart" style="width:100%">
 				<div class="col-xs-12 col-md-5">
-				<div class="pageClass">
-					<h1>
-						Analysis
-					</h1>
-					<h3>Input</h3>
-
-
-					<div id="query">
-						<textarea class="comments" id="queryText"
-								style="width: 90%; height: 90px;" oninput="printText()">Put here the Official gene symbols or UniprotKB ids...
+					<div class="pageClass">
+						<h1>Analysis</h1>
+						<h3>Input</h3>
+						<div id="query">
+							<textarea class="comments" id="queryText" style="width: 90%; height: 90px;" oninput="printText()">
+								Put here the Official gene symbols or UniprotKB ids...
 							</textarea>
-							  <label>
-							    <input type="checkbox" class="protORgene" value="1"  name="ids"/> <span id="uni">UniprotKB</span></label>
-							  <label>
-							    <input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> <span id="genOf">Official gene symbol</span></label>
-
-
-							<script th:inline="javascript">
-
-
+							<label>
+							<input type="checkbox" class="protORgene" value="1"  name="ids"/> <span id="uni">UniprotKB</span></label>
+							<label>
+							<input type="checkbox" class="protORgene" value="2" name="ids" checked="checked"/> <span id="genOf">Official gene symbol</span></label>
+							<i class="fa fa-info-circle" rel="tooltip" data-html="true"
+								title="Gene input" data-content="The gene input consider only the official gene symbol and the UniprotKB ids. The genes (or proteins) can be delimited by:<br>
+								&nbsp;	1. Space<br>
+								&nbsp;	2. Tabulation<br>
+								&nbsp;	3. Line breaks<br>
+								&nbsp;	4. Comma<br>
+								&nbsp;	5. Semicolon<br>
+								It is possible to insert a file in text-plain format."
+								></i>
+							<br>
+							<h6>If your gene/protein ids are not Official gene symbols or UniprotKB ids, you can convert them to UniprotKB
+								<br>
+								in <a href="https://www.uniprot.org/uploadlists/"> https://www.uniprot.org/uploadlists/ </a>
+							</h6>
+							<button id="clear">Clear</button>
+							<script>
+								$("#clear").click(function(){
+									$("#queryText").val("Put here the Official gene symbols or UniprotKB ids...")
+								});
+								
+							</script>
+							<h6>OR insert a file in csv, tsv or txt file</h6>
+							<input type="file" id="queryFile" name="profile_pic"
+								accept=".csv, .tsv, .txt">
+						</div>
+						<h3>Genome annotation input</h3>
+						<div>
+							<br>
+							<div class="row">
+								<div class="col-sm-4">
+									<label style="font-weight: normal;">Choose an
+									organism:	<span> <i class="fa fa-info-circle" rel="tooltip"
+										title="Select genome" data-content="Choose the stored organism. If your organism is not in the list, you can choose input and upload a GOA using the gaf 2.0 format."
+										></i>
+									</span></label>
+								</div>
+								<div class="col-sm-4">
+									<SELECT id="organism" name="organism" size="1">
+										<OPTION value="homo_sapiens" selected>homo_sapiens
+										<OPTION value="arabidopsis_thaliana">arabidopsis_thaliana
+										<OPTION value="bos_taurus">bos_taurus
+										<OPTION value="caenorhabditis_elegans">caenorhabditis_elegans
+										<OPTION value="candida_albicans">candida_albicans
+										<OPTION value="canis_lupus">canis_lupus
+										<OPTION value="danio_rerio">danio_rerio
+										<OPTION value="drosophila_melanogaster">drosophila_melanogaster
+										<OPTION value="escherichia_coli">escherichia_coli
+										<OPTION value="gallus_gallus">gallus_gallus
+										<OPTION value="mus_musculus">mus_musculus
+										<OPTION value="pseudomonas_aeruginosa"> pseudomonas_aeruginosa
+										<OPTION value="saccharomyces_cerevisiae">saccharomyces_cerevisiae
+										<OPTION value="sus_scrofa">sus_scrofa
+										<OPTION value="rattus_norvegicus">rattus_norvegicus
+										<OPTION value="input">input
+									</SELECT>
+								</div>
+							</div>
+							<br>
+							<div id="gafHide" style="display: none">
+								<p>Please, use a gaf file format.</p>
+								<input type="file" id="GAF" name="GAF"> <br>
+							</div>
+							<br>
+							<div class="row">
+								<div class="col-sm-4">
+									Considering IEA:&nbsp;<i class="fa fa-info-circle"
+										rel="tooltip" title="Inferred from Electronic Annotation" data-content="<ON> means that the analysis will use the IEA annotations"></i>
+								</div>
+								<div class="col-sm-4">
+									<input id="iea" checked
+										data-toggle="toggle" data-onstyle="primary" data-size="mini"
+										type="checkbox">
+								</div>
+							</div>
+							<br>
+							<div class="row">
+								<div class="col-sm-4">
+									<label style="font-weight: normal;">Choose an ontology: <i class="fa fa-info-circle" rel="tooltip"
+										title="Select Ontology" data-content="Subparts of GO (BP, MF, CC, all) to choose for the analysis."></i>
+									</label>
+								</div>
+								<div class="col-sm-6">
+									<br> <input class="ontologies" id="BP" type="checkbox"
+										value="GO:0008150" checked="checked"> <label for="BP">biological process</label> <br>
+									<input class="ontologies" id="MF" type="checkbox"
+										value="GO:0003674"> <label for="MF">molecular function</label> <br>
+									<input class="ontologies" id="CC" type="checkbox"
+										value="GO:0005575"> <label for="CC">cellular component</label>
+								</div>
+							</div>
+							<br>
+							<div class="row">
+								<div class="col-sm-4">
+									<label style="font-weight: normal;">Choose a semantic similarity measure:
+									<i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
+										title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms. <a href='documentation#SSformulas'>Click here</a> for details about formulas."></i>
+									</label>
+								</div>
+								<div class="col-sm-4">
+									<SELECT id="semantic_similarity" name="semantic_similarity" size="1">
+										<OPTION value="lin"> Lin
+										<OPTION value="resnik"> Resnik
+										<OPTION value="distanceFunction"> Distance function
+										<OPTION value="nUnivers" selected> NUnivers
+										<OPTION value="aic" > AIC
+									</SELECT>
+								</div>
+							</div>
+							
+							<h3>
+								Advanced parameters
+								<button type="button" class="btn btn-default btn-circle"
+									id="hide" style="display: none;">
+								<span class="glyphicon glyphicon-minus"></span>
+								</button>
+								<button type="button" class="btn btn-default btn-circle"
+									id="show">
+								<span class="glyphicon glyphicon-plus"></span>
+								</button>
+							</h3>
+							<div class="container-fluid" style="display: none;">
+								<br>
+								<div class="row">
+									<div class="col-xs-8 col-sm-7">
+										<div class="form-group row">
+											<label class="col-xs-12 col-lg-8 col-form-label"
+												style="font-weight: normal;">Gene support: <i
+												class="fa fa-info-circle" rel="tooltip" title="Gene support" data-content="Any term annotating less genes than the filter value will be removed. The value is adapted depending on the gene set size but can be chosen by the user."></i>
+											</label>
+											<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
+												<input class="form-control" type="number" id="support"
+													value=3 step="1">
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-xs-12 col-lg-8 col-form-label"
+												style="font-weight: normal;">Incomplete information filter: <i
+												class="fa fa-info-circle" rel="tooltip"
+												title="Incomplete information filter" data-content="Tolerance degree that discards terms with a low specificity. Four levels of tolerance (none, low, medium and hard) may be applied corresponding to the IC distribution of the ontology (discarding the terms below the 1, 10, 25 and 50 percentiles, respectively)"></i>
+											</label>
+											<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
+												<SELECT id="percentile" name="percentile" size="1">
+													<OPTION value="1">None
+													<OPTION value="10">Low
+													<OPTION value="25" selected>Medium
+													<OPTION value="50">Hard
+												</SELECT>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								Email (OPTIONAL):
+							</div>
+							<div class="col-sm-4">
+								<input type="text" id="inputEmail">
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-xs-12">
+								<button type="button" id="run" onclick="openRun()" class="btn-circle btn-xl">
+								<i class="glyphicon glyphicon-play"></i>
+								</button><span id="waiting1" style="display:none"> Waiting for the form to be sent.</span><span id="waiting2" style="display:none"> Waiting for the GAF 2.0 file to be loaded and for the form to be sent.</span> <span id="completing" style="display:none"> Form sent.</span>
+							</div>
+						</div>
+						<br><br>
+						<br><br>
+						<br><br>
+					</div>
+				</div>
+				<div id="examples" class="col-xs-12 col-md-6 col-lg-5">
+					<H1>Example to run GSAn</H1>
+					<h3>Example 1</h3>
+					<p>Set of 27 genes annotated as Interferon. This gene set was provided of a module repertoire created from several diseases data-set by <a href="https://www.nature.com/articles/nri3642" target="_blank">Chaussabel and Baldwin.</a></p>
+					<button id="example1" class="btn btn-primary btn-sm"
+						style="float: rigth; background-color: #4169E1;">Click to use!</button>
+					<h3>Example 2</h3>
+					<p>Set of 81 genes annotated as regulation of antigen presentation and immune response. This gene set was provided of a module repertoire created from five human vaccines by <a href="https://www.nature.com/articles/ni.2789" target="_blank">Li <i>et al.</i></a></p>
+					<button id="example2" class="btn btn-primary btn-sm"
+						style="float: rigth; background-color: #4169E1;">Click to use!</button>
+					<br><br>
+					<br><br>
+					<br><br>
+					<br><br>
+					<br><br>
+					
+				</div>
+			</div>
+		</div>
+		<script th:inline="javascript">
+							changingOrganism($("#organism").val());
+							$("#organism").change(function(event) {
+							  changingOrganism(event.target.value);
+							});
+							
+							
+							
+							function changingOrganism(str){
+							  
+							  if(str == "input"){
+							    $("#gafHide").show();
+							    $("#uni").text("proteins");
+							    $("#genOf").text("genes");
+							  } else if( str === "candida_albicans"){
+							    $("#gafHide").hide();
+							    $("#uni").text("Candida genome database");
+							    $("#genOf").text("Official gene symbol");
+							  }
+							    else if( str === "pseudomonas_aeruginosa"){
+							      $("#gafHide").hide();
+							      $("#uni").text("Pseudomonas locus tag");
+							      $("#genOf").text("Official gene symbol");
+							    }
+							      else{
+							        $("#uni").text("UniprotKB");
+							        $("#genOf").text("Official gene symbol");
+							        $("#gafHide").hide();
+							      }
+							}
 							/*<![CDATA[*/
-
-							    var message = /*[[${query}]]*/ 'default';
-							  //  console.log(message);
-									if(message!=null){
-									message = 	message.replace(/-,/g,"");
-									message = 	message.replace(/-/g,"");
-								$("#queryText").val(message);
-
-									}
-
-							/*]]>*/
-
-
-
-
+							
+							    var message = /*[[${query}]]*/ 'default';								 
+								if(message!=null){
+								  message = 	message.replace(/-,/g,"");
+								  message = 	message.replace(/-/g,"");
+								  $("#queryText").val(message);
+								}
+	
+							
+							/*]]>*/	
+							
 							$(".protORgene").on('click', function() {
 							  // in the handler, 'this' refers to the box clicked on
 							  var $box = $(this);
@@ -59,636 +269,211 @@
 							    $box.prop("checked", false);
 							  }
 							});
-
-
-								$("#queryText")
-										.click(
-												function() {
-													if ($.trim($(this).val()) === "Put here the Official gene symbols or UniprotKB ids...") {
-														$(this).val("");
-													};
-													return false;
-												})
-								function printText() {
-									var x = document
-											.getElementById("queryText").value.split(/[\n|\t|;|\s|,]/g).filter(function (el) {return el != "";});
-										//	console.log("TEST "+x);
-									if (x.length > 5) {
-										$("#support")
-												.val(
-														""+ (Math.floor(Math.sqrt(Math.abs(x.length / 10 - 1))) + 2));
-									} else {
-										$("#support").val("" + 1);
-									}
-								}
-							</script>
-
-
-							 <i class="fa fa-info-circle" rel="tooltip" data-html="true"
-								title="Gene input" data-content="The gene input consider only the official gene symbol and the UniprotKB ids. The genes (or proteins) can be delimited by:<br>
-
-								&nbsp;	1. Space<br>
-								&nbsp;	2. Tabulation<br>
-								&nbsp;	3. Line breaks<br>
-								&nbsp;	4. Comma<br>
-								&nbsp;	5. Semicolon<br>
-
-									It is possible to insert a file in text-plain format."
-></i>
-						<br>
-						<h6>If your gene/protein ids are not Official gene symbols or UniprotKB ids, you can convert them to UniprotKB
-						<br>
-						in <a href="https://www.uniprot.org/uploadlists/"> https://www.uniprot.org/uploadlists/ </a></h6>
-						<button id="clear">Clear</button>
-						<script>
-
-						$("#clear").click(function(){
-							$("#queryText").val("Put here the Official gene symbols or UniprotKB ids...")
-						});
-
-						</script>
-						<h6>OR insert a file in csv, tsv or txt file</h6>
-						<input type="file" id="queryFile" name="profile_pic"
-							accept=".csv, .tsv, .txt">
-
-					</div>
-					<h3>Genome annotation input</h3>
-					<div>
-						<br>
-						<div class="row">
-							<div class="col-sm-4">
-								<label style="font-weight: normal;">Choose an
-							organism:	<span> <i class="fa fa-info-circle" rel="tooltip"
-									title="Select genome" data-content="Choose the stored organism. If your organism is not in the list, you can choose input and upload a GOA using the gaf 2.0 format."
-									></i>
-								</span></label>
-						</div>
-						<div class="col-sm-4">
-							 <SELECT id="organism" name="organism" size="1">
-								<OPTION value="homo_sapiens" selected>homo_sapiens
-								<OPTION value="arabidopsis_thaliana">arabidopsis_thaliana
-								<OPTION value="bos_taurus">bos_taurus
-								<OPTION value="caenorhabditis_elegans">caenorhabditis_elegans
-								<OPTION value="candida_albicans">candida_albicans
-								<OPTION value="canis_lupus">canis_lupus
-								<OPTION value="danio_rerio">danio_rerio
-								<OPTION value="drosophila_melanogaster">drosophila_melanogaster
-							  <OPTION value="escherichia_coli">escherichia_coli
-								<OPTION value="gallus_gallus">gallus_gallus
-								<OPTION value="mus_musculus">mus_musculus
-								<OPTION value="pseudomonas_aeruginosa"> pseudomonas_aeruginosa
-								<OPTION value="saccharomyces_cerevisiae">saccharomyces_cerevisiae
-								<OPTION value="sus_scrofa">sus_scrofa
-								<OPTION value="rattus_norvegicus">rattus_norvegicus
-
-
-
-
-
-
-
-
-								<OPTION value="input">input
-						</SELECT>
-
-</div>
-</div>
-<br>
-						<div id="gafHide" style="display: none">
-
-							<p>Please, use a gaf file format.</p>
-							<input type="file" id="GAF" name="GAF"> <br>
-						</div>
-						<script>
-
-
-						changingOrganism($("#organism").val());
-
-							 $("#organism").change(function(event) {
-								 changingOrganism(event.target.value);
-							 });
-
-
-
-							 function changingOrganism(str){
-
-								 if(str == "input"){
-								$("#gafHide").show();
-								$("#uni").text("proteins");
-							 $("#genOf").text("genes")
-								 //$('#prok').bootstrapToggle('enable')
-							 } else if( str === "candida_albicans"){
-								 $("#gafHide").hide();
-								 $("#uni").text("Candida genome database")
-								 $("#genOf").text("Official gene symbol")
-							 }
-							 else if( str === "pseudomonas_aeruginosa"){
-								 $("#gafHide").hide();
-								 $("#uni").text("Pseudomonas locus tag")
-								 $("#genOf").text("Official gene symbol")
-							 }
-							 else{
-								 $("#uni").text("UniprotKB")
-								$("#genOf").text("Official gene symbol")
-								$("#gafHide").hide();
-								// $('#prok').bootstrapToggle('disable')
-								 }
-							 }
-
-						</script>
-
-						<br>
-
-							<!--   Prokaryote:&nbsp;
-
-      <input id="prok" value="off" disabled="disabled" data-toggle="toggle" data-onstyle="primary" data-size = "mini" type="checkbox">
-        <i class="fa fa-info-circle"  rel="tooltip" title="Popover Header" data-content="Some content inside the popover"></i> &nbsp; &nbsp;
-			-->
-			<div class="row">
-				<div class="col-sm-4">
-							Considering IEA:&nbsp;<i class="fa fa-info-circle"
-							rel="tooltip" title="Inferred from Electronic Annotation" data-content="<ON> means that the analysis will use the IEA annotations"></i>
-
-</div>
-	<div class="col-sm-4">
-
-							 <input id="iea" checked
-								data-toggle="toggle" data-onstyle="primary" data-size="mini"
-								type="checkbox">
-						</div>
-						</div>
-						<br>
-						<div class="row">
-							<div class="col-sm-4">
-						<label style="font-weight: normal;">Choose an
-							ontology: <i class="fa fa-info-circle" rel="tooltip"
-							title="Select Ontology" data-content="Subparts of GO (BP, MF, CC, all) to choose for the analysis."></i>
-	</label>
-						</div>
-							<div class="col-sm-6">
-					 <br> <input class="ontologies" id="BP" type="checkbox"
-							value="GO:0008150" checked="checked"> <label for="BP">biological process</label> <br>
-						<input class="ontologies" id="MF" type="checkbox"
-							value="GO:0003674"> <label for="MF">molecular function</label> <br>
-						<input class="ontologies" id="CC" type="checkbox"
-							value="GO:0005575"> <label for="CC">cellular component</label>
-						</div>
-					</div>
-					<!--	<input class="ontologies" id="DO" type="checkbox"
-							value="DOID:4"> <label for="DO">disease</label>
-						<input class="ontologies" id="R" type="checkbox"
-							value="reac"> <label for="R">reactome</label>-->
-						<!--
-						<input class="ontologies" id="all" type="checkbox" value="all">
-
-						<label for="all">all </label>
-						-->
-						<!-- (doesn't work) -->
-
-
-
-						<br>
-						<div class="row">
-							<div class="col-sm-4">
-						 <label style="font-weight: normal;">Choose a
-							semantic similarity measure:
-					 <i class="fa fa-info-circle" rel="tooltip" data-toggle=popover
-							title="Semantic similarity measure" data-content="Choose the semantic similarity measure to compute the similarity between terms. <a href='documentation#SSformulas'>Click here</a> for details about formulas."></i>
-						</label>
-						</div>
-						<div class="col-sm-4">
-							<SELECT id="semantic_similarity"
-							name="semantic_similarity" size="1">
-							<!--	<OPTION value="simrel">SimRel-->
-								<OPTION value="lin">Lin
-								<OPTION value="resnik">Resnik
-							<!--	<OPTION value="pekarStaab">Pekar & Staab-->
-								<OPTION value="distanceFunction">Distance function
-							<!--	<OPTION value="ganesan">Ganesan-->
-								<OPTION value="nUnivers" selected>NUnivers
-									<!--  <OPTION value="NUM">NUnivers_Mod  -->
-								<OPTION value="aic" >AIC
-
-									<!--  <OPTION value="wang">Wang-->
-						</SELECT>
-
-	</div>
-	</div>
-	<script>
-	 // Pour avoir un URL dans le i
-	 // popover demo
-	 $("[data-toggle=popover]")
-	 .popover({html:true})
-		</script>
-						<h3>
-							Advanced parameters
-							<button type="button" class="btn btn-default btn-circle"
-								id="hide" style="display: none;">
-								<span class="glyphicon glyphicon-minus"></span>
-							</button>
-							<button type="button" class="btn btn-default btn-circle"
-								id="show">
-								<span class="glyphicon glyphicon-plus"></span>
-							</button>
-						</h3>
-						<script>
-							$(document).ready(function() {
-								$("#hide").click(function() {
-									$(".container-fluid").hide();
-									$("#show").show();
-									$("#hide").hide();
-								});
-								$("#show").click(function() {
-									$(".container-fluid").show();
-									$("#show").hide();
-									$("#hide").show();
-								});
+							
+							
+							$("#queryText")
+							.click(
+							  function() {
+							    if ($.trim($(this).val()) === "Put here the Official gene symbols or UniprotKB ids...") {
+							      $(this).val("");
+							    };
+							    return false;
+							  })
+							function printText() {
+							  var x = document
+							  .getElementById("queryText").value.split(/[\n|\t|;|\s|,]/g).filter(function (el) {return el != "";});
+							  //	console.log("TEST "+x);
+							  if (x.length > 5) {
+							    $("#support")
+							    .val(
+							      ""+ (Math.floor(Math.sqrt(Math.abs(x.length / 10 - 1))) + 2));
+							  } else {
+							    $("#support").val("" + 1);
+							  }
+							}
+						$(document).ready(function() {
+							 $("[rel=tooltip]").popover({ placement: 'right'});
+						     $("[data-toggle=popover]").popover({html:true}) 
+							 $("#hide").click(function() {
+								 $(".container-fluid").hide();
+								 $("#show").show();
+								 $("#hide").hide();
 							});
-						</script>
-
-						<div class="container-fluid" style="display: none;">
-						<!--	<div class="row">
-								<div class="col-sm-4">
-									<label style="font-weight: normal;"> Information
-										content:  <i class="fa fa-info-circle" rel="tooltip" title="IC" data-content="Choose the measure to compute the information content score. See documentation for more details."></i>
-										&nbsp;&nbsp; </label>
-									</div>
-		<div class="col-sm-4">
-
-										<SELECT id="ic" name="ic" size="1">
-										<OPTION value="0">Seco
-										<OPTION value="1">Zhou
-										<OPTION value="2">Sanchez
-										<OPTION value="3" selected>Mazandu
-
-
-									</SELECT>
-
-
-								</div>
-							</div>-->
-							<br>
-							<div class="row">
-								<div class="col-xs-8 col-sm-7">
-							<!--		<h4 style="font-weight: bold;">Filters:</h4>-->
-
-					<!--				<div class="form-group row">
-										<label class="col-xs-12 col-lg-8 col-form-label"
-											style="font-weight: normal;">Clustering gene
-											covering: <i class="fa fa-info-circle" rel="tooltip"
-											title="## Gene covering ##
-In the representative algorithm, after clustering method, one or more terms can represent the cluster. A cluster involve a number of genes being the addition of its elements. This filter allow to be permissive for each clustering being able to show a more specific representative involving at least the chosen filter value."></i>
-										</label>
-
-
-										<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
-											<input class="form-control" type="number" id="covering"
-												value=1 min=0 max=1 step="0.01" maxlength="4" size="4">
-
-										</div>
-									</div>-->
-
-									<div class="form-group row">
-										<label class="col-xs-12 col-lg-8 col-form-label"
-											style="font-weight: normal;">Gene support: <i
-											class="fa fa-info-circle" rel="tooltip" title="Gene support" data-content="Any term annotating less genes than the filter value will be removed. The value is adapted depending on the gene set size but can be chosen by the user."></i>
-										</label>
-
-
-										<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
-											<input class="form-control" type="number" id="support"
-												value=3 step="1">
-										</div>
-									</div>
-
-							<!--		<div class="form-group row">
-										<label class="col-xs-12 col-lg-8 col-form-label"
-											style="font-weight: normal;">Term combined
-											similarity: <i class="fa fa-info-circle" rel="tooltip"
-											title="Jaccard-like gene similarity" data-content="When the algorithm searches the representative terms, sometimes, more than one representative term can be found for the same cluster. This filter is used to have some difference between combined representative terms. The similarity used is the jaccard similarity using the genes annotated by each representative terms."></i>
-										</label>
-
-										<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4">
-											<input class="form-control" type="number"
-												id="similarity_filter" value=0.5 min=0 max=1 step="0.01">
-										</div>
-									</div>
-								-->
-									<div class="form-group row">
-										<label class="col-xs-12 col-lg-8 col-form-label"
-											style="font-weight: normal;">Incomplete information filter: <i
-											class="fa fa-info-circle" rel="tooltip"
-											title="Incomplete information filter" data-content="Tolerance degree that discards terms with a low specificity. Four levels of tolerance (none, low, medium and hard) may be applied corresponding to the IC distribution of the ontology (discarding the terms below the 1, 10, 25 and 50 percentiles, respectively)"></i>
-										</label>
-										<div class="col-xs-12 col-sm-8 col-md-8 col-lg-4">
-											<SELECT id="percentile" name="percentile" size="1">
-											<OPTION value="1">None
-											<OPTION value="10">Low
-											<OPTION value="25" selected>Medium
-											<OPTION value="50">Hard
-
-
-										</SELECT>
-										</div>
-									</div>
-
-
-								</div>
-
-							</div>
-						</div>
-					</div>
-
-	<div class="row">
-		<div class="col-sm-4">
-
-						Email (OPTIONAL):
-</div>
-<div class="col-sm-4">
-<input type="text" id="inputEmail">
-</div>
-
-
-					</div>
-					<br>
-						<div class="row">
-							<div class="col-xs-12">
-					<button type="button" id="run" onclick="openRun()" class="btn-circle btn-xl">
-						<i class="glyphicon glyphicon-play"></i>
-					</button><span id="waiting1" style="display:none"> Waiting for the form to be sent.</span><span id="waiting2" style="display:none"> Waiting for the GAF 2.0 file to be loaded and for the form to be sent.</span> <span id="completing" style="display:none"> Form sent.</span>
-				</div>
-			</div>
-					<br><br>
-					<br><br>
-					<br><br>
-
-					<script>
-
+						     $("#show").click(function() {
+						 	 	$(".container-fluid").show();
+							 	$("#show").hide();
+							 	$("#hide").show();
+							});
+						
+						});
+						// when input is chosen. fileGAF will include the temporary path to send
+						// the GAF 2.0 file.
 						var fileGAF = "";
-						$("#GAF")
-								.change(
-										function(e) {
-											//var ext = $("input#GAF")
-												//	.val().split(".").pop()
-												//	.toLowerCase();
-
-									//		if ($.inArray(ext, [ "txt", "csv",
-									//				"tsv", ".gaf" ]) == -1) {
-									//			alert('Please upload a .gaf,.txt,.csv or .tsv file');
-									//			return false;
-									//		}
-                    fileGAF = e.target.files.item(0);
-									//	console.log(fileGAF);
-
-
-
-
-										});
-
-						var genesFile = []
+						$("#GAF").change(
+						  function(e) {
+						    fileGAF = e.target.files.item(0);
+						  });
+						// Read the gene file if uploaded.
+						var genesFile = [];
 						$("#queryFile")
-								.change(
-										function(e) {
-											var ext = $("input#queryFile").val()
-													.split(".").pop()
-													.toLowerCase();
-											//console.log(ext);
-											if ($.inArray(ext, [ "txt", "csv",
-													"tsv" ]) == -1) {
-												alert('Please upload a .txt,.csv or .tsv file');
-												return false;
-											}
-											if (e.target.files != undefined) {
-												var reader = new FileReader();
-												reader.onload = function(e) {
-													var csvval = e.target.result
-															.split("\n");
-
-													csvval.forEach(function(x) {
-																if (x !== "") {
-
-																	genesFile = genesFile.concat(x.split(/[\n|\t|;|\s|,]/g).filter(function (el) {return el != "";}));
-
-																}
-															});
-												};
-												reader
-														.readAsText(e.target.files
-																.item(0));
-
-											}
-												return false;
-										});
-
-
-
+						.change(
+						  function(e) {
+						    var ext = $("input#queryFile").val()
+						    .split(".").pop()
+						    .toLowerCase();
+						    //console.log(ext);
+						    if ($.inArray(ext, ["txt", "csv",
+						                        "tsv"
+						                       ]) == -1) {
+						      alert('Please upload a .txt,.csv or .tsv file');
+						      return false;
+						    }
+						    if (e.target.files != undefined) {
+						      var reader = new FileReader();
+						      reader.onload = function(e) {
+						        var csvval = e.target.result
+						        .split("\n");
+						        
+						        csvval.forEach(function(x) {
+						          if (x !== "") {
+						            genesFile = genesFile.concat(x.split(/[\n|\t|;|\s|,]/g)
+						                                         .filter(function(el) {
+						                                           return el != "";
+						                                         })
+						                                        );
+						            
+						          }
+						        });
+						      };
+						      reader.readAsText(e.target.files.item(0));
+						      
+						    }
+						    return false;
+						  });
+						// Main function to call the RESTAPI functions of GSAn
 						function openRun() {
-							$('#run').prop('disabled', true);
-							 var genes = [];
-
-							 if (genesFile.length === 0) { // Observamos si los genes han sido cargados en un fichero.
-
-								 genes = genes.concat(document.getElementById("queryText").value.split(/[\n|\t|;|\s|,]/g).filter(function (el) {return el != "";}));
-
-								 //console.log(genes);
-
-							 }else{
-								 genes = genesFile
-							 }
-							 var organism = document
-									 .getElementById("organism").value;
-
-							 if (genes.includes("Put here the Official gene symbols or UniprotKB ids...")){
-								 alert("Please, the gene input is required!");
-								 	$('#run').prop('disabled', false);
-							 return false;
-							 }
-							 else if(genes.length ===1 && genes.includes("")){
-								 alert("Please, the gene is required!");
-								 	$('#run').prop('disabled', false);
-								 return false;
-							 }
-							 else if(genes.length<5){
-								 alert("Please, the input must have a minimun of 5 genes");
-								 	$('#run').prop('disabled', false);
-								 return false;
-							 }
-							 else if (organism === "input" && fileGAF === ""){
-								 alert("Please, the annotation input is required!");
-								 	$('#run').prop('disabled', false);
-								 return false;
-							 }
-							 else if (organism === "input" && fileGAF.size>150000000 ){
-								 alert("The maximal size allowed is 150MB, If your GAF file is bigger, please contact us.");
-								 	$('#run').prop('disabled', false);
-								 return false;
-							 }
-							 else if ($('.ontologies:checked').length === 0){
-								 alert("Please, choose at least one ontology");
-								 	$('#run').prop('disabled', false);
-								 return false;
-							 }
-							 else if ($('.protORgene:checked').length === 0){
-								 alert("Please, choose if the ids are genes or proteins.");
-									$('#run').prop('disabled', false);
-								 return false;
-							 }
-							 else {
-								// console.log($('#iea').prop('checked'));
-								 var iea = 	$('#iea').prop('checked');
-								 var prok = false;//document.getElementById("prok").value==="on"?true:false;
-								 var onto = [];
-
-								 $('.ontologies')
-										 .each(
-												 function() {
-													 //var sThisVal = (this.checked ? onto.push(this.value) : "0");
-													 var sThisVal = (this.checked ? onto
-															 .push(this.value)
-															 : "0");
-												 });
-								 var protORgene;
-
-												 $('.protORgene')
-														 .each(
-																 function() {
-																	 //var sThisVal = (this.checked ? onto.push(this.value) : "0");
-																	 if(this.checked){
-																		 protORgene = this.value
-																	 }
-																 });
-
-
-								 var ss = document
-										 .getElementById("semantic_similarity").value;
-
-								 //var repFilter = document .getElementById("similarity_filter").value;
-							 //var gcovering = document
-								 //		.getElementById("covering").value;
-								 var sup = document .getElementById("support").value;
-								 var per = document
-										 .getElementById("percentile").value;
-							//	 var ic = document.getElementById("ic").value;
-								 var email = document
-										 .getElementById("inputEmail").value;
-								 //console.log("EMAIL " + email);
-								 email = email === "" ? null
-										 : email;
-								 //console.log("EMAIL " + email);
-								 /*
-									LY6E,IFIT1,OAS1,IFIT1,IFIT3,OAS3,IFIT3,OAS1,OASL,LOC129607,ISG15,HERC5,OAS1,MX1,BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4
-									*/
-
-								 /*var genes = "LY6E,IFIT1,OAS1,IFIT1,IFIT3,OAS3,IFIT3,OAS1,OASL,LOC129607,ISG15,HERC5,OAS1,MX1,"+
-									"BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,"  +
-									"CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4"*/
-								 //console.log(organism)
-								 
-								 if (organism !== "input") {
-									console.log(window.location.protocol);
-									 var gstr = genes.toString() ;
-									 var gf = [ ];
-									 gf.push(gstr);
-									 var f = new Blob(gf, { type: "plain/text"});
-
-									 var formData = new FormData();
-									 formData.append("query", f);
-									 formData.append("useIEA",iea);
-									 formData.append("ontology",onto);
-									 formData.append("organism",organism);
-									 formData.append("semanticSimilarity",ss);
-									 formData.append("ids",protORgene);
-									 formData.append("minGeneSupport",sup);
-									 formData.append("email",email);
-									 formData.append("percentile", per);
-									console.log("hola");
-									 var xhr = new XMLHttpRequest();
-									 xhr.open("POST", window.location.protocol+"//"+window.location.host+"/gsanGet",false);
-
-													  document.getElementById("waiting1").style.display = "inline";
-													 $("#completing").hide();
-													xhr.send(formData);
-													console.log(xhr.responseText);
-													if (xhr.status === 200) {
-													$("#waiting1").hide();
-													$("#completing").show();
-  								 window.open(window.location.protocol+"//"+window.location.host+"/"+xhr.responseText,"_blank");
-									 $('#run').prop('disabled', false);
-								 }
-									 //console.log("2." + uri);
-									 //$("#run2").show();
-
-								 } else {
-									console.log(window.location.host);
-									 var gstr = genes.toString() ;
-									 var gf = [ ];
-									 gf.push(gstr);
-									var f = new Blob(gf, { type: "plain/text"});
-									 var formData = new FormData();
-									 formData.append("query", f);
-									 formData.append("useIEA",iea);
-									 formData.append("ontology",onto);
-									 formData.append("uploadFile",fileGAF);
-									 formData.append("semanticSimilarity",ss);
-									 formData.append("ids",protORgene);
-									 formData.append("minGeneSupport",sup);
-									 formData.append("email",email);
-									 formData.append("percentile", per);
-									 var gogo = false;
-									 var xhr = new XMLHttpRequest();
-						 xhr.open("POST",window.location.protocol+"//"+window.location.host+"/gsanPost",false);
-													 
-													 document.getElementById("waiting1").style.display = "inline";
-													 $("#completing").hide();
-													xhr.send(formData);
-													console.log(xhr.responseText);
-													if (xhr.status === 200) {
-													$("#waiting1").hide();
-													$("#completing").show();
-  								 window.open(window.location.protocol+"//"+window.location.host+"/"+xhr.responseText,"_blank");
-									 $('#run').prop('disabled', false);
-								 }
-
-
-								 }
-
-								 return false;
-							 }
-										};
-
-
-
-
-
-					</script>
-
-				</div>
-				</div>
-				<div id="examples" class="col-xs-12 col-md-6 col-lg-5">
-					<H1>Example to run GSAn</H1>
-
-
-					<h3>Example 1</h3>
-
-					<p>Set of 27 genes annotated as Interferon. This gene set was provided of a module repertoire created from several diseases data-set by <a href="https://www.nature.com/articles/nri3642" target="_blank">Chaussabel and Baldwin.</a></p>
-
-					<button id="example1" class="btn btn-primary btn-sm"
-						style="float: rigth; background-color: #4169E1;">Click to use!</button>
-
-					<h3>Example 2</h3>
-
-					<p>Set of 81 genes annotated as regulation of antigen presentation and immune response. This gene set was provided of a module repertoire created from five human vaccines by <a href="https://www.nature.com/articles/ni.2789" target="_blank">Li <i>et al.</i></a></p>
-
-					<button id="example2" class="btn btn-primary btn-sm"
-						style="float: rigth; background-color: #4169E1;">Click to use!</button>
-					<br><br>
-
-					<br><br>
-					<br><br>
-					<br><br>
-					<br><br>
-
-					<script type="text/javascript">
+						  $('#run').prop('disabled', true);
+						  var genes = [];
+							// Check if genes are in file.
+							// geneFile=0: genes in the box are used
+							// geneFile!=0: geneFile is used;
+						  if (genesFile.length === 0) {
+						    genes = genes.concat(document.getElementById("queryText").value.
+						                         split(/[\n|\t|;|\s|,]/g).filter(function(el) {
+						                           return el != "";
+						                         })
+						                        );    
+						  } else {
+						    genes = genesFile;
+						  }
+						  // The organism variable is important that stay here.
+						  var organism = document.getElementById("organism").value;
+						  
+						  if (genes.includes("Put here the Official gene symbols or UniprotKB ids...")) {
+						    alert("Please, the gene input is required!");
+						    $('#run').prop('disabled', false);
+						    return false;
+						  } else if (genes.length === 1 && genes.includes("")) {
+						    alert("Please, the gene is required!");
+						    $('#run').prop('disabled', false);
+						    return false;
+						  } else if (genes.length < 5) {
+						    alert("Please, the input must have a minimun of 5 genes");
+						    $('#run').prop('disabled', false);
+						    return false;
+						  } else if (organism === "input" && fileGAF === "") {
+						    alert("Please, the annotation input is required!");
+						    $('#run').prop('disabled', false);
+						    return false;
+						  } else if (organism === "input" && fileGAF.size > 150000000) {
+						    alert("The maximal size allowed is 150MB, If your GAF file is bigger, please contact us.");
+						    $('#run').prop('disabled', false);
+						    return false;
+						  } else if ($('.ontologies:checked').length === 0) {
+						    alert("Please, choose at least one ontology");
+						    $('#run').prop('disabled', false);
+						    return false;
+						  } else if ($('.protORgene:checked').length === 0) {
+						    alert("Please, choose if the ids are genes or proteins.");
+						    $('#run').prop('disabled', false);
+						    return false;
+						  } else {
+						    // console.log($('#iea').prop('checked'));
+						    var iea = $('#iea').prop('checked');
+						    //var prok = false; //document.getElementById("prok").value==="on"?true:false;
+						    var onto = [];
+						    
+						  // $('.ontologies').each(
+						  //    function() {
+						        //var sThisVal = (this.checked ? onto.push(this.value) : "0");
+						  //      var sThisVal = (this.checked ? onto.push(this.value) : "0");
+						   //   });
+						    var protORgene;
+						    $('.protORgene')
+						    .each(
+						      function() {
+						        //var sThisVal = (this.checked ? onto.push(this.value) : "0");
+						        if (this.checked) {
+						          protORgene = this.value;
+						        }
+						      });
+						    
+						    
+						    var ss  = document.getElementById("semantic_similarity").value;
+						    var sup = document.getElementById("support").value;
+						    var per = document
+						    .getElementById("percentile").value;
+						    //	 var ic = document.getElementById("ic").value;
+						    var email = document.getElementById("inputEmail").value;
+						    //console.log("EMAIL " + email);
+						    email = email === "" ? null :
+						    email;
+						    
+						    var gstr = genes.toString();
+						    var gf = [];
+						    gf.push(gstr);
+						    var f = new Blob(gf, {
+						      type: "plain/text"
+						    });
+						    var formData = new FormData();
+						    formData.append("query", f);
+						    formData.append("useIEA", iea);
+						    formData.append("ontology", onto);
+						    formData.append("organism", organism);
+						    formData.append("semanticSimilarity", ss);
+						    formData.append("ids", protORgene);
+						    formData.append("minGeneSupport", sup);
+						    formData.append("email", email);
+						    formData.append("percentile", per);
+						    var xhr = new XMLHttpRequest();
+						    // Check if organism is equal to input
+						    // YES: do gsanPost
+						    // NO: do gsanGet
+						    if (organism !== "input") {
+						      xhr.open("POST", window.location.protocol + "//" + window.location.host + "/gsanGet", false);
+						    } else {
+						      formData.append("uploadFile", fileGAF);
+						      //var gogo = false;
+						      
+						      xhr.open("POST", window.location.protocol + "//" + window.location.host + "/gsanPost", false);
+						      
+						      
+						      
+						    }
+						    
+						    document.getElementById("waiting1").style.display = "inline";
+						    $("#completing").hide();
+						    xhr.send(formData);    
+						    if (xhr.status === 200) {
+						      $("#waiting1").hide();
+						      $("#completing").show();
+						      window.open(window.location.protocol + "//" + window.location.host + "/" + xhr.responseText, "_blank");
+						      $('#run').prop('disabled', false);
+						    }
+						    
+						    return false;
+						  }
+						}
 						$("#example1").click(function() {
 						var gs = "LY6E,IFIT1,OAS1,IFIT1,IFIT3,OAS3,IFIT3,OAS1,OASL,LOC129607,ISG15,HERC5,OAS1,MX1,BATF2,LAMP3,IFI44L,XAF1,OASL,IFI44,OAS2,TRIM6,HES4,OTOF,FLJ20035,IFITM3,IFIT3,CXCL10,EPSTI1,SERPING1,LOC26010,OAS2,RSAD2,RTP4,"
 							$("#queryText").val(gs);
@@ -700,27 +485,7 @@ In the representative algorithm, after clustering method, one or more terms can 
 							printText();
 						});
 						</script>
-				</div>
-
-
-		</div>
-
-	</div>
-
-
-	<!-- Tooltip boostrap clicking -->
-
-	<script>
-		//$(document).ready(function() {
-			//$("[rel=tooltip]").popover({
-				//placement : 'right'
-		//	});
-		//});
-
-	$(document).ready(function(){
-    $("[rel=tooltip]").popover({ placement: 'right'});
-});	
-	</script>
-
-</body>
+		
+	</body>
 </html>
+
