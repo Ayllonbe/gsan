@@ -8,7 +8,7 @@ RUN apt-get update \
     vim-tiny \
     wget \
     ca-certificates \  
-    openjdk-11-jdk\
+    openjdk-8-jdk\
     maven
 
 ## Configure default locale, see https://github.com/rocker-org/rocker/issues/19
@@ -50,6 +50,5 @@ RUN while read line;\
 ENV MAVEN_OPTS="-Xmx8096m -XX:MaxPermSize=4048m"
 WORKDIR /usr/gsan/
 ADD . /usr/gsan/
-RUN mvn clean && mvn package -DskipTests
-EXPOSE 8282
-CMD java -jar target/app.jar
+#RUN mvn clean && mvn package -DskipTests
+
