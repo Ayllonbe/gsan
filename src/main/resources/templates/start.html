@@ -449,24 +449,27 @@
 						    // Check if organism is equal to input
 						    // YES: do gsanPost
 						    // NO: do gsanGet
+							var restFunc = "";
 						    if (organism !== "input") {
-						      xhr.open("POST", window.location.protocol + "//" + window.location.host + "/gsanGet", false);
+							  resFunc = "/gsanGet";
 						    } else {
+							  resFunc = "/gsanPost";
 						      formData.append("uploadFile", fileGAF);
 						      //var gogo = false;
 						      
-						      xhr.open("POST", window.location.protocol + "//" + window.location.host + "/gsanPost", false);
+						      
 						      
 						      
 						      
 						    }
-						    
+						    xhr.open("POST", window.location.protocol + "//" + window.location.host + resFunc, false);
 						    document.getElementById("waiting1").style.display = "inline";
 						    $("#completing").hide();
 						    xhr.send(formData);    
 						    if (xhr.status === 200) {
 						      $("#waiting1").hide();
-						      $("#completing").show();
+							  $("#completing").show();
+							  console.log(window.location.protocol + "//" + window.location.host + "/" + xhr.responseText);
 						      window.open(window.location.protocol + "//" + window.location.host + "/" + xhr.responseText, "_blank");
 						      $('#run').prop('disabled', false);
 						    }
