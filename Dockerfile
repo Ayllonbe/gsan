@@ -50,5 +50,7 @@ RUN while read line;\
 ENV MAVEN_OPTS="-Xmx8096m -XX:MaxPermSize=4048m"
 WORKDIR /usr/gsan/
 ADD . /usr/gsan/
-#RUN mvn clean && mvn package -DskipTests
+RUN mvn clean && mvn package -DskipTests
+EXPOSE 8282
+CMD java -jar target/app.jar
 
