@@ -53,4 +53,3 @@ ADD . /usr/gsan/
 RUN mvn clean && mvn package -DskipTests
 EXPOSE 8282
 CMD java -jar target/app.jar
-
