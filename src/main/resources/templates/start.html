@@ -12,8 +12,7 @@
 						<h1>Analysis</h1>
 						<h3>Input</h3>
 						<div id="query">
-							<textarea class="comments" id="queryText" style="width: 90%; height: 90px;" oninput="printText()">
-								Put here the Official gene symbols or UniprotKB ids...
+							<textarea class="comments" id="queryText" style="width: 90%; height: 90px;" oninput="printText()">Put here the Official gene symbols or UniprotKB ids...
 							</textarea>
 							<label>
 							<input type="checkbox" class="protORgene" value="1"  name="ids"/> <span id="uni">UniprotKB</span></label>
@@ -403,11 +402,11 @@
 						    //var prok = false; //document.getElementById("prok").value==="on"?true:false;
 						    var onto = [];
 						    
-						  // $('.ontologies').each(
-						  //    function() {
-						        //var sThisVal = (this.checked ? onto.push(this.value) : "0");
-						  //      var sThisVal = (this.checked ? onto.push(this.value) : "0");
-						   //   });
+						   $('.ontologies').each(
+						      function() {
+						        var sThisVal = (this.checked ? onto.push(this.value) : "0");
+						        var sThisVal = (this.checked ? onto.push(this.value) : "0");
+						      });
 						    var protORgene;
 						    $('.protORgene')
 						    .each(

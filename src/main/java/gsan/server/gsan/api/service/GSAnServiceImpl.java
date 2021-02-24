@@ -262,7 +262,7 @@ public class GSAnServiceImpl implements GSAnService {
 			//System.out.println(it.ICs.get(3)+" "+it.genome.size());
 		
 		Set<String> termsInc = new HashSet<String>();
-		System.out.println(ontology);
+		//System.out.println(ontology);
 		log.debug("Recovering terms to analyse the gene set");
 		for(String ont : ontology) {
 			
