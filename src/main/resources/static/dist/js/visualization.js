@@ -70,7 +70,8 @@ representative.forEach(function(x){
 
 r.push(cells);
 })
-
+console.log(representative)
+console.log(scp)
 $("#tableResult").append('<H3>GSAn retained '+representative.length+' terms, '+scp.length +' of them being synthetic<br>  ' +recoverGenes.size +' out of '+genes.length+' genes are covered</H3>');
 var table = new Table()
 
