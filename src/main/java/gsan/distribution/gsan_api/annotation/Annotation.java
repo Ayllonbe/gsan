@@ -45,7 +45,10 @@ public class Annotation implements Serializable {
 	//	this.percentile = percentile;
 	}
 
-	public Annotation(List<List<String>> table, GlobalOntology gont,boolean bol, int ids){
+	public Annotation(List<List<String>> table, GlobalOntology gont,boolean bol, int ids) {
+		
+		
+		System.out.println(bol + " " + ids);
 	//	this.percentile = new HashMap<>();
 //		for(String subont : gont.subontology.keySet()) {
 //			System.out.println(subont);
