@@ -573,7 +573,7 @@ public class GSAnServiceImpl implements GSAnService {
 			finalResult.put("tree", tdt.transform(hierarchy, ic_inc, mapTerm2genes));
 			}
 			
-			Set<String> scp =  new HashSet<String>(SetCoverAaron.scp(term2genebs,go,ontology));
+			List<String> scp =  SetCoverAaron.scp(term2genebs,go,ontology);
 			Set<String> genesTest = new HashSet<>();
 			for(String t: scp) {
 //				System.out.println("Rep? " + go.allStringtoInfoTerm.get(t).toName());

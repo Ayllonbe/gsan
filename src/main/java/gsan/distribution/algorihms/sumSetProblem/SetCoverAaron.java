@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,7 +20,7 @@ public class SetCoverAaron {
 	public static List<String> scp(Map<String,BitSet> term2genebs, GlobalOntology go, List<String> ontology) {
 		
 		
-		List<String> res = new ArrayList<>();
+		Set<String> res = new HashSet<>();
 		for(String top:ontology) {
 		BitSet cover = new BitSet();
 		List<String> allTerms = new ArrayList<String>();
@@ -101,13 +102,9 @@ public class SetCoverAaron {
 			finalBS.or(term2genebs.get(choosen));
 			
 			}
-		//System.out.println("Cover : "+finalBS.cardinality() + ", TermsNumber : " + allTerms.size() + ", reducedNumer : " + res.size());
-//		System.out.println("The results is: ");
-//		for(String r : res) {
-//			System.out.println("\t" + go.allStringtoInfoTerm.get(r).toName()+ " : " + (go.allStringtoInfoTerm.get(r).ICs.get(4)/go.allStringtoInfoTerm.get(r).sIC) + ":" +term2genebs.get(r));
-//		}
+
 	}
-		return res;
+		return new LinkedList<>(res);
 
 
 	
